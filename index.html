@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>大阪家族旅行 2026</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root {
+    --pink: #E8A0BF;
+    --pink-light: #FDF2F8;
+    --pink-dark: #C05A8C;
+    --blue: #5B7FC7;
+    --blue-light: #EBF0FA;
+    --green: #4CAF7D;
+    --green-light: #E8F5E9;
+    --orange: #E8985E;
+    --orange-light: #FFF8F0;
+    --red: #E57373;
+    --purple: #9575CD;
+    --teal: #4DB6AC;
+    --gray: #6B7280;
+    --gray-light: #F3F4F6;
+    --text: #1F2937;
+    --bg: #F5F3F0;
+    --card: #FFFFFF;
+    --shadow: 0 2px 16px rgba(0,0,0,0.07);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.10);
+    --radius: 18px;
+    --radius-sm: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 17px;
+    line-height: 1.65;
+    padding-bottom: 70px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, #F8BBD0 0%, #CE93D8 50%, #9FA8DA 100%);
+    color: white;
+    text-align: center;
+    padding: 36px 20px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0; right: 0;
+    height: 24px;
+    background: var(--bg);
+    border-radius: 24px 24px 0 0;
+  }
+  .header h1 { font-size: 26px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 1px 8px rgba(0,0,0,0.1); }
+  .header .subtitle { font-size: 14px; opacity: 0.92; margin-top: 4px; font-weight: 500; }
+
+  /* ===== DAY TABS ===== */
+  .day-tabs {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+    padding: 8px 16px 4px;
+    scrollbar-width: none;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: var(--bg);
+  }
+  .day-tabs::-webkit-scrollbar { display: none; }
+  .day-tab {
+    flex: 0 0 auto;
+    padding: 10px 18px;
+    border-radius: 24px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--card);
+    color: var(--gray);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    transition: all 0.25s;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .day-tab.active {
+    background: var(--pink-dark);
+    color: white;
+    box-shadow: 0 4px 14px rgba(192,90,140,0.35);
+  }
+  .day-tab .tab-icon { margin-right: 4px; }
+
+  /* ===== VIEW TOGGLE ===== */
+  .view-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    padding: 8px 16px;
+    margin-bottom: 4px;
+  }
+  .view-btn {
+    padding: 9px 24px;
+    border: 2px solid #E0E0E0;
+    background: var(--card);
+    color: var(--gray);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .view-btn:first-child { border-radius: 20px 0 0 20px; border-right: 1px solid #E0E0E0; }
+  .view-btn:last-child { border-radius: 0 20px 20px 0; border-left: 1px solid #E0E0E0; }
+  .view-btn.active { background: var(--pink-dark); color: white; border-color: var(--pink-dark); }
+
+  /* ===== CONTENT ===== */
+  .page { display: none; }
+  .page.active { display: block; }
+  .page-inner { max-width: 600px; margin: 0 auto; padding: 8px 14px; }
+
+  /* ===== MAP ===== */
+  .map-container {
+    display: none;
+    height: 55vh;
+    min-height: 350px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 0 14px 12px;
+    box-shadow: var(--shadow-lg);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+  }
+  .map-container.active { display: block; }
+  .map-container .leaflet-container { height: 100%; width: 100%; }
+
+  /* custom map markers */
+  .custom-marker {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--pink-dark);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+  .custom-marker.checked-marker { background: var(--green); }
+  .leaflet-popup-content { font-family: inherit; font-size: 14px; line-height: 1.5; }
+  .popup-title { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+  .popup-tags { margin: 4px 0 8px; }
+  .popup-nav-btn {
+    display: inline-block;
+    background: var(--blue);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* ===== SPOT CARD ===== */
+  .spot-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 0;
+    margin-bottom: 14px;
+    overflow: hidden;
+    transition: transform 0.15s;
+    position: relative;
+  }
+  .spot-card:active { transform: scale(0.99); }
+  .spot-card-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  /* number badge */
+  .spot-num {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--pink-dark);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 15px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(192,90,140,0.3);
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+  }
+  .spot-num.done {
+    background: var(--green);
+    box-shadow: 0 2px 6px rgba(76,175,125,0.3);
+  }
+  .spot-num.done::after {
+    content: '✓';
+    position: absolute;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .spot-num.done .num-text { visibility: hidden; }
+
+  .spot-body { flex: 1; min-width: 0; }
+  .spot-time { font-size: 13px; color: var(--pink-dark); font-weight: 700; }
+  .spot-name {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 2px 0 4px;
+    line-height: 1.35;
+  }
+  .spot-name.done-text { text-decoration: line-through; color: #aaa; }
+  .spot-jp { font-size: 13px; color: #999; margin-bottom: 6px; }
+  .spot-desc { font-size: 14px; color: var(--gray); margin-bottom: 8px; line-height: 1.55; }
+
+  /* tags */
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .tag-sight { background: #E3F2FD; color: #1565C0; }
+  .tag-food { background: #FFF3E0; color: #E65100; }
+  .tag-shop { background: #F3E5F5; color: #7B1FA2; }
+  .tag-nature { background: #E8F5E9; color: #2E7D32; }
+  .tag-temple { background: #FFF8E1; color: #F57F17; }
+  .tag-transport { background: #ECEFF1; color: #455A64; }
+  .tag-play { background: #FCE4EC; color: #C62828; }
+
+  /* tips */
+  .spot-tips {
+    background: var(--gray-light);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+  .spot-tips strong { color: var(--text); }
+
+  /* actions */
+  .spot-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px 14px;
+    flex-wrap: wrap;
+  }
+  .act-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 7px 14px;
+    border-radius: 18px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .act-btn:active { transform: scale(0.95); }
+  .act-nav { background: var(--blue-light); color: var(--blue); }
+  .act-check { background: var(--green-light); color: var(--green); }
+  .act-check.is-done { background: var(--green); color: white; }
+
+  /* connector line between cards */
+  .connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0 0 30px;
+    margin: -6px 0;
+    position: relative;
+  }
+  .connector::before {
+    content: '';
+    position: absolute;
+    left: 30px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: repeating-linear-gradient(to bottom, var(--pink) 0, var(--pink) 4px, transparent 4px, transparent 8px);
+  }
+  .connector-text {
+    background: var(--bg);
+    padding: 2px 10px;
+    font-size: 12px;
+    color: #bbb;
+    z-index: 1;
+  }
+
+  /* ===== SOLO CARD ===== */
+  .solo-section {
+    background: var(--orange-light);
+    border: 2px solid #F5C89A;
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .solo-title { font-size: 16px; font-weight: 700; color: var(--orange); margin-bottom: 10px; }
+
+  /* ===== SECTION CARD ===== */
+  .section-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ===== CHECKLIST ===== */
+  .cl-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid #F0F0F0;
+  }
+  .cl-item:last-child { border-bottom: none; }
+  .cl-check {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    border: 2.5px solid #D1D5DB;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 15px;
+    color: transparent;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cl-check.done { background: var(--green); border-color: var(--green); color: white; }
+  .cl-text { flex: 1; font-size: 16px; }
+  .cl-text.done-text { text-decoration: line-through; color: #aaa; }
+  .cl-text a { color: var(--blue); }
+  .cl-sub { font-size: 13px; color: #999; display: block; }
+  .cl-map {
+    padding: 6px 12px;
+    background: var(--blue-light);
+    color: var(--blue);
+    border-radius: 14px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* ===== PROGRESS ===== */
+  .progress-ring { text-align: center; padding: 10px 0; }
+  .progress-ring svg { width: 120px; height: 120px; }
+  .progress-ring .ring-bg { fill: none; stroke: #E5E7EB; stroke-width: 10; }
+  .progress-ring .ring-fill { fill: none; stroke: var(--green); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+  .progress-pct { font-size: 28px; font-weight: 800; }
+  .progress-label { font-size: 13px; color: var(--gray); margin-top: 4px; }
+
+  /* ===== INFO GRID ===== */
+  .info-grid { display: grid; gap: 10px; }
+  .info-item { background: var(--gray-light); border-radius: var(--radius-sm); padding: 14px 16px; }
+  .info-label { font-size: 12px; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .info-value { font-size: 16px; font-weight: 700; }
+
+  /* ===== BOTTOM BAR	===== */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(0,0,0,0.06);
+    padding: 10px 16px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    z-index: 300;
+  }
+  .bottom-btn {
+    padding: 9px 18px;
+    border-radius: 20px;
+    border: 1.5px solid #E0E0E0;
+    background: white;
+    color: var(--gray);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .bottom-btn:active { background: var(--gray-light); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (min-width: 768px) {
+    body { font-size: 18px; }
+    .spot-name { font-size: 20px; }
+    .page-inner { padding: 12px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>大阪家族旅行</h1>
+  <div class="subtitle">2026 / 5 / 8 (五) — 5 / 12 (二)  ·  5 天 4 夜</div>
+</div>
+
+<nav class="day-tabs" id="dayTabs"></nav>
+<div class="view-toggle" id="viewToggle" style="display:none;">
+  <button class="view-btn active" data-view="list">行程</button>
+  <button class="view-btn" data-view="map">地圖</button>
+</div>
+
+<div id="appRoot"></div>
+
+<div class="bottom-bar">
+  <button class="bottom-btn" onclick="if(confirm('確定要重置所有打勾紀錄嗎？')){localStorage.removeItem('osaka2026v2');location.reload();}">重置紀錄</button>
+</div>
+
+<script>
+// ============================================================
+// DATA — enriched with coordinates, categories, tips
+// ============================================================
+const DAYS_DATA = [
+  { id:'day1', label:'5/8', icon:'🛬', weekday:'五', title:'Day 1 · 抵達大阪', spots:[
+    { name:"關西機場 KIX", jp:"関西国際空港", time:"12:50", tags:["transport"], desc:"抵達關西國際機場，搭南海電鐵或 JR 前往市區", lat:34.4320, lng:135.2304, maps:"https://maps.google.com/?q=Kansai+International+Airport" },
+    { name:"心齋橋筋商店街", jp:"心斎橋筋商店街", tags:["shop"], desc:"大阪最熱鬧的購物商店街，600 公尺長的拱廊", tips:"可逛藥妝店、服飾、伴手禮，延議留 1-2 小時", lat:34.6723, lng:135.5016, maps:"https://maps.google.com//q=心斎橋筋商店街" },
+    { name:"道頓堀", jp:"道頓堀", tags:["food","sight"], desc:"大阪美食地標，固力果跑跑人、螃蟹道樂都在這", tips:"必吃：章魚燒、大阪燒、串炸。傍晚霓虹燈最美", lat:34.6687, lng:135.5013, maps:"https://maps.google.com/?q=道頓堀" },
+  ], solo:[
+    { name:"飯店下午茶", tags:["food"] }
+  ]},
+  { id:'day2', label:'5/9', icon:'🏯', weekday:'六', title:'Day 2 · 大阪市區經典', spots:[
+    { name:"大阪城公園 · 天守閣", jp:"大阪城天守閣", tags:["sight","temple"], desc:"豐臣秀吉建倠的歷史名城，天守閣可眺望大阪全景", tips:"天守閣門票 ¥600 / 9:00-17:00。城公園免費，櫻花季很美", lat:34.6873, lng:135.5262, maps:"https://maps.google.com/?q=大阪城天守閣" },
+    { name:"黑門市場", jp:"黒門市場", tags:["food","shop"], desc:"「大阪的廚房」，超過 170 年歷史的生鮮市場", tips:"推薦：新鮮海鮮丼、黑門三平鮪魚、現烤扇貝", lat:34.6627, lng:135.5063, maps:"https://maps.google.com/?q=黒門市場" },
+    { name:"難波", jp:"なんば", tags:["shop","food"], desc:"大阪南區最繁華的商圈，連接心齋橋與道頓堀", lat:34.6659, lng:135.5013, maps:"https://maps.google.com//q=難波" },
+    { name:"法善寺橫丁", jp:"法善寺横丁", tags:["sight","food"], desc:"充滿懷舊風情的石板小巷，不動明王佛像被苔蘚覆蓋", tips:"可以往佛像潑水許願，巷內也有高級割烹餐廳", lat:34.6681, lng:135.5034, maps:"https://maps.google.com/?q=法善寺横丁" },
+    { name:"HARUKAS 300 展望台", jp:"ハルカス300", tags:["sight"], desc:"日本最高的百貨大樓（300m），360度全景展望台", tips:"門票 ¥1,500 / 營業至 22:00。建議傍晚來看夕陽+夜景", lat:34.6464, lng:135.5133, maps:"https://maps.google.com/?q=HARUKAS+300+展望台" },
+  ], solo:[
+    { name:"アニメイトカフェ天王寺", jp:"アニメイトカフェ天王寺", tags:["play"], maps:"https://maps.google.com/?q=アニメイトカフェ+天王寺", lat:34.6467, lng:135.5144 }
+  ]},
+  { id:'day3', label:'5/10', icon:'🦌', weekday:'日', title:'Day 3 · 奈良一日遊', spots:[
+    { name:"奈良", jp:"奈良", tags:["sight"], desc:"從大阪搭近鐵約 45 分鐘，千年古都一日遊", tips:"建議搭近鐵奈良線，比 JR 更近市中心景點", lat:34.6851, lng:135.8048, maps:"https://maps.google.com/?q=近鉄奈良駅" },
+    { name:"東大寺大佛殿", jp:"東大寺大仏殿", tags:["temple","sight"], desc:"世界最大木造建築，供奉 15 公尺高的盧舍那大佛", tips:"門票 ¥600 / 8:00-17:00。鑽大佛鼻孔洞可祈求好運", lat:34.6891, lng:135.8399, maps:"https://maps.google.com/?q=東大寺大仏殿" },
+    { name:"興福寺五重塔", jp:"興福寺五重塔", tags:["temple"], desc:"奈良代表性地標，高 50 公尺的五重塔", tips:"目前維修中，可能有圍欄，但仍值得路過拍照", lat:34.6832, lng:135.8328, maps:"https://maps.google.com/?q=興福寺五重塔" },
+    { name:"春日大社", jp:"春日大社", tags:["temple","nature"], desc:"世界遺產，朱紅色的千座石燈籠非常壯觀", tips:"免費參拜 / 本殿特別參拜 ¥500。路上可能遇到小鹿", lat:34.6812, lng:135.8498, maps:"https://maps.google.com/?q=春日大社" },
+    { name:"焼肉キング", jp:"焼肉キング", tags:["food"], desc:"日式燒肉吃到飽連鎖，CP 值高適合家族聚餐", tips:"午餐吃到飽約 ¥2,680 起，建議先用 Hot Pepper 訂位", lat:34.6851, lng:135.8048, maps:"https://maps.google.com/?q=焼肉キング+奈良" },
+  ]},
+  { id:'day4', label:'5/11', icon:'🍁', weekday:'一', title:'Day 4 · 箕面自然 + 梅田', spots:[
+    { name:"箕面瀑布", jp:"箕面大滝", tags:["nature","sight"], desc:"落差 33 公尺的壯觀瀑布，日本百選瀑布之一", tips:"從箕面站步行約 40 分鐘。步道平緩適合長輩，建議穿好走的鞋", lat:34.8536, lng:135.4697, maps:"https://maps.google.com/?q=箕面大滝" },
+    { name:"勝尾寺", jp:"勝尾寺", tags:["temple","nature"], desc:"「勝運之寺」，以達摩不倒翁和美麗庭園聞名", tips:"門票 ¥500 / 可從箕面搭巴士前往。寺內可以買達摩許願", lat:34.8614, lng:135.4858, maps:"https://maps.google.com/?q=勝尾寺" },
+    { name:"梅田藍天大廈", jp:"梅田スカイビル", tags:["sight"], desc:"空中庭園展望台，獨特的連接雙塔設計地標", tips:"門票 ¥1,500 / 開放至 22:30。地下有昭和復古美食街「瀧見小路」", lat:34.7052, lng:135.4906, maps:"https://maps.google.com/?q=梅田スカイビル" },
+    { name:"天神橋筋商店街", jp:"天神橋筋商店街", tags:["shop","food"], desc:"日本最長商店街（2.6km），在地庶民美食天堂", tips:"必吃：中村屋可樂餅、春駒壽司。可邊走邊吃", lat:34.7044, lng:135.5126, maps:"https://maps.google.com/?q=天神橋筋商店街" },
+  ]},
+  { id:'day5', label:'5/12', icon:'🛍', weekday:'二', title:'Day 5 · 購物 + 回程', spots:[
+    { name:"臨空城 Outlet", jp:"りんくうプレミアム・アウトレット", tags:["shop"], desc:"關西機場旁的大型 Outlet，離機場搭電車只要一站", tips:"10:00 開門，建議早到。離機場近適合最後一天逛", lat:34.4073, lng:135.2913, maps:"https://maps.google.com/?q=りんくうプレミアム・アウトレット" },
+    { name:"關西機場 · 回程", jp:"関西国際空港", time:"19:05", tags:["transport"], desc:"搭乘 19:05 班機返回台灣", tips:"建議 16:30 前抵達機場，預留退稅和安檢時間", lat:34.4320, lng:135.2304, maps:"https://maps.google.com/?q=Kansai+International+Airport" },
+  ]},
+];
+
+const CAFES = [
+  { name:"Twinkle", area:"谷町六丁目駅", url:"https://www.instagram.com/twinkle_cafe_/", maps:"https://maps.google.com/?q=Twinkle+cafe+谷町六丁目" },
+  { name:"fran cafe", area:"心斎橋", url:"https://www.google.com/maps/place/fran+cafe/", maps:"https://www.google.com/maps/place/fran+cafe/" },
+  { name:"Ha-neul Cafe", area:"大阪", url:"https://tabelog.com/osaka/A2701/A270205/27141886/", maps:"https://maps.google.com/?q=Ha-neul+Cafe+大阪" },
+  { name:"ciel byfrancafe", area:"大阪", url:"https://www.google.com/maps/place/ciel+byfrancafe/", maps:"https://www.google.com/maps/place/ciel+byfrancafe/" },
+  { name:"tea lab", area:"天王寺", url:"https://tabelog.com/osaka/A2701/A270203/27112636/", maps:"https://maps.google.com/?q=tea+lab+天王寺" },
+  { name:"BabuTea CAFE", area:"十三", url:"https://www.instagram.com/babutea.cafe/", maps:"https://maps.google.com/?q=BabuTea+CAFE+十三" },
+  { name:"cafe crerumi", area:"鶴橋", url:"https://www.instagram.com/cafe_crerumi/", maps:"https://maps.google.com/?q=cafe+crerumi+鶴橋" },
+  { name:"BIMMIE CAFE", area:"森ノ宮", url:"https://www.instagram.com/bimmie.cafe/", maps:"https://maps.google.com/?q=BIMMIE+CAFE+森ノ宮" },
+  { name:"coucou amande", area:"中崎町", url:"https://www.instagram.com/coucou_amande/", maps:"https://maps.google.com/?q=coucou+amande+中崎町" },
+  { name:"Picco Latte", area:"中崎町", url:"https://www.instagram.com/picco.latte/", maps:"https://maps.google.com/?q=Picco+Latte+中崎町" },
+  { name:"cafe seukon kitahama", area:"北浜", url:"https://tabelog.com/tw/osaka/A2701/A270102/27126089/", maps:"https://maps.google.com/?q=cafe+seukon+kitahama+北浜" },
+  { name:"cafe BPM", area:"塚本", url:"https://www.instagram.com/cafe_bpm/", maps:"https://maps.google.com/?q=cafe+BPM+塚本" },
+  { name:"サントルエム", area:"心斎橋", url:"https://akr2545955585.owst.jp/", maps:"https://maps.google.com/?q=サントルエム+心斎橋" },
+  { name:"LOHE COFFEE", area:"梅田", url:"https://www.instagram.com/lohe_coffee_coffeecocktail/", maps:"https://maps.google.com/?q=LOHE+COFFEE+梅田" },
+  { name:"BOYA COFFEE", area:"梅田", url:"https://tabelog.com/tw/osaka/A2701/A270101/27142196/", maps:"https://maps.google.com/?q=BOYA+COFFEE+梅田" },
+  { name:"monoGRAM studio cafe", area:"茨木市", url:"https://www.instagram.com/monogram_studio_cafe/", maps:"https://maps.google.com/?q=monoGRAM+studio+cafe+茨木市" },
+  { name:"cafe i-eum", area:"西大橋", url:"https://www.instagram.com/i_eum_cafe/", maps:"https://maps.google.com/?q=cafe+i-eum+西大橋" },
+];
+
+const BRING = ["日本 eSIM","通鼻液","鼻炎藥","熱水器"];
+const SOUVENIRS = ["🐷","ㄒㄘ"];
+const WISHES = [
+  { name:"吃麥當勞" },
+  { name:"Refa 捲髮器" },
+  { name:"固定劉海的膠水 or 噴霧", url:"https://x.com/yuatanfjpu/status/2018519190165155877" },
+  { name:"貼眼睛亮片", url:"https://x.com/3710cos/status/2021112622071079018" },
+];
+
+const TAG_MAP = {
+  sight: { label:"觀光", cls:"tag-sight" },
+  food: { label:"美食", cls:"tag-food" },
+  shop: { label:"購物", cls:"tag-shop" },
+  nature: { label:"自然", cls:"tag-nature" },
+  temple: { label:"寺廟", cls:"tag-temple" },
+  transport: { label:"交通", cls:"tag-transport" },
+  play: { label:"娛樂", cls:"tag-play" },
+};
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {};
+try { state = JSON.parse(localStorage.getItem('osaka2026v2') || '{}'); } catch(e) { state = {}; }
+function save() { localStorage.setItem('osaka2026v2', JSON.stringify(state)); }
+function isChecked(k) { return !!state[k]; }
+function toggle(k) { state[k] = !state[k]; save(); }
+
+let currentDay = 'info';
+let currentView = 'list';
+let maps = {};
+
+// ============================================================
+// RENDER — Tabs
+// ============================================================
+function renderTabs() {
+  const nav = document.getElementById('dayTabs');
+  let html = `<button class="day-tab ${currentDay==='info'?'active':''}" data-day="info"><span class="tab-icon">📋</span> 總覽</button>`;
+  DAYS_DATA.forEach(d => {
+    html += `<button class="day-tab ${currentDay===d.id?'active':''}" data-day="${d.id}"><span class="tab-icon">${d.icon}</span> ${d.label} (${d.weekday})</button>`;
+  });
+  html += `<button class="day-tab ${currentDay==='cafe'?'active':''}" data-day="cafe"><span class="tab-icon">☕</span> 咖啡廳</button>`;
+  html += `<button class="day-tab ${currentDay==='lists'?'active':''}" data-day="lists"><span class="tab-icon">📝</span> 清單</button>`;
+  nav.innerHTML = html;
+}
+
+// ============================================================
+// RENDER — Tags
+// ============================================================
+function renderTags(tags) {
+  if (!tags || !tags.length) return '';
+  return '<div class="tags">' + tags.map(t => {
+    const info = TAG_MAP[t];
+    return info ? `<span class="tag ${info.cls}">${info.label}</span>` : '';
+  }).join('') + '</div>';
+}
+
+// ============================================================
+// RENDER — Day page (list view)
+// ============================================================
+function renderDayList(day) {
+  let html = '';
+  day.spots.forEach((s, i) => {
+    const key = day.id + '_' + i;
+    const done = isChecked(key);
+    if (i > 0) html += `<div class="connector"><span class="connector-text"></span></div>`;
+    html += `
+      <div class="spot-card">
+        <div class="spot-card-inner">
+          <div class="spot-num ${done?'done':''}" data-key="${key}"><span class="num-text">${i+1}</span></div>
+          <div class="spot-body">
+            ${s.time ? `<div class="spot-time">${s.time}</div>` : ''}
+            <div class="spot-name ${done?'done-text':''}">${s.name}</div>
+            ${s.jp ? `<div class="spot-jp">${s.jp}</div>` : ''}
+            ${renderTags(s.tags)}
+            ${s.desc ? `<div class="spot-desc">${s.desc}</div>` : ''}
+            ${s.tips ? `<div class="spot-tips"><strong>💡 小提醒</strong><br>${s.tips}</div>` : ''}
+          </div>
+        </div>
+        <div class="spot-actions">
+          ${s.maps ? `<a class="act-btn act-nav" href="${s.maps}" target="_blank" rel="noopener">📍 Google Maps 導航</a>` : ''}
+          <button class="act-btn act-check ${done?'is-done':''}" data-key="${key}">${done?'✓ 已完成':'標記完成'}</button>
+        </div>
+      </div>`;
+  });
+
+  if (day.solo && day.solo.length) {
+    html += `<div class="solo-section"><div class="solo-title">🧡 脫隊行程</div>`;
+    day.solo.forEach((s, i) => {
+      const key = day.id + '_solo_' + i;
+      const done = isChecked(key);
+      html += `
+        <div class="cl-item">
+          <button class="cl-check ${done?'done':''}" data-key="${key}">✓</button>
+          <div class="cl-text ${done?'done-text':''}">${s.name} ${renderTags(s.tags)}</div>
+          ${s.maps ? `<a class="cl-map" href="${s.maps}" target="_blank" rel="noopener">📍</a>` : ''}
+        </div>`;
+    });
+    html += `</div>`;
+  }
+  return html;
+}
+
+// ============================================================
+// RENDER — Day page (map view)
+// ============================================================
+function renderDayMap(day) {
+  const mapId = 'map-' + day.id;
+  setTimeout(() => initMap(day, mapId), 50);
+  return `<div class="map-container active" id="${mapId}"></div>`;
+}
+
+function initMap(day, mapId) {
+  const el = document.getElementById(mapId);
+  if (!el || el._leaflet_id) return;
+  const spots = day.spots.filter(s => s.lat && s.lng);
+  if (!spots.length) return;
+
+  const map = L.map(el, { zoomControl: false });
+  L.control.zoom({ position: 'topright' }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap',
+    maxZoom: 18,
+  }).addTo(map);
+
+  const coords = spots.map(s => [s.lat, s.lng]);
+
+  // dashed route line
+  L.polyline(coords, { color: '#C05A8C', weight: 3, dashArray: '8,8', opacity: 0.7 }).addTo(map);
+
+  // markers
+  spots.forEach((s, i) => {
+    const key = day.id + '_' + i;
+    const done = isChecked(key);
+    const icon = L.divIcon({
+      className: '',
+      html: `<div class="custom-marker ${done?'checked-marker':''}">${i+1}</div>`,
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+    });
+    const marker = L.marker([s.lat, s.lng], { icon }).addTo(map);
+    const tagsHtml = (s.tags||[]).map(t => { const info = TAG_MAP[t]; return info ? `<span class="tag ${info.cls}" style="font-size:11px;padding:1px 6px;">${info.label}</span>` : ''; }).join(' ');
+    marker.bindPopup(`
+      <div class="popup-title">${s.name}</div>
+      ${s.jp ? `<div style="color:#999;font-size:12px;margin-bottom:4px;">${s.jp}</div>` : ''}
+      <div class="popup-tags">${tagsHtml}</div>
+      ${s.desc ? `<div style="margin-bottom:8px;">${s.desc}</div>` : ''}
+      ${s.maps ? `<a class="popup-nav-btn" href="${s.maps}" target="_blank" rel="noopener">📍 Google Maps 導航</a>` : ''}
+    `, { maxWidth: 260 });
+  });
+
+  map.fitBounds(L.latLngBounds(coords).pad(0.15));
+  maps[day.id] = map;
+}
+
+// ============================================================
+// RENDER — Info page
+// ============================================================
+function renderInfo() {
+  // count progress
+  let total = 0, done = 0;
+  DAYS_DATA.forEach(d => {
+    d.spots.forEach((_,i) => { total++; if(isChecked(d.id+'_'+i)) done++; });
+    if(d.solo) d.solo.forEach((_,i) => { total++; if(isChecked(d.id+'_solo_'+i)) done++; });
+  });
+  const pct = total ? Math.round(done/total*100) : 0;
+  const circ = 2 * Math.PI * 48;
+  const offset = circ - (pct/100) * circ;
+
+  let html = `
+    <div class="section-card">
+      <div class="section-title">✈️ 航班資訊</div>
+      <div class="info-grid">
+        <div class="info-item"><div class="info-label">去程</div><div class="info-value">5/8 (五) → 12:50 抵達關西機場 KIX</div></div>
+        <div class="info-item"><div class="info-label">回程</div><div class="info-value">5/12 (二) 19:05 關西機場出發</div></div>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-title">📊 行程進度</div>
+      <div class="progress-ring">
+        <svg viewBox="0 0 120 120">
+          <circle class="ring-bg" cx="60" cy="60" r="48"/>
+          <circle class="ring-fill" cx="60" cy="60" r="48" stroke-dasharray="${circ}" stroke-dashoffset="${offset}" transform="rotate(-90 60 60)"/>
+        </svg>
+        <div class="progress-pct">${pct}%</div>
+        <div class="progress-label">已完成 ${done} / ${total} 個景點</div>
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-title">📦 攜帶物品</div>`;
+  BRING.forEach((item,i) => {
+    const key = 'bring_'+i, d = isChecked(key);
+    html += `<div class="cl-item"><button class="cl-check ${d?'done':''}" data-key="${key}">✓</button><div class="cl-text ${d?'done-text':''}">${item}</div></div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+// ============================================================
+// RENDER — Cafe page
+// ============================================================
+function renderCafe() {
+  let html = `<div class="section-card"><div class="section-title">☕ 脫隊咖啡廳候選清單</div>`;
+  CAFES.forEach((c,i) => {
+    const key='cafe_'+i, d=isChecked(key);
+    html += `<div class="cl-item">
+      <button class="cl-check ${d?'done':''}" data-key="${key}">✓</button>
+      <div class="cl-text ${d?'done-text':''}"><a href="${c.url}" target="_blank" rel="noopener">${c.name}</a><span class="cl-sub">📍 ${c.area}</span></div>
+      <a class="cl-map" href="${c.maps}" target="_blank" rel="noopener">導航</a>
+    </div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+// ============================================================
+// RENDER — Lists page
+// ============================================================
+function renderLists() {
+  let html = `<div class="section-card"><div class="section-title">🎁 伴手禮對象</div>`;
+  SOUVENIRS.forEach((s,i) => {
+    const key='sou_'+i, d=isChecked(key);
+    html += `<div class="cl-item"><button class="cl-check ${d?'done':''}" data-key="${key}">✓</button><div class="cl-text ${d?'done-text':''}">${s}</div></div>`;
+  });
+  html += `</div><div class="section-card"><div class="section-title">⭐ 願望清單</div>`;
+  WISHES.forEach((w,i) => {
+    const key='wish_'+i, d=isChecked(key), name=typeof w==='string'?w:w.name, url=typeof w==='object'?w.url:null;
+    html += `<div class="cl-item"><button class="cl-check ${d?'done':''}" data-key="${key}">✓</button><div class="cl-text ${d?'done-text':''}">${url?`<a href="${url}" target="_blank" rel="noopener">${name}</a>`:name}</div></div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+// ============================================================
+// MAIN RENDER
+// ============================================================
+function render() {
+  renderTabs();
+  const root = document.getElementById('appRoot');
+  const vt = document.getElementById('viewToggle');
+  const isDayPage = DAYS_DATA.some(d => d.id === currentDay);
+  vt.style.display = isDayPage ? 'flex' : 'none';
+
+  // invalidate old maps
+  Object.keys(maps).forEach(k => { if(maps[k]) { maps[k].remove(); delete maps[k]; } });
+
+  let content = '';
+  if (currentDay === 'info') {
+    content = renderInfo();
+  } else if (currentDay === 'cafe') {
+    content = renderCafe();
+  } else if (currentDay === 'lists') {
+    content = renderLists();
+  } else {
+    const day = DAYS_DATA.find(d => d.id === currentDay);
+    if (day) {
+      if (currentView === 'map') {
+        content = renderDayMap(day);
+        // also show list below map
+        content += `<div class="page-inner">${renderDayList(day)}</div>`;
+      } else {
+        content = `<div class="page-inner">${renderDayList(day)}</div>`;
+      }
+    }
+  }
+
+  if (!isDayPage || currentView === 'list') {
+    root.innerHTML = `<div class="page active"><div class="page-inner">${content}</div></div>`;
+  } else {
+    root.innerHTML = `<div class="page active">${content}</div>`;
+  }
+}
+
+// ============================================================
+// EVENTS
+// ============================================================
+document.addEventListener('click', e => {
+  // Tab click
+  const tab = e.target.closest('.day-tab');
+  if (tab) {
+    currentDay = tab.dataset.day;
+    currentView = 'list';
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.toggle('active', b.dataset.view === 'list'));
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+  // View toggle
+  const vb = e.target.closest('.view-btn');
+  if (vb) {
+    currentView = vb.dataset.view;
+    document.querySelectorAll('.view-btn').forEach(b => b.classList.toggle('active', b.dataset.view === currentView));
+    render();
+    return;
+  }
+  // Check buttons
+  const ck = e.target.closest('.cl-check, .spot-num, .act-check');
+  if (ck && ck.dataset.key) {
+    toggle(ck.dataset.key);
+    render();
+    return;
+  }
+});
+
+// Auto-select today
+(function() {
+  const t = new Date(), key = `${t.getFullYear()}-${t.getMonth()+1}-${t.getDate()}`;
+  const map = {'2026-5-8':'day1','2026-5-9':'day2','2026-5-10':'day3','2026-5-11':'day4','2026-5-12':'day5'};
+  if (map[key]) currentDay = map[key];
+})();
+
+render();
+</script>
+</body>
+</html>
