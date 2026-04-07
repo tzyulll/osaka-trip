@@ -785,12 +785,19 @@ function fmtWalk(dist, dur) {
 async function loadWalkingData(day) {
   for (let i = 1; i < day.spots.length; i++) {
     const a = day.spots[i-1], b = day.spots[i];
-    if (!a.lat || !b.lat) continue;
     const el = document.getElementById('conn-'+day.id+'-'+i);
     if (!el) continue;
     const span = el.querySelector('.connector-text');
+    if (!span) continue;
+    if (a.transitToNext) {
+      span.textContent = a.transitToNext;
+      span.classList.remove('loading');
+      continue;
+    }
+    if (!a.lat || !b.lat) { span.textContent = ''; span.classList.remove('loading'); continue; }
     const res = await fetchRoute(a.lat, a.lng, b.lat, b.lng);
-    if (span) { span.textContent = res ? fmtWalk(res.dist, res.dur) : ''; span.classList.remove('loading'); }
+    span.textContent = res ? fmtWalk(res.dist, res.dur) : '';
+    span.classList.remove('loading');
   }
 }
 
