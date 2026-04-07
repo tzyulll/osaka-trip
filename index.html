@@ -307,11 +307,14 @@
   }
   .connector-text {
     background: var(--bg);
-    padding: 2px 10px;
+    padding: 3px 12px;
     font-size: 12px;
-    color: #bbb;
+    color: var(--gray);
     z-index: 1;
+    border-radius: 20px;
+    border: 1px solid #e8e8e8;
   }
+  .connector-text.loading { color: #ccc; border-color: transparent; }
 
   /* ===== SOLO CARD ===== */
   .solo-section {
@@ -574,7 +577,7 @@ function renderDayList(day) {
   day.spots.forEach((s, i) => {
     const key = day.id + '_' + i;
     const done = isChecked(key);
-    if (i > 0) html += `<div class="connector"><span class="connector-text"></span></div>`;
+    if (i > 0) html += `<div class="connector" id="conn-${day.id}-${i}"><span class="connector-text loading">…</span></div>`;
     html += `
       <div class="spot-card">
         <div class="spot-card-inner">
@@ -757,6 +760,41 @@ function renderLists() {
 }
 
 // ============================================================
+// WALKING DISTANCE (OSRM)
+// ============================================================
+const routeCache = {};
+async function fetchRoute(lat1, lng1, lat2, lng2) {
+  const key = lat1+','+lng1+'_'+lat2+','+lng2;
+  if (routeCache[key]) return routeCache[key];
+  try {
+    const r = await fetch('https://router.project-osrm.org/route/v1/foot/'+lng1+','+lat1+';'+lng2+','+lat2+'?overview=false');
+    const d = await r.json();
+    if (d.code === 'Ok' && d.routes && d.routes[0]) {
+      const result = { dist: d.routes[0].distance, dur: d.routes[0].duration };
+      routeCache[key] = result;
+      return result;
+    }
+  } catch(e) {}
+  return null;
+}
+function fmtWalk(dist, dur) {
+  const mins = Math.max(1, Math.round(dur / 60));
+  const ds = dist >= 1000 ? (dist/1000).toFixed(1)+' km' : Math.round(dist)+' m';
+  return '🚶 '+ds+' · 步行約 '+mins+' 分鐘';
+}
+async function loadWalkingData(day) {
+  for (let i = 1; i < day.spots.length; i++) {
+    const a = day.spots[i-1], b = day.spots[i];
+    if (!a.lat || !b.lat) continue;
+    const el = document.getElementById('conn-'+day.id+'-'+i);
+    if (!el) continue;
+    const span = el.querySelector('.connector-text');
+    const res = await fetchRoute(a.lat, a.lng, b.lat, b.lng);
+    if (span) { span.textContent = res ? fmtWalk(res.dist, res.dur) : ''; span.classList.remove('loading'); }
+  }
+}
+
+// ============================================================
 // MAIN RENDER
 // ============================================================
 function render() {
@@ -769,6 +807,7 @@ function render() {
   // invalidate old maps
   Object.keys(maps).forEach(k => { if(maps[k]) { maps[k].remove(); delete maps[k]; } });
 
+  let walkDay = null;
   let content = '';
   if (currentDay === 'info') {
     content = renderInfo();
@@ -779,6 +818,7 @@ function render() {
   } else {
     const day = DAYS_DATA.find(d => d.id === currentDay);
     if (day) {
+      walkDay = day;
       if (currentView === 'map') {
         content = renderDayMap(day);
         // also show list below map
@@ -794,6 +834,7 @@ function render() {
   } else {
     root.innerHTML = `<div class="page active">${content}</div>`;
   }
+  if (walkDay) setTimeout(() => loadWalkingData(walkDay), 100);
 }
 
 // ============================================================
