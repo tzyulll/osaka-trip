@@ -424,6 +424,30 @@
   }
   .bottom-btn:active { background: var(--gray-light); }
 
+  /* ===== SECRET UNLOCK HEART ===== */
+  .unlock-heart {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    font-size: 14px;
+    opacity: 0.25;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.4s ease;
+    filter: grayscale(1);
+  }
+  .unlock-heart.unlocked {
+    opacity: 0.75;
+    filter: grayscale(0);
+    transform: scale(1.15);
+  }
+  .unlock-heart.pressing {
+    transform: scale(0.85);
+    opacity: 0.5;
+  }
+
   /* ===== RESPONSIVE ===== */
   @media (min-width: 768px) {
     body { font-size: 18px; }
@@ -540,6 +564,13 @@ function save() { localStorage.setItem('osaka2026v2', JSON.stringify(state)); }
 function isChecked(k) { return !!state[k]; }
 function toggle(k) { state[k] = !state[k]; save(); }
 
+// secret unlock: hides solo / cafe / wishlist / bring list from family view
+let isUnlocked = localStorage.getItem('osaka2026_unlock') === '1';
+function setUnlocked(v) {
+  isUnlocked = v;
+  localStorage.setItem('osaka2026_unlock', v ? '1' : '0');
+}
+
 let currentDay = 'info';
 let currentView = 'list';
 let maps = {};
@@ -553,8 +584,10 @@ function renderTabs() {
   DAYS_DATA.forEach(d => {
     html += `<button class="day-tab ${currentDay===d.id?'active':''}" data-day="${d.id}"><span class="tab-icon">${d.icon}</span> ${d.label} (${d.weekday})</button>`;
   });
-  html += `<button class="day-tab ${currentDay==='cafe'?'active':''}" data-day="cafe"><span class="tab-icon">☕</span> 咖啡廳</button>`;
-  html += `<button class="day-tab ${currentDay==='lists'?'active':''}" data-day="lists"><span class="tab-icon">📝</span> 清單</button>`;
+  if (isUnlocked) {
+    html += `<button class="day-tab ${currentDay==='cafe'?'active':''}" data-day="cafe"><span class="tab-icon">☕</span> 咖啡廳</button>`;
+    html += `<button class="day-tab ${currentDay==='lists'?'active':''}" data-day="lists"><span class="tab-icon">📝</span> 清單</button>`;
+  }
   nav.innerHTML = html;
 }
 
@@ -598,7 +631,7 @@ function renderDayList(day) {
       </div>`;
   });
 
-  if (day.solo && day.solo.length) {
+  if (isUnlocked && day.solo && day.solo.length) {
     html += `<div class="solo-section"><div class="solo-title">🧡 脫隊行程</div>`;
     day.solo.forEach((s, i) => {
       const key = day.id + '_solo_' + i;
@@ -671,11 +704,11 @@ function initMap(day, mapId) {
 // RENDER — Info page
 // ============================================================
 function renderInfo() {
-  // count progress
+  // count progress (solo items only count when unlocked)
   let total = 0, done = 0;
   DAYS_DATA.forEach(d => {
     d.spots.forEach((_,i) => { total++; if(isChecked(d.id+'_'+i)) done++; });
-    if(d.solo) d.solo.forEach((_,i) => { total++; if(isChecked(d.id+'_solo_'+i)) done++; });
+    if(isUnlocked && d.solo) d.solo.forEach((_,i) => { total++; if(isChecked(d.id+'_solo_'+i)) done++; });
   });
   const pct = total ? Math.round(done/total*100) : 0;
   const circ = 2 * Math.PI * 48;
@@ -689,19 +722,10 @@ function renderInfo() {
         <div class="info-item"><div class="info-label">回程</div><div class="info-value">5/12 (二) 19:05 關西機場出發</div></div>
       </div>
     </div>
-    <div class="section-card">
+    <div class="section-card" style="position:relative;">
+      <span id="unlockHeart" class="unlock-heart ${isUnlocked?'unlocked':''}">💗</span>
       <div class="section-title">🏠 住宿資訊</div>
-      <div class="info-grid">
-        <div class="info-item"><div class="info-label">名稱</div><div class="info-value">大正駅徒歩4分・陽当たり良い貸切一軒家</div></div>
-        <div class="info-item"><div class="info-label">地址</div><div class="info-value">大阪市大正区 〒551-0001（大正駅 步行約4分鐘）</div></div>
-        <div class="info-item"><div class="info-label">入住 / 退房</div><div class="info-value">16:00 入住 ／ 10:00 退房</div></div>
-        <div class="info-item"><div class="info-label">房型</div><div class="info-value">3臥室・4床・1衛浴・3層樓獨棟（最多6人）</div></div>
-        <div class="info-item"><div class="info-label">房東</div><div class="info-value">Max（超讚房東・10年經驗） ⭐ 4.62 / 13則評價</div></div>
-      </div>
-      <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;">
-        <a href="https://maps.google.com/?q=大阪市大正区+大正駅" target="_blank" rel="noopener" style="flex:1;min-width:120px;display:inline-block;background:var(--blue);color:#fff;text-align:center;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600;">🗺️ 導航回住處</a>
-        <a href="https://www.airbnb.com.tw/rooms/1372891258852120566" target="_blank" rel="noopener" style="flex:1;min-width:120px;display:inline-block;background:var(--pink-dark);color:#fff;text-align:center;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600;">🏡 Airbnb 頁面</a>
-      </div>
+      <div style="font-size:15px;color:var(--gray);line-height:1.6;">大正駅 徒步約 4 分鐘 ・ 16:00 入住 / 10:00 退房</div>
     </div>
     <div class="section-card">
       <div class="section-title">📊 行程進度</div>
@@ -714,13 +738,15 @@ function renderInfo() {
         <div class="progress-label">已完成 ${done} / ${total} 個景點</div>
       </div>
     </div>
-    <div class="section-card">
-      <div class="section-title">📦 攜帶物品</div>`;
-  BRING.forEach((item,i) => {
-    const key = 'bring_'+i, d = isChecked(key);
-    html += `<div class="cl-item"><button class="cl-check ${d?'done':''}" data-key="${key}">✓</button><div class="cl-text ${d?'done-text':''}">${item}</div></div>`;
-  });
-  html += `</div>`;
+`;
+  if (isUnlocked) {
+    html += `<div class="section-card"><div class="section-title">📦 攜帶物品</div>`;
+    BRING.forEach((item,i) => {
+      const key = 'bring_'+i, d = isChecked(key);
+      html += `<div class="cl-item"><button class="cl-check ${d?'done':''}" data-key="${key}">✓</button><div class="cl-text ${d?'done-text':''}">${item}</div></div>`;
+    });
+    html += `</div>`;
+  }
   return html;
 }
 
@@ -805,6 +831,10 @@ async function loadWalkingData(day) {
 // MAIN RENDER
 // ============================================================
 function render() {
+  // if locked and user somehow on a hidden tab, bounce to info
+  if (!isUnlocked && (currentDay === 'cafe' || currentDay === 'lists')) {
+    currentDay = 'info';
+  }
   renderTabs();
   const root = document.getElementById('appRoot');
   const vt = document.getElementById('viewToggle');
@@ -874,6 +904,34 @@ document.addEventListener('click', e => {
     return;
   }
 });
+
+// ============================================================
+// SECRET UNLOCK — long-press 💗 to toggle
+// ============================================================
+(function() {
+  let pressTimer = null;
+  function onStart(e) {
+    e.preventDefault();
+    const heart = document.getElementById('unlockHeart');
+    if (!heart) return;
+    heart.classList.add('pressing');
+    pressTimer = setTimeout(() => {
+      setUnlocked(!isUnlocked);
+      heart.classList.remove('pressing');
+      render();
+    }, 800);
+  }
+  function onEnd() {
+    clearTimeout(pressTimer);
+    const heart = document.getElementById('unlockHeart');
+    if (heart) heart.classList.remove('pressing');
+  }
+  document.addEventListener('touchstart', e => { if (e.target.closest('#unlockHeart')) onStart(e); }, { passive: false });
+  document.addEventListener('touchend', onEnd);
+  document.addEventListener('touchcancel', onEnd);
+  document.addEventListener('mousedown', e => { if (e.target.closest('#unlockHeart')) onStart(e); });
+  document.addEventListener('mouseup', onEnd);
+})();
 
 // Auto-select today
 (function() {
