@@ -481,18 +481,19 @@
 // ============================================================
 const DAYS_DATA = [
   { id:'day1', label:'5/8', icon:'🛬', weekday:'五', title:'Day 1 · 抵達大阪', spots:[
-    { name:"關西機場 KIX", jp:"関西国際空港", time:"12:50", tags:["transport"], desc:"抵達關西國際機場，搭南海電鐵前往市區", lat:34.4320, lng:135.2304, maps:"https://maps.google.com/?q=Kansai+International+Airport" , transitToNext:"🚃 南海電鐵難波線 · 約 40 分鐘到難波"},
+    { name:"關西機場 KIX", jp:"関西国際空港", time:"12:50", tags:["transport"], desc:"抵達關西國際機場，搭南海電鐵前往市區", lat:34.4320, lng:135.2304, maps:"https://maps.google.com/?q=Kansai+International+Airport" , transitToNext:"🚃 南海電鐵到難波 約 40 分 → 轉長堀鶴見緑地線到大正 約 10 分"},
+    { name:"Airbnb Check-in", jp:"大正駅 徒歩4分", time:"16:00", tags:["transport"], desc:"放行李、稍作休息，準備出發逛街", tips:"入住 16:00，可先聯繫房東確認能否提早寄放行李", lat:34.6515, lng:135.4818, maps:"https://maps.google.com/?q=大正駅" , transitToNext:"🚃 長堀鶴見緑地線 · 心齋橋駅 · 約 10 分鐘"},
     { name:"心齋橋筋商店街", jp:"心斎橋筋商店街", tags:["shop"], desc:"大阪最熱鬧的購物商店街，600 公尺長的拱廊", tips:"可逛藥妝店、服飾、伴手禮，建議留 1-2 小時", lat:34.6723, lng:135.5016, maps:"https://maps.google.com/?q=心斎橋筋商店街" },
     { name:"道頓堀", jp:"道頓堀", tags:["food","sight"], desc:"大阪美食地標，固力果跑跑人、螃蟹道樂都在這", tips:"必吃：章魚燒、大阪燒、串炸。傍晚霓虹燈最美", lat:34.6687, lng:135.5013, maps:"https://maps.google.com/?q=道頓堀" },
   ], solo:[
     { name:"飯店下午茶", tags:["food"] }
   ]},
   { id:'day2', label:'5/9', icon:'🏯', weekday:'六', title:'Day 2 · 大阪市區經典', spots:[
-    { name:"大阪城公園 · 天守閣", jp:"大阪城天守閣", tags:["sight","temple"], desc:"豐臣秀吉建造的歷史名城，天守閣可眺望大阪全景", tips:"天守閣門票 ¥600 / 9:00-17:00。城公園免費，櫻花季很美", lat:34.6873, lng:135.5262, maps:"https://maps.google.com/?q=大阪城天守閣" },
+    { name:"大阪城公園 · 天守閣", jp:"大阪城天守閣", tags:["sight","temple"], desc:"豐臣秀吉建造的歷史名城，天守閣可眺望大阪全景", tips:"天守閣門票 ¥600 / 9:00-17:00。城公園免費，櫻花季很美", lat:34.6873, lng:135.5262, maps:"https://maps.google.com/?q=大阪城天守閣" , transitToNext:"🚃 谷町線 谷町四丁目→日本橋 · 約 15 分鐘"},
     { name:"黑門市場", jp:"黒門市場", tags:["food","shop"], desc:"「大阪的廚房」，超過 170 年歷史的生鮮市場", tips:"推薦：新鮮海鮮丼、黑門三平鮪魚、現烤扇貝", lat:34.6627, lng:135.5063, maps:"https://maps.google.com/?q=黒門市場" },
     { name:"すき焼き しゃぶしゃぶ 豚々 心斎橋店", jp:"すき焼き しゃぶしゃぶ 豚々 心斎橋店", tags:["food"], desc:"心齋橋人氣壽喜燒＆涮涮鍋專門店，食材新鮮、適合家族共享的午餐", tips:"建議提前訂位 / 午餐時段約 ¥2,000–4,000 / 人，可選豬肉套餐（豚々招牌）", lat:34.6723, lng:135.5009, maps:"https://maps.google.com/?q=すき焼き+しゃぶしゃぶ+豚々+心斎橋店" },
     { name:"難波", jp:"なんば", tags:["shop","food"], desc:"大阪南區最繁華的商圈，連接心齋橋與道頓堀", lat:34.6659, lng:135.5013, maps:"https://maps.google.com/?q=難波" },
-    { name:"法善寺橫丁", jp:"法善寺横丁", tags:["sight","food"], desc:"充滿懷舊風情的石板小巷，不動明王佛像被苔蘚覆蓋", tips:"可以往佛像潑水許願，巷內也有高級割烹餐廳", lat:34.6681, lng:135.5034, maps:"https://maps.google.com/?q=法善寺横丁" },
+    { name:"法善寺橫丁", jp:"法善寺横丁", tags:["sight","food"], desc:"充滿懷舊風情的石板小巷，不動明王佛像被苔蘚覆蓋", tips:"可以往佛像潑水許願，巷內也有高級割烹餐廳", lat:34.6681, lng:135.5034, maps:"https://maps.google.com/?q=法善寺横丁" , transitToNext:"🚃 御堂筋線 なんば→天王寺 · 約 10 分鐘"},
     { name:"HARUKAS 300 展望台", jp:"ハルカス300", tags:["sight"], desc:"日本最高的百貨大樓（300m），360度全景展望台", tips:"門票 ¥1,500 / 營業至 22:00。建議傍晚來看夕陽+夜景", lat:34.6464, lng:135.5133, maps:"https://maps.google.com/?q=HARUKAS+300+展望台" },
   ], solo:[
     { name:"アニメイトカフェ天王寺", jp:"アニメイトカフェ天王寺", tags:["play"], maps:"https://maps.google.com/?q=アニメイトカフェ+天王寺", lat:34.6467, lng:135.5144 }
@@ -505,8 +506,8 @@ const DAYS_DATA = [
     { name:"春日大社", jp:"春日大社", tags:["temple","nature"], desc:"世界遺產，朱紅色的千座石燈籠非常壯觀", tips:"免費參拜 / 本殿特別參拜 ¥500。路上可能遇到小鹿", lat:34.6812, lng:135.8498, maps:"https://maps.google.com/?q=春日大社" },
   ]},
   { id:'day4', label:'5/11', icon:'🍁', weekday:'一', title:'Day 4 · 箕面自然 + 梅田', spots:[
-    { name:"箕面瀑布", jp:"箕面大滝", tags:["nature","sight"], desc:"落差 33 公尺的壯觀瀑布，日本百選瀑布之一", tips:"從箕面站步行約 40 分鐘。步道平緩適合長輩，建議穿好走的鞋", lat:34.8536, lng:135.4697, maps:"https://maps.google.com/?q=箕面大滝" },
-    { name:"勝尾寺", jp:"勝尾寺", tags:["temple","nature"], desc:"「勝運之寺」，以達摩不倒翁和美麗庭園聞名", tips:"門票 ¥500 / 可從箕面搭巴士前往。寺內可以買達摩許願", lat:34.8614, lng:135.4858, maps:"https://maps.google.com/?q=勝尾寺" },
+    { name:"箕面瀑布", jp:"箕面大滝", tags:["nature","sight"], desc:"落差 33 公尺的壯觀瀑布，日本百選瀑布之一", tips:"從箕面站步行約 40 分鐘。步道平緩適合長輩，建議穿好走的鞋", lat:34.8536, lng:135.4697, maps:"https://maps.google.com/?q=箕面大滝" , transitToNext:"🚌 阪急巴士 · 約 15 分鐘（班次少，建議先查時刻表）"},
+    { name:"勝尾寺", jp:"勝尾寺", tags:["temple","nature"], desc:"「勝運之寺」，以達摩不倒翁和美麗庭園聞名", tips:"門票 ¥500 / 寺內可以買達摩許願", lat:34.8614, lng:135.4858, maps:"https://maps.google.com/?q=勝尾寺" , transitToNext:"🚌 巴士回箕面駅 → 🚃 阪急線到梅田 · 約 50 分鐘"},
     { name:"梅田藍天大廈", jp:"梅田スカイビル", tags:["sight"], desc:"空中庭園展望台，獨特的連接雙塔設計地標", tips:"門票 ¥1,500 / 開放至 22:30。地下有昭和復古美食街「瀧見小路」", lat:34.7052, lng:135.4906, maps:"https://maps.google.com/?q=梅田スカイビル" },
     { name:"天神橋筋商店街", jp:"天神橋筋商店街", tags:["shop","food"], desc:"日本最長商店街（2.6km），在地庶民美食天堂", tips:"必吃：中村屋可樂餅、春駒壽司。可邊走邊吃", lat:34.7044, lng:135.5126, maps:"https://maps.google.com/?q=天神橋筋商店街" },
   ]},
