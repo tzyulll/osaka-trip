@@ -488,7 +488,7 @@ const DAYS_DATA = [
   ], solo:[
     { name:"飯店下午茶", tags:["food"] }
   ]},
-  { id:'day2', label:'5/9', icon:'🏯', weekday:'六', title:'Day 2 · 大阪市區經典', spots:[
+  { id:'day2', label:'5/9', icon:'🏯', weekday:'六', title:'Day 2 · 大阪市區經典', startTransit:"🏠 → 🚃 長堀鶴見緑地線 大正→森ノ宮 · 約 15 分鐘 + 步行", spots:[
     { name:"大阪城公園 · 天守閣", jp:"大阪城天守閣", tags:["sight","temple"], desc:"豐臣秀吉建造的歷史名城，天守閣可眺望大阪全景", tips:"天守閣門票 ¥600 / 9:00-17:00。城公園免費，櫻花季很美", lat:34.6873, lng:135.5262, maps:"https://maps.google.com/?q=大阪城天守閣" , transitToNext:"🚃 谷町線 谷町四丁目→日本橋 · 約 15 分鐘"},
     { name:"黑門市場", jp:"黒門市場", tags:["food","shop"], desc:"「大阪的廚房」，超過 170 年歷史的生鮮市場", tips:"推薦：新鮮海鮮丼、黑門三平鮪魚、現烤扇貝", lat:34.6627, lng:135.5063, maps:"https://maps.google.com/?q=黒門市場" },
     { name:"すき焼き しゃぶしゃぶ 豚々 心斎橋店", jp:"すき焼き しゃぶしゃぶ 豚々 心斎橋店", tags:["food"], desc:"心齋橋人氣壽喜燒＆涮涮鍋專門店，食材新鮮、適合家族共享的午餐", tips:"建議提前訂位 / 午餐時段約 ¥2,000–4,000 / 人，可選豬肉套餐（豚々招牌）", lat:34.6723, lng:135.5009, maps:"https://maps.google.com/?q=すき焼き+しゃぶしゃぶ+豚々+心斎橋店" },
@@ -498,20 +498,20 @@ const DAYS_DATA = [
   ], solo:[
     { name:"アニメイトカフェ天王寺", jp:"アニメイトカフェ天王寺", tags:["play"], maps:"https://maps.google.com/?q=アニメイトカフェ+天王寺", lat:34.6467, lng:135.5144 }
   ]},
-  { id:'day3', label:'5/10', icon:'🦌', weekday:'日', title:'Day 3 · 奈良一日遊', spots:[
+  { id:'day3', label:'5/10', icon:'🦌', weekday:'日', title:'Day 3 · 奈良一日遊', startTransit:"🏠 → 🚃 長堀鶴見緑地線到なんば → 近鐵奈良線 · 約 60 分鐘", spots:[
     { name:"奈良", jp:"奈良", tags:["sight"], desc:"從大阪搭近鐵約 45 分鐘，千年古都一日遊", tips:"建議搭近鐵奈良線，比 JR 更近市中心景點", lat:34.6851, lng:135.8048, maps:"https://maps.google.com/?q=近鉄奈良駅" },
     { name:"焼肉キング", jp:"焼肉キング", tags:["food"], desc:"日式燒肉吃到飽連鎖，CP 值高適合家族午餐", tips:"午餐吃到飽約 ¥2,680 起，建議先用 Hot Pepper 訂位", lat:34.6851, lng:135.8048, maps:"https://maps.google.com/?q=焼肉キング+奈良" },
     { name:"東大寺大佛殿", jp:"東大寺大仏殿", tags:["temple","sight"], desc:"世界最大木造建築，供奉 15 公尺高的盧舍那大佛", tips:"門票 ¥600 / 8:00-17:00。鑽大佛鼻孔洞可祈求好運", lat:34.6891, lng:135.8399, maps:"https://maps.google.com/?q=東大寺大仏殿" },
     { name:"興福寺五重塔", jp:"興福寺五重塔", tags:["temple"], desc:"奈良代表性地標，高 50 公尺的五重塔", tips:"目前維修中，可能有圍欄，但仍值得路過拍照", lat:34.6832, lng:135.8328, maps:"https://maps.google.com/?q=興福寺五重塔" },
     { name:"春日大社", jp:"春日大社", tags:["temple","nature"], desc:"世界遺產，朱紅色的千座石燈籠非常壯觀", tips:"免費參拜 / 本殿特別參拜 ¥500。路上可能遇到小鹿", lat:34.6812, lng:135.8498, maps:"https://maps.google.com/?q=春日大社" },
   ]},
-  { id:'day4', label:'5/11', icon:'🍁', weekday:'一', title:'Day 4 · 箕面自然 + 梅田', spots:[
+  { id:'day4', label:'5/11', icon:'🍁', weekday:'一', title:'Day 4 · 箕面自然 + 梅田', startTransit:"🏠 → 🚃 長堀鶴見緑地線到心齋橋 → 御堂筋線到梅田 → 阪急箕面線 · 約 50 分鐘", spots:[
     { name:"箕面瀑布", jp:"箕面大滝", tags:["nature","sight"], desc:"落差 33 公尺的壯觀瀑布，日本百選瀑布之一", tips:"從箕面站步行約 40 分鐘。步道平緩適合長輩，建議穿好走的鞋", lat:34.8536, lng:135.4697, maps:"https://maps.google.com/?q=箕面大滝" , transitToNext:"🚌 阪急巴士 · 約 15 分鐘（班次少，建議先查時刻表）"},
     { name:"勝尾寺", jp:"勝尾寺", tags:["temple","nature"], desc:"「勝運之寺」，以達摩不倒翁和美麗庭園聞名", tips:"門票 ¥500 / 寺內可以買達摩許願", lat:34.8614, lng:135.4858, maps:"https://maps.google.com/?q=勝尾寺" , transitToNext:"🚌 巴士回箕面駅 → 🚃 阪急線到梅田 · 約 50 分鐘"},
     { name:"梅田藍天大廈", jp:"梅田スカイビル", tags:["sight"], desc:"空中庭園展望台，獨特的連接雙塔設計地標", tips:"門票 ¥1,500 / 開放至 22:30。地下有昭和復古美食街「瀧見小路」", lat:34.7052, lng:135.4906, maps:"https://maps.google.com/?q=梅田スカイビル" },
     { name:"天神橋筋商店街", jp:"天神橋筋商店街", tags:["shop","food"], desc:"日本最長商店街（2.6km），在地庶民美食天堂", tips:"必吃：中村屋可樂餅、春駒壽司。可邊走邊吃", lat:34.7044, lng:135.5126, maps:"https://maps.google.com/?q=天神橋筋商店街" },
   ]},
-  { id:'day5', label:'5/12', icon:'🛍', weekday:'二', title:'Day 5 · 購物 + 回程', spots:[
+  { id:'day5', label:'5/12', icon:'🛍', weekday:'二', title:'Day 5 · 購物 + 回程', startTransit:"🏠 → 🚃 JR 環狀線 大正→新今宮 → 南海線到りんくうタウン · 約 55 分鐘", spots:[
     { name:"臨空城 Outlet", jp:"りんくうプレミアム・アウトレット", tags:["shop"], desc:"關西機場旁的大型 Outlet，離機場搭電車只要一站", tips:"10:00 開門，建議早到。離機場近適合最後一天逛", lat:34.4073, lng:135.2913, maps:"https://maps.google.com/?q=りんくうプレミアム・アウトレット" , transitToNext:"🚃 南海電鐵 · 1 站 · 約 5 分鐘"},
     { name:"關西機場 · 回程", jp:"関西国際空港", time:"19:05", tags:["transport"], desc:"搭乘 19:05 班機返回台灣", tips:"建議 16:30 前抵達機場，預留退稅和安檢時間", lat:34.4320, lng:135.2304, maps:"https://maps.google.com/?q=Kansai+International+Airport" },
   ]},
@@ -608,6 +608,9 @@ function renderTags(tags) {
 // ============================================================
 function renderDayList(day) {
   let html = '';
+  if (day.startTransit) {
+    html += `<div class="connector" style="padding-left:0;justify-content:center;"><span class="connector-text" style="border-color:var(--pink);color:var(--pink-dark);font-weight:600;">${day.startTransit}</span></div>`;
+  }
   day.spots.forEach((s, i) => {
     const key = day.id + '_' + i;
     const done = isChecked(key);
