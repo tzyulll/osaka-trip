@@ -913,14 +913,16 @@ document.addEventListener('click', e => {
 // SECRET UNLOCK — long-press 💗 to toggle
 // ============================================================
 (function() {
+  // --- Long-press to UNLOCK ---
   let pressTimer = null;
   function onStart(e) {
+    if (isUnlocked) return; // already unlocked, long-press does nothing
     e.preventDefault();
     const heart = document.getElementById('unlockHeart');
     if (!heart) return;
     heart.classList.add('pressing');
     pressTimer = setTimeout(() => {
-      setUnlocked(!isUnlocked);
+      setUnlocked(true);
       heart.classList.remove('pressing');
       render();
     }, 800);
@@ -935,6 +937,21 @@ document.addEventListener('click', e => {
   document.addEventListener('touchcancel', onEnd);
   document.addEventListener('mousedown', e => { if (e.target.closest('#unlockHeart')) onStart(e); });
   document.addEventListener('mouseup', onEnd);
+
+  // --- Triple-tap to LOCK ---
+  let tapCount = 0, tapTimer = null;
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#unlockHeart') || !isUnlocked) return;
+    tapCount++;
+    clearTimeout(tapTimer);
+    if (tapCount >= 3) {
+      tapCount = 0;
+      setUnlocked(false);
+      render();
+    } else {
+      tapTimer = setTimeout(() => { tapCount = 0; }, 500);
+    }
+  });
 })();
 
 // Auto-select today
