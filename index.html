@@ -448,6 +448,42 @@
     opacity: 0.5;
   }
 
+  /* ===== EXPENSE TRACKER ===== */
+  .exp-dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .exp-stat { background: var(--card); border-radius: var(--radius-sm); padding: 14px 16px; box-shadow: var(--shadow); text-align: center; }
+  .exp-stat-label { font-size: 12px; color: var(--gray); font-weight: 600; margin-bottom: 4px; }
+  .exp-stat-value { font-size: 22px; font-weight: 800; }
+  .exp-stat-sub { font-size: 12px; color: #999; margin-top: 2px; }
+  .exp-stat.full { grid-column: 1 / -1; }
+  .exp-rate { text-align: center; font-size: 13px; color: var(--gray); margin-bottom: 12px; }
+  .exp-rate input { width: 60px; border: 1.5px solid #ddd; border-radius: 8px; padding: 4px 8px; font-size: 13px; text-align: center; }
+
+  .exp-form { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; margin-bottom: 14px; }
+  .exp-form-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+  .exp-row { display: flex; gap: 8px; margin-bottom: 10px; }
+  .exp-input { flex: 1; padding: 10px 12px; border: 1.5px solid #E0E0E0; border-radius: 10px; font-size: 15px; font-family: inherit; -webkit-appearance: none; }
+  .exp-input:focus { outline: none; border-color: var(--pink-dark); }
+  .exp-select { padding: 10px 12px; border: 1.5px solid #E0E0E0; border-radius: 10px; font-size: 14px; font-family: inherit; background: white; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+  .exp-submit { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--orange); color: white; font-size: 16px; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .exp-submit:active { transform: scale(0.98); }
+
+  .exp-day-group { margin-bottom: 14px; }
+  .exp-day-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 2px solid #eee; margin-bottom: 8px; }
+  .exp-day-date { font-size: 15px; font-weight: 700; }
+  .exp-day-total { font-size: 13px; color: var(--gray); font-weight: 600; }
+  .exp-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F0F0F0; }
+  .exp-item:last-child { border-bottom: none; }
+  .exp-item-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .exp-item-body { flex: 1; min-width: 0; }
+  .exp-item-name { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .exp-item-meta { font-size: 12px; color: #999; margin-top: 2px; }
+  .exp-item-amount { text-align: right; flex-shrink: 0; }
+  .exp-item-jpy { font-size: 16px; font-weight: 700; }
+  .exp-item-twd { font-size: 12px; color: #999; }
+  .exp-item-del { background: none; border: none; color: #ccc; font-size: 18px; cursor: pointer; padding: 4px; -webkit-tap-highlight-color: transparent; }
+  .exp-item-del:active { color: var(--red); }
+  .exp-empty { text-align: center; color: #bbb; padding: 40px 0; font-size: 15px; }
+
   /* ===== RESPONSIVE ===== */
   @media (min-width: 768px) {
     body { font-size: 18px; }
@@ -572,6 +608,18 @@ function setUnlocked(v) {
   localStorage.setItem('osaka2026_unlock', v ? '1' : '0');
 }
 
+// expense tracker
+let expenses = [];
+try { expenses = JSON.parse(localStorage.getItem('osaka2026_exp') || '[]'); } catch(e) { expenses = []; }
+function saveExp() { localStorage.setItem('osaka2026_exp', JSON.stringify(expenses)); }
+let expRate = parseFloat(localStorage.getItem('osaka2026_rate') || '0.206');
+function saveRate() { localStorage.setItem('osaka2026_rate', String(expRate)); }
+const EXP_CATS = { food:'餐飲', transport:'交通', shop:'購物', stay:'住宿', ticket:'門票', other:'其他' };
+const EXP_CAT_ICONS = { food:'🍽️', transport:'🚃', shop:'🛍️', stay:'🏠', ticket:'🎫', other:'📦' };
+const EXP_CAT_COLORS = { food:'#FFF3E0', transport:'#E3F2FD', shop:'#FCE4EC', stay:'#E8F5E9', ticket:'#F3E5F5', other:'#ECEFF1' };
+const EXP_PAYS = { cash:'現金', card:'信用卡', paypay:'PayPay', icoca:'ICOCA' };
+const TRIP_DATES = ['2026-05-08','2026-05-09','2026-05-10','2026-05-11','2026-05-12'];
+
 let currentDay = 'info';
 let currentView = 'list';
 let maps = {};
@@ -585,6 +633,7 @@ function renderTabs() {
   DAYS_DATA.forEach(d => {
     html += `<button class="day-tab ${currentDay===d.id?'active':''}" data-day="${d.id}"><span class="tab-icon">${d.icon}</span> ${d.label} (${d.weekday})</button>`;
   });
+  html += `<button class="day-tab ${currentDay==='expense'?'active':''}" data-day="expense"><span class="tab-icon">💰</span> 記帳</button>`;
   if (isUnlocked) {
     html += `<button class="day-tab ${currentDay==='cafe'?'active':''}" data-day="cafe"><span class="tab-icon">☕</span> 咖啡廳</button>`;
     html += `<button class="day-tab ${currentDay==='lists'?'active':''}" data-day="lists"><span class="tab-icon">📝</span> 清單</button>`;
@@ -832,6 +881,83 @@ async function loadWalkingData(day) {
 }
 
 // ============================================================
+// RENDER — Expense tracker
+// ============================================================
+function renderExpense() {
+  const today = new Date().toISOString().slice(0,10);
+  const todayExp = expenses.filter(e => e.date === today);
+  const todayTotal = todayExp.reduce((s,e) => s + e.amount, 0);
+  const tripTotal = expenses.reduce((s,e) => s + e.amount, 0);
+
+  let html = `
+    <div class="exp-rate">匯率　¥1 = NT$ <input type="number" step="0.001" id="expRateInput" value="${expRate}"> <span style="color:#bbb;">（可自行調整）</span></div>
+    <div class="exp-dashboard">
+      <div class="exp-stat">
+        <div class="exp-stat-label">🧾 今日支出</div>
+        <div class="exp-stat-value">¥${todayTotal.toLocaleString()}</div>
+        <div class="exp-stat-sub">≈ NT$${Math.round(todayTotal * expRate).toLocaleString()}</div>
+      </div>
+      <div class="exp-stat">
+        <div class="exp-stat-label">📊 旅程累計</div>
+        <div class="exp-stat-value">¥${tripTotal.toLocaleString()}</div>
+        <div class="exp-stat-sub">≈ NT$${Math.round(tripTotal * expRate).toLocaleString()} · ${expenses.length} 筆</div>
+      </div>
+    </div>
+
+    <div class="exp-form">
+      <div class="exp-form-title">➕ 新增花費</div>
+      <div class="exp-row">
+        <input class="exp-input" id="expAmount" type="number" placeholder="金額（¥）" inputmode="numeric" style="flex:1;">
+        <input class="exp-input" id="expStore" type="text" placeholder="店名 / 備註" style="flex:1.5;">
+      </div>
+      <div class="exp-row">
+        <select class="exp-select" id="expCat" style="flex:1;">${Object.entries(EXP_CATS).map(([k,v]) => `<option value="${k}">${EXP_CAT_ICONS[k]} ${v}</option>`).join('')}</select>
+        <select class="exp-select" id="expPay" style="flex:1;">${Object.entries(EXP_PAYS).map(([k,v]) => `<option value="${k}">${v}</option>`).join('')}</select>
+      </div>
+      <button class="exp-submit" id="expSubmit">記錄花費</button>
+    </div>`;
+
+  // group by date, sorted newest first
+  const grouped = {};
+  expenses.slice().sort((a,b) => b.date.localeCompare(a.date) || b.id - a.id).forEach(e => {
+    if (!grouped[e.date]) grouped[e.date] = [];
+    grouped[e.date].push(e);
+  });
+
+  if (Object.keys(grouped).length === 0) {
+    html += `<div class="exp-empty">還沒有任何花費紀錄<br>開始記帳吧！</div>`;
+  } else {
+    Object.entries(grouped).forEach(([date, items]) => {
+      const dayTotal = items.reduce((s,e) => s + e.amount, 0);
+      const d = new Date(date);
+      const weekdays = ['日','一','二','三','四','五','六'];
+      const dateLabel = `${d.getMonth()+1}/${d.getDate()} (${weekdays[d.getDay()]})`;
+      html += `<div class="exp-day-group">
+        <div class="exp-day-header">
+          <span class="exp-day-date">${dateLabel}</span>
+          <span class="exp-day-total">¥${dayTotal.toLocaleString()} ≈ NT$${Math.round(dayTotal * expRate).toLocaleString()}</span>
+        </div>`;
+      items.forEach(e => {
+        html += `<div class="exp-item">
+          <div class="exp-item-icon" style="background:${EXP_CAT_COLORS[e.cat]||'#f5f5f5'}">${EXP_CAT_ICONS[e.cat]||'📦'}</div>
+          <div class="exp-item-body">
+            <div class="exp-item-name">${e.store || EXP_CATS[e.cat] || '其他'}</div>
+            <div class="exp-item-meta"><span class="tag" style="background:${EXP_CAT_COLORS[e.cat]||'#eee'};color:#555;font-size:11px;padding:1px 6px;">${EXP_CATS[e.cat]||'其他'}</span> ${EXP_PAYS[e.pay]||''}</div>
+          </div>
+          <div class="exp-item-amount">
+            <div class="exp-item-jpy">¥${e.amount.toLocaleString()}</div>
+            <div class="exp-item-twd">NT$${Math.round(e.amount * expRate).toLocaleString()}</div>
+          </div>
+          <button class="exp-item-del" data-expid="${e.id}">✕</button>
+        </div>`;
+      });
+      html += `</div>`;
+    });
+  }
+  return html;
+}
+
+// ============================================================
 // MAIN RENDER
 // ============================================================
 function render() {
@@ -852,6 +978,8 @@ function render() {
   let content = '';
   if (currentDay === 'info') {
     content = renderInfo();
+  } else if (currentDay === 'expense') {
+    content = renderExpense();
   } else if (currentDay === 'cafe') {
     content = renderCafe();
   } else if (currentDay === 'lists') {
@@ -906,6 +1034,36 @@ document.addEventListener('click', e => {
     toggle(ck.dataset.key);
     render();
     return;
+  }
+  // Expense — submit
+  if (e.target.closest('#expSubmit')) {
+    const amt = parseInt(document.getElementById('expAmount').value);
+    if (!amt || amt <= 0) { document.getElementById('expAmount').focus(); return; }
+    const store = document.getElementById('expStore').value.trim();
+    const cat = document.getElementById('expCat').value;
+    const pay = document.getElementById('expPay').value;
+    expenses.push({ id: Date.now(), date: new Date().toISOString().slice(0,10), amount: amt, store, cat, pay });
+    saveExp();
+    render();
+    // scroll to top of expense list after short delay
+    setTimeout(() => { const el = document.querySelector('.exp-dashboard'); if(el) el.scrollIntoView({behavior:'smooth'}); }, 50);
+    return;
+  }
+  // Expense — delete
+  const del = e.target.closest('.exp-item-del');
+  if (del && del.dataset.expid) {
+    expenses = expenses.filter(e => e.id !== parseInt(del.dataset.expid));
+    saveExp();
+    render();
+    return;
+  }
+});
+
+// Expense — rate change
+document.addEventListener('change', e => {
+  if (e.target.id === 'expRateInput') {
+    const v = parseFloat(e.target.value);
+    if (v > 0) { expRate = v; saveRate(); render(); }
   }
 });
 
