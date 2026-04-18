@@ -484,6 +484,20 @@
   .exp-item-del:active { color: var(--red); }
   .exp-empty { text-align: center; color: #bbb; padding: 40px 0; font-size: 15px; }
 
+  /* Google Sheets sync */
+  .exp-sync-section { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; margin-bottom: 14px; }
+  .exp-sync-btn { width: 100%; padding: 12px; border: none; border-radius: 12px; background: #34A853; color: white; font-size: 16px; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: transparent; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .exp-sync-btn:active { transform: scale(0.98); }
+  .exp-sync-btn:disabled { background: #9E9E9E; cursor: not-allowed; }
+  .exp-sync-btn.syncing { background: #FFA726; }
+  .exp-sync-status { text-align: center; font-size: 13px; margin-top: 8px; min-height: 20px; }
+  .exp-sync-setup { margin-top: 12px; padding: 14px; background: var(--gray-light); border-radius: 10px; }
+  .exp-sync-setup summary { font-size: 14px; font-weight: 600; color: var(--gray); cursor: pointer; }
+  .exp-sync-setup .setup-content { margin-top: 10px; font-size: 13px; color: var(--gray); line-height: 1.7; }
+  .exp-sync-setup code { background: #E8E8E8; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+  .exp-sync-setup .url-input { width: 100%; padding: 8px 10px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 13px; font-family: monospace; margin-top: 6px; }
+  .exp-sync-setup .url-input:focus { outline: none; border-color: #34A853; }
+
   /* ===== RESPONSIVE ===== */
   @media (min-width: 768px) {
     body { font-size: 18px; }
@@ -573,6 +587,37 @@ const CAFES = [
   { name:"cafe i-eum", area:"西大橋", url:"https://www.instagram.com/i_eum_cafe/", maps:"https://maps.google.com/?q=cafe+i-eum+西大橋" },
 ];
 
+// ============================================================
+// BACKUP PLANS — 備案行程
+// ============================================================
+const BACKUP_PLANS = [
+  {
+    id: 'backup1',
+    priority: 1,
+    title: '姬路城一日遊',
+    icon: '🏰',
+    subtitle: '可替代 Day 3 奈良 或 Day 4 箕面',
+    transit: '🏠 → 🚃 JR環狀線 大正→大阪 → JR新快速 大阪→姫路 · 約 90 分鐘',
+    spots: [
+      { name:"姬路城", jp:"姫路城", tags:["sight","temple"], desc:"日本第一座世界文化遺產，有「白鷺城」之稱的國寶天守閣，保存最完整的日本城堡", tips:"門票 ¥1,050 / 9:00-17:00（16:00 最後入城）。建議預留 2 小時參觀，週日人稍多但比奈良好很多", lat:34.8394, lng:134.6939, maps:"https://maps.google.com/?q=姫路城", transitToNext:"🚶 步行約 5 分鐘" },
+      { name:"好古園", jp:"好古園", tags:["nature","sight"], desc:"姬路城旁的池泉回遊式日本庭園，九個風格各異的美麗庭園", tips:"門票 ¥310（與姬路城聯票 ¥1,050 更划算）/ 9:00-17:00。拍照非常美", lat:34.8383, lng:134.6896, maps:"https://maps.google.com/?q=好古園+姫路", transitToNext:"🚶 步行回姫路駅 約 15 分鐘" },
+      { name:"姬路午餐 · 穴子飯", jp:"姫路駅周辺", tags:["food"], desc:"姬路名物穴子飯（星鰻蓋飯）是當地必吃美食，炭火烤星鰻搭配醬汁超香", tips:"推薦「穴子料理 柊」或站前「炭火焼穴子 あなご亭」，約 ¥1,500-2,500", lat:34.8266, lng:134.6914, maps:"https://maps.google.com/?q=姫路駅" },
+    ]
+  },
+  {
+    id: 'backup2',
+    priority: 2,
+    title: '太陽之塔 + 萬博紀念公園',
+    icon: '☀️',
+    subtitle: '可替代 Day 4 箕面，下午接梅田行程',
+    transit: '🏠 → 🚃 長堀鶴見緑地線到心齋橋 → 御堂筋線到千里中央 → 大阪モノレール · 約 50 分鐘',
+    spots: [
+      { name:"萬博紀念公園", jp:"万博記念公園", tags:["nature","sight"], desc:"1970 年大阪萬國博覽會舊址，廣大綠地公園，有自然文化園和日本庭園", tips:"入園 ¥260 / 9:30-17:00（16:30 最後入園）。園區很大很舒服，建議預留 2 小時慢慢逛", lat:34.8109, lng:135.5318, maps:"https://maps.google.com/?q=万博記念公園", transitToNext:"🚶 園區內 · 步行約 3 分鐘" },
+      { name:"太陽之塔", jp:"太陽の塔", tags:["sight"], desc:"岡本太郎設計的 70 公尺高藝術巨作，大阪萬博的永恆象徵。三張臉代表過去、現在、未來", tips:"內部參觀需預約（¥720）→ taiyounotou-expo70.jp。即使不進去，外觀拍照也很震撼", lat:34.8116, lng:135.5327, maps:"https://maps.google.com/?q=太陽の塔", transitToNext:"🚃 大阪モノレール→千里中央 → 御堂筋線到梅田 · 約 40 分鐘" },
+    ]
+  }
+];
+
 const BRING = ["日本 eSIM","通鼻液","鼻炎藥","熱水器"];
 const SOUVENIRS = ["🐷","ㄒㄘ"];
 const WISHES = [
@@ -620,6 +665,35 @@ const EXP_CAT_COLORS = { food:'#FFF3E0', transport:'#E3F2FD', shop:'#FCE4EC', st
 const EXP_PAYS = { cash:'現金', card:'信用卡', paypay:'PayPay', icoca:'ICOCA' };
 const TRIP_DATES = ['2026-05-08','2026-05-09','2026-05-10','2026-05-11','2026-05-12'];
 
+// Google Sheets sync
+let sheetUrl = localStorage.getItem('osaka2026_sheet_url') || '';
+function saveSheetUrl() { localStorage.setItem('osaka2026_sheet_url', sheetUrl); }
+let syncStatus = ''; // '', 'syncing', 'ok', 'error'
+let syncMsg = '';
+
+async function syncToSheets() {
+  if (!sheetUrl) { syncStatus = 'error'; syncMsg = '請先設定 Google Apps Script 網址'; render(); return; }
+  if (!expenses.length) { syncStatus = 'error'; syncMsg = '沒有任何記錄可以同步'; render(); return; }
+  syncStatus = 'syncing'; syncMsg = '同步中…'; render();
+  try {
+    const res = await fetch(sheetUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ expenses, rate: expRate, cats: EXP_CATS, pays: EXP_PAYS })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      syncStatus = 'ok'; syncMsg = `✅ 已同步 ${data.count || expenses.length} 筆到 Google Sheets`;
+    } else {
+      syncStatus = 'error'; syncMsg = '❌ 同步失敗：' + (data.error || '未知錯誤');
+    }
+  } catch(e) {
+    syncStatus = 'error'; syncMsg = '❌ 連線失敗，請確認網址是否正確';
+  }
+  render();
+  setTimeout(() => { syncStatus = ''; syncMsg = ''; }, 5000);
+}
+
 let currentDay = 'info';
 let currentView = 'list';
 let maps = {};
@@ -633,6 +707,7 @@ function renderTabs() {
   DAYS_DATA.forEach(d => {
     html += `<button class="day-tab ${currentDay===d.id?'active':''}" data-day="${d.id}"><span class="tab-icon">${d.icon}</span> ${d.label} (${d.weekday})</button>`;
   });
+  html += `<button class="day-tab ${currentDay==='backup'?'active':''}" data-day="backup"><span class="tab-icon">🔄</span> 備案</button>`;
   html += `<button class="day-tab ${currentDay==='expense'?'active':''}" data-day="expense"><span class="tab-icon">💰</span> 記帳</button>`;
   if (isUnlocked) {
     html += `<button class="day-tab ${currentDay==='cafe'?'active':''}" data-day="cafe"><span class="tab-icon">☕</span> 咖啡廳</button>`;
@@ -839,6 +914,56 @@ function renderLists() {
 }
 
 // ============================================================
+// RENDER — Backup plans page
+// ============================================================
+function renderBackup() {
+  let html = `<div class="section-card" style="background:linear-gradient(135deg,#FFF8E1,#FFF3E0);border:1.5px solid #FFD54F;">
+    <div class="section-title">🔄 備案行程</div>
+    <div style="font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:4px;">如果碰上人潮太多、天氣不好或臨時想換行程，可以直接參考這裡！</div>
+  </div>`;
+
+  BACKUP_PLANS.forEach(plan => {
+    // header card
+    html += `<div class="section-card">
+      <div class="section-title">${plan.icon} 備案 ${plan.priority}：${plan.title}</div>
+      <div style="font-size:14px;color:var(--gray);margin-bottom:10px;">${plan.subtitle}</div>
+      <div class="connector" style="padding-left:0;justify-content:center;margin-bottom:8px;">
+        <span class="connector-text" style="border-color:var(--pink);color:var(--pink-dark);font-weight:600;">${plan.transit}</span>
+      </div>
+    </div>`;
+
+    // spot cards — same style as day pages
+    plan.spots.forEach((s, i) => {
+      if (i > 0 && plan.spots[i-1].transitToNext) {
+        html += `<div class="connector" style="padding-left:30px;"><span class="connector-text">${plan.spots[i-1].transitToNext}</span></div>`;
+      } else if (i > 0) {
+        html += `<div class="connector" id="conn-${plan.id}-${i}"><span class="connector-text loading">…</span></div>`;
+      }
+      html += `
+        <div class="spot-card">
+          <div class="spot-card-inner">
+            <div class="spot-num" style="background:var(--orange);box-shadow:0 2px 6px rgba(232,152,94,0.3);"><span class="num-text">${i+1}</span></div>
+            <div class="spot-body">
+              <div class="spot-name">${s.name}</div>
+              ${s.jp ? `<div class="spot-jp">${s.jp}</div>` : ''}
+              ${renderTags(s.tags)}
+              ${s.desc ? `<div class="spot-desc">${s.desc}</div>` : ''}
+              ${s.tips ? `<div class="spot-tips"><strong>💡 小提醒</strong><br>${s.tips}</div>` : ''}
+            </div>
+          </div>
+          <div class="spot-actions">
+            ${s.maps ? `<a class="act-btn act-nav" href="${s.maps}" target="_blank" rel="noopener">📍 Google Maps 導航</a>` : ''}
+          </div>
+        </div>`;
+    });
+    // spacer between plans
+    html += `<div style="height:10px;"></div>`;
+  });
+
+  return html;
+}
+
+// ============================================================
 // WALKING DISTANCE (OSRM)
 // ============================================================
 const routeCache = {};
@@ -902,6 +1027,49 @@ function renderExpense() {
         <div class="exp-stat-value">¥${tripTotal.toLocaleString()}</div>
         <div class="exp-stat-sub">≈ NT$${Math.round(tripTotal * expRate).toLocaleString()} · ${expenses.length} 筆</div>
       </div>
+    </div>
+
+    <div class="exp-sync-section">
+      <button class="exp-sync-btn ${syncStatus==='syncing'?'syncing':''}" id="expSyncBtn" ${syncStatus==='syncing'?'disabled':''}>
+        ${syncStatus==='syncing'?'⏳ 同步中…':'📤 一鍵同步到 Google Sheets'}
+      </button>
+      <div class="exp-sync-status" style="color:${syncStatus==='ok'?'var(--green)':syncStatus==='error'?'var(--red)':'var(--gray)'}">${syncMsg}</div>
+      <details class="exp-sync-setup">
+        <summary>⚙️ 設定 Google Sheets 連結</summary>
+        <div class="setup-content">
+          <strong>第一次使用？按以下步驟設定：</strong><br>
+          1. 開一個新的 <a href="https://sheets.google.com" target="_blank" rel="noopener">Google Sheets</a><br>
+          2. 點選「擴充功能」→「Apps Script」<br>
+          3. 把以下程式碼貼進去，取代原本的內容：<br>
+          <div style="background:#1E1E1E;color:#D4D4D4;padding:10px;border-radius:8px;margin:8px 0;font-size:11px;line-height:1.5;overflow-x:auto;white-space:pre;font-family:monospace;">function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  // 清除舊資料（保留標題列）
+  if (sheet.getLastRow() > 1)
+    sheet.getRange(2,1,sheet.getLastRow()-1,7).clearContent();
+  // 寫入標題（如果是空的）
+  if (sheet.getLastRow() === 0)
+    sheet.appendRow(['ID','日期','金額(¥)','店名','類別','付款方式','NT$']);
+  // 寫入資料
+  data.expenses.forEach(function(exp) {
+    sheet.appendRow([
+      exp.id, exp.date, exp.amount,
+      exp.store || '', data.cats[exp.cat]||'',
+      data.pays[exp.pay]||'',
+      Math.round(exp.amount * data.rate)
+    ]);
+  });
+  return ContentService
+    .createTextOutput(JSON.stringify({ok:true,count:data.expenses.length}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</div>
+          4. 點「部署」→「新增部署」→ 類型選「網頁應用程式」<br>
+          5. 存取權限設為「所有人」→ 按「部署」<br>
+          6. 複製產生的網址，貼到下方：<br>
+          <input class="url-input" id="sheetUrlInput" type="url" placeholder="https://script.google.com/macros/s/..." value="${sheetUrl}">
+          <div style="margin-top:6px;font-size:12px;color:#999;">網址會自動儲存，之後每次按同步就會覆寫整份 Sheet（用 ID 去重不怕重複）</div>
+        </div>
+      </details>
     </div>
 
     <div class="exp-form">
@@ -978,6 +1146,8 @@ function render() {
   let content = '';
   if (currentDay === 'info') {
     content = renderInfo();
+  } else if (currentDay === 'backup') {
+    content = renderBackup();
   } else if (currentDay === 'expense') {
     content = renderExpense();
   } else if (currentDay === 'cafe') {
@@ -1004,6 +1174,9 @@ function render() {
     root.innerHTML = `<div class="page active">${content}</div>`;
   }
   if (walkDay) setTimeout(() => loadWalkingData(walkDay), 100);
+  if (currentDay === 'backup') {
+    setTimeout(() => { BACKUP_PLANS.forEach(p => loadWalkingData(p)); }, 100);
+  }
 }
 
 // ============================================================
@@ -1059,12 +1232,20 @@ document.addEventListener('click', e => {
   }
 });
 
-// Expense — rate change
+// Expense — rate change & sheet URL
 document.addEventListener('change', e => {
   if (e.target.id === 'expRateInput') {
     const v = parseFloat(e.target.value);
     if (v > 0) { expRate = v; saveRate(); render(); }
   }
+  if (e.target.id === 'sheetUrlInput') {
+    sheetUrl = e.target.value.trim();
+    saveSheetUrl();
+  }
+});
+// Expense — sync button
+document.addEventListener('click', e => {
+  if (e.target.closest('#expSyncBtn')) { syncToSheets(); }
 });
 
 // ============================================================
