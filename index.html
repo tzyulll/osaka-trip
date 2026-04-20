@@ -461,9 +461,9 @@
   .exp-form { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; margin-bottom: 14px; }
   .exp-form-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
   .exp-row { display: flex; gap: 8px; margin-bottom: 10px; }
-  .exp-input { flex: 1; padding: 10px 12px; border: 1.5px solid #E0E0E0; border-radius: 10px; font-size: 15px; font-family: inherit; -webkit-appearance: none; }
+  .exp-input { flex: 1; min-width: 0; padding: 10px 12px; border: 1.5px solid #E0E0E0; border-radius: 10px; font-size: 15px; font-family: inherit; -webkit-appearance: none; }
   .exp-input:focus { outline: none; border-color: var(--pink-dark); }
-  .exp-select { padding: 10px 12px; border: 1.5px solid #E0E0E0; border-radius: 10px; font-size: 14px; font-family: inherit; background: white; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+  .exp-select { min-width: 0; padding: 10px 12px; border: 1.5px solid #E0E0E0; border-radius: 10px; font-size: 14px; font-family: inherit; background: white; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
   .exp-submit { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--orange); color: white; font-size: 16px; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .exp-submit:active { transform: scale(0.98); }
 
@@ -550,7 +550,7 @@ const DAYS_DATA = [
   ]},
   { id:'day3', label:'5/10', icon:'🦌', weekday:'日', title:'Day 3 · 奈良一日遊', startTransit:"🏠 → 🚃 長堀鶴見緑地線到なんば → 近鐵奈良線 · 約 60 分鐘", spots:[
     { name:"奈良", jp:"奈良", tags:["sight"], desc:"從大阪搭近鐵約 45 分鐘，千年古都一日遊", tips:"建議搭近鐵奈良線，比 JR 更近市中心景點", lat:34.6851, lng:135.8048, maps:"https://maps.google.com/?q=近鉄奈良駅" },
-    { name:"焼肉キング", jp:"焼肉キング", tags:["food"], desc:"日式燒肉吃到飽連鎖，CP 值高適合家族午餐", tips:"午餐吃到飽約 ¥2,680 起，建議先用 Hot Pepper 訂位", lat:34.6851, lng:135.8048, maps:"https://maps.google.com/?q=焼肉キング+奈良" },
+    { name:"焼肉キング", jp:"焼肉キング", tags:["food"], desc:"日式燒肉吃到飽連鎖，CP 值高適合家族午餐", tips:"午餐吃到飽約 ¥2,680 起，建議先用 Hot Pepper 訂位", lat:34.6950, lng:135.8020, maps:"https://maps.google.com/?q=焼肉キング+奈良" },
     { name:"東大寺大佛殿", jp:"東大寺大仏殿", tags:["temple","sight"], desc:"世界最大木造建築，供奉 15 公尺高的盧舍那大佛", tips:"門票 ¥600 / 8:00-17:00。鑽大佛鼻孔洞可祈求好運", lat:34.6891, lng:135.8399, maps:"https://maps.google.com/?q=東大寺大仏殿" },
     { name:"興福寺五重塔", jp:"興福寺五重塔", tags:["temple"], desc:"奈良代表性地標，高 50 公尺的五重塔", tips:"目前維修中，可能有圍欄，但仍值得路過拍照", lat:34.6832, lng:135.8328, maps:"https://maps.google.com/?q=興福寺五重塔" },
     { name:"春日大社", jp:"春日大社", tags:["temple","nature"], desc:"世界遺產，朱紅色的千座石燈籠非常壯觀", tips:"免費參拜 / 本殿特別參拜 ¥500。路上可能遇到小鹿", lat:34.6812, lng:135.8498, maps:"https://maps.google.com/?q=春日大社" },
@@ -670,10 +670,12 @@ let sheetUrl = localStorage.getItem('osaka2026_sheet_url') || '';
 function saveSheetUrl() { localStorage.setItem('osaka2026_sheet_url', sheetUrl); }
 let syncStatus = ''; // '', 'syncing', 'ok', 'error'
 let syncMsg = '';
+let lastSyncTime = localStorage.getItem('osaka2026_last_sync') || '';
 
 async function syncToSheets() {
   if (!sheetUrl) { syncStatus = 'error'; syncMsg = '請先設定 Google Apps Script 網址'; render(); return; }
   if (!expenses.length) { syncStatus = 'error'; syncMsg = '沒有任何記錄可以同步'; render(); return; }
+  if (!confirm(`確定要同步 ${expenses.length} 筆記錄到 Google Sheets？\n（會覆寫 Sheet 上的 A~G 欄資料）`)) return;
   syncStatus = 'syncing'; syncMsg = '同步中…'; render();
   try {
     const res = await fetch(sheetUrl, {
@@ -683,7 +685,9 @@ async function syncToSheets() {
     });
     const data = await res.json();
     if (data.ok) {
-      syncStatus = 'ok'; syncMsg = `✅ 已同步 ${data.count || expenses.length} 筆到 Google Sheets`;
+      lastSyncTime = new Date().toLocaleString('zh-TW');
+      localStorage.setItem('osaka2026_last_sync', lastSyncTime);
+      syncStatus = 'ok'; syncMsg = `✅ 已同步 ${data.count || expenses.length} 筆`;
     } else {
       syncStatus = 'error'; syncMsg = '❌ 同步失敗：' + (data.error || '未知錯誤');
     }
@@ -691,7 +695,18 @@ async function syncToSheets() {
     syncStatus = 'error'; syncMsg = '❌ 連線失敗，請確認網址是否正確';
   }
   render();
-  setTimeout(() => { syncStatus = ''; syncMsg = ''; }, 5000);
+}
+
+async function testSheetConnection() {
+  if (!sheetUrl) { alert('請先貼上網址'); return; }
+  try {
+    const res = await fetch(sheetUrl);
+    const data = await res.json();
+    if (data.ok) { alert('✅ 連線成功！可以開始同步了'); }
+    else { alert('⚠️ 收到回應但格式不對，請確認 Apps Script 有部署 doGet'); }
+  } catch(e) {
+    alert('❌ 連線失敗，請確認網址是否正確，以及是否已部署為「所有人」可存取');
+  }
 }
 
 let currentDay = 'info';
@@ -773,6 +788,19 @@ function renderDayList(day) {
     });
     html += `</div>`;
   }
+
+  // show backup hint on Day 3 (Nara) and Day 4 (Minoh)
+  if (day.id === 'day3') {
+    html += `<div style="text-align:center;padding:16px 0 8px;">
+      <button class="day-tab" data-day="backup" style="font-size:13px;color:var(--orange);border:1.5px solid var(--orange);background:var(--orange-light);">🔄 人太多？看備案（姬路城）→</button>
+    </div>`;
+  }
+  if (day.id === 'day4') {
+    html += `<div style="text-align:center;padding:16px 0 8px;">
+      <button class="day-tab" data-day="backup" style="font-size:13px;color:var(--orange);border:1.5px solid var(--orange);background:var(--orange-light);">🔄 想換行程？看備案（萬博公園）→</button>
+    </div>`;
+  }
+
   return html;
 }
 
@@ -932,8 +960,10 @@ function renderBackup() {
       </div>
     </div>`;
 
-    // spot cards — same style as day pages
+    // spot cards — same style as day pages, with check functionality
     plan.spots.forEach((s, i) => {
+      const key = plan.id + '_' + i;
+      const done = isChecked(key);
       if (i > 0 && plan.spots[i-1].transitToNext) {
         html += `<div class="connector" style="padding-left:30px;"><span class="connector-text">${plan.spots[i-1].transitToNext}</span></div>`;
       } else if (i > 0) {
@@ -942,9 +972,9 @@ function renderBackup() {
       html += `
         <div class="spot-card">
           <div class="spot-card-inner">
-            <div class="spot-num" style="background:var(--orange);box-shadow:0 2px 6px rgba(232,152,94,0.3);"><span class="num-text">${i+1}</span></div>
+            <div class="spot-num ${done?'done':''}" data-key="${key}" style="${done?'':'background:var(--orange);box-shadow:0 2px 6px rgba(232,152,94,0.3);'}"><span class="num-text">${i+1}</span></div>
             <div class="spot-body">
-              <div class="spot-name">${s.name}</div>
+              <div class="spot-name ${done?'done-text':''}">${s.name}</div>
               ${s.jp ? `<div class="spot-jp">${s.jp}</div>` : ''}
               ${renderTags(s.tags)}
               ${s.desc ? `<div class="spot-desc">${s.desc}</div>` : ''}
@@ -953,6 +983,7 @@ function renderBackup() {
           </div>
           <div class="spot-actions">
             ${s.maps ? `<a class="act-btn act-nav" href="${s.maps}" target="_blank" rel="noopener">📍 Google Maps 導航</a>` : ''}
+            <button class="act-btn act-check ${done?'is-done':''}" data-key="${key}">${done?'✓ 已完成':'標記完成'}</button>
           </div>
         </div>`;
     });
@@ -1033,7 +1064,9 @@ function renderExpense() {
       <button class="exp-sync-btn ${syncStatus==='syncing'?'syncing':''}" id="expSyncBtn" ${syncStatus==='syncing'?'disabled':''}>
         ${syncStatus==='syncing'?'⏳ 同步中…':'📤 一鍵同步到 Google Sheets'}
       </button>
-      <div class="exp-sync-status" style="color:${syncStatus==='ok'?'var(--green)':syncStatus==='error'?'var(--red)':'var(--gray)'}">${syncMsg}</div>
+      <div class="exp-sync-status" style="color:${syncStatus==='ok'?'var(--green)':syncStatus==='error'?'var(--red)':'var(--gray)'}">
+        ${syncMsg}${!syncMsg && lastSyncTime ? '<span style="color:#999;font-size:12px;">上次同步：'+lastSyncTime+'</span>' : ''}
+      </div>
       <details class="exp-sync-setup">
         <summary>⚙️ 設定 Google Sheets 連結</summary>
         <div class="setup-content">
@@ -1041,10 +1074,17 @@ function renderExpense() {
           1. 開一個新的 <a href="https://sheets.google.com" target="_blank" rel="noopener">Google Sheets</a><br>
           2. 點選「擴充功能」→「Apps Script」<br>
           3. 把以下程式碼貼進去，取代原本的內容：<br>
-          <div style="background:#1E1E1E;color:#D4D4D4;padding:10px;border-radius:8px;margin:8px 0;font-size:11px;line-height:1.5;overflow-x:auto;white-space:pre;font-family:monospace;">function doPost(e) {
+          <div style="background:#1E1E1E;color:#D4D4D4;padding:10px;border-radius:8px;margin:8px 0;font-size:11px;line-height:1.5;overflow-x:auto;white-space:pre;font-family:monospace;">// 健康檢查（驗證網址用）
+function doGet(e) {
+  return ContentService
+    .createTextOutput(JSON.stringify({ok:true}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = JSON.parse(e.postData.contents);
-  // 清除舊資料（保留標題列）
+  // 清除 A~G 欄舊資料（保留標題列，H 欄以後不動）
   if (sheet.getLastRow() > 1)
     sheet.getRange(2,1,sheet.getLastRow()-1,7).clearContent();
   // 寫入標題（如果是空的）
@@ -1065,9 +1105,10 @@ function renderExpense() {
 }</div>
           4. 點「部署」→「新增部署」→ 類型選「網頁應用程式」<br>
           5. 存取權限設為「所有人」→ 按「部署」<br>
-          6. 複製產生的網址，貼到下方：<br>
+          6. 複製產生的網址，貼到下方，然後按「測試連線」：<br>
           <input class="url-input" id="sheetUrlInput" type="url" placeholder="https://script.google.com/macros/s/..." value="${sheetUrl}">
-          <div style="margin-top:6px;font-size:12px;color:#999;">網址會自動儲存，之後每次按同步就會覆寫整份 Sheet（用 ID 去重不怕重複）</div>
+          <button id="testSheetBtn" style="margin-top:8px;padding:6px 14px;border:1.5px solid #34A853;border-radius:8px;background:white;color:#34A853;font-size:13px;font-weight:600;cursor:pointer;">🔗 測試連線</button>
+          <div style="margin-top:6px;font-size:12px;color:#999;">同步只會覆寫 A~G 欄，H 欄以後的備註/公式不受影響</div>
         </div>
       </details>
     </div>
@@ -1137,7 +1178,8 @@ function render() {
   const root = document.getElementById('appRoot');
   const vt = document.getElementById('viewToggle');
   const isDayPage = DAYS_DATA.some(d => d.id === currentDay);
-  vt.style.display = isDayPage ? 'flex' : 'none';
+  const isBackupPage = currentDay === 'backup';
+  vt.style.display = (isDayPage || isBackupPage) ? 'flex' : 'none';
 
   // invalidate old maps
   Object.keys(maps).forEach(k => { if(maps[k]) { maps[k].remove(); delete maps[k]; } });
@@ -1147,7 +1189,16 @@ function render() {
   if (currentDay === 'info') {
     content = renderInfo();
   } else if (currentDay === 'backup') {
-    content = renderBackup();
+    if (currentView === 'map') {
+      // show all backup plans on one map
+      const allBackupSpots = [];
+      BACKUP_PLANS.forEach(p => p.spots.forEach(s => { if(s.lat && s.lng) allBackupSpots.push(s); }));
+      const backupMapDay = { id:'backup', spots: allBackupSpots };
+      content = renderDayMap(backupMapDay);
+      content += `<div class="page-inner">${renderBackup()}</div>`;
+    } else {
+      content = renderBackup();
+    }
   } else if (currentDay === 'expense') {
     content = renderExpense();
   } else if (currentDay === 'cafe') {
@@ -1168,7 +1219,8 @@ function render() {
     }
   }
 
-  if (!isDayPage || currentView === 'list') {
+  const useMapLayout = (isDayPage || isBackupPage) && currentView === 'map';
+  if (!useMapLayout) {
     root.innerHTML = `<div class="page active"><div class="page-inner">${content}</div></div>`;
   } else {
     root.innerHTML = `<div class="page active">${content}</div>`;
@@ -1232,20 +1284,49 @@ document.addEventListener('click', e => {
   }
 });
 
-// Expense — rate change & sheet URL
+// Expense — rate change (partial update to avoid destroying form state)
 document.addEventListener('change', e => {
   if (e.target.id === 'expRateInput') {
     const v = parseFloat(e.target.value);
-    if (v > 0) { expRate = v; saveRate(); render(); }
+    if (v > 0) {
+      expRate = v; saveRate();
+      // partial update: only refresh dashboard + item TWD values, don't rebuild form
+      document.querySelectorAll('.exp-stat-sub').forEach(el => {
+        const m = el.textContent.match(/NT\$/);
+        if (!m) return;
+      });
+      // just update all TWD displays in-place
+      const today = new Date().toISOString().slice(0,10);
+      const todayTotal = expenses.filter(x => x.date === today).reduce((s,x) => s + x.amount, 0);
+      const tripTotal = expenses.reduce((s,x) => s + x.amount, 0);
+      const stats = document.querySelectorAll('.exp-stat');
+      if (stats[0]) stats[0].querySelector('.exp-stat-sub').textContent = '≈ NT$' + Math.round(todayTotal * expRate).toLocaleString();
+      if (stats[1]) stats[1].querySelector('.exp-stat-sub').textContent = '≈ NT$' + Math.round(tripTotal * expRate).toLocaleString() + ' · ' + expenses.length + ' 筆';
+      document.querySelectorAll('.exp-item-twd').forEach(el => {
+        const jpy = el.closest('.exp-item')?.querySelector('.exp-item-jpy');
+        if (jpy) {
+          const amt = parseInt(jpy.textContent.replace(/[¥,]/g, ''));
+          if (!isNaN(amt)) el.textContent = 'NT$' + Math.round(amt * expRate).toLocaleString();
+        }
+      });
+      document.querySelectorAll('.exp-day-total').forEach(el => {
+        const m = el.textContent.match(/¥([\d,]+)/);
+        if (m) {
+          const amt = parseInt(m[1].replace(/,/g, ''));
+          el.textContent = '¥' + amt.toLocaleString() + ' ≈ NT$' + Math.round(amt * expRate).toLocaleString();
+        }
+      });
+    }
   }
   if (e.target.id === 'sheetUrlInput') {
     sheetUrl = e.target.value.trim();
     saveSheetUrl();
   }
 });
-// Expense — sync button
+// Expense — sync & test buttons
 document.addEventListener('click', e => {
   if (e.target.closest('#expSyncBtn')) { syncToSheets(); }
+  if (e.target.closest('#testSheetBtn')) { testSheetConnection(); }
 });
 
 // ============================================================
