@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>大阪家族旅行 2026</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 :root {
   --primary: #6C63FF;
@@ -1161,6 +1161,7 @@ function renderItinerary(el) {
 function initMap() {
   var mapEl = document.getElementById('map');
   if (!mapEl) return;
+  if (typeof L === 'undefined') { mapEl.innerHTML = '<div style="padding:40px;text-align:center;color:var(--gray);">地圖載入失敗，請重新整理頁面</div>'; return; }
   if (map) { map.remove(); map = null; }
   map = L.map('map');
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
