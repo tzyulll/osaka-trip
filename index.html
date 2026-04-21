@@ -2,1386 +2,1602 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>大阪家族旅行 2026</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-  :root {
-    --pink: #E8A0BF;
-    --pink-light: #FDF2F8;
-    --pink-dark: #C05A8C;
-    --blue: #5B7FC7;
-    --blue-light: #EBF0FA;
-    --green: #4CAF7D;
-    --green-light: #E8F5E9;
-    --orange: #E8985E;
-    --orange-light: #FFF8F0;
-    --red: #E57373;
-    --purple: #9575CD;
-    --teal: #4DB6AC;
-    --gray: #6B7280;
-    --gray-light: #F3F4F6;
-    --text: #1F2937;
-    --bg: #F5F3F0;
-    --card: #FFFFFF;
-    --shadow: 0 2px 16px rgba(0,0,0,0.07);
-    --shadow-lg: 0 8px 30px rgba(0,0,0,0.10);
-    --radius: 18px;
-    --radius-sm: 12px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 17px;
-    line-height: 1.65;
-    padding-bottom: 70px;
-    -webkit-font-smoothing: antialiased;
-  }
+:root {
+  --primary: #6C63FF;
+  --primary-light: #E8E6FF;
+  --primary-dark: #524AE0;
+  --accent: #FF6B6B;
+  --accent-light: #FFE0E0;
+  --green: #2ECC71;
+  --green-light: #E8F8F0;
+  --blue: #3498DB;
+  --blue-light: #EBF5FB;
+  --orange: #F39C12;
+  --orange-light: #FFF3E0;
+  --gray: #7F8C8D;
+  --gray-light: #F7F8FA;
+  --gray-border: #E8E8E8;
+  --dark: #2C3E50;
+  --white: #FFFFFF;
+  --bg: #F4F5F7;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 4px 24px rgba(0,0,0,0.12);
+  --font: 'Segoe UI', 'Hiragino Sans', 'Noto Sans TC', sans-serif;
+}
 
-  /* ===== HEADER ===== */
-  .header {
-    background: linear-gradient(135deg, #F8BBD0 0%, #CE93D8 50%, #9FA8DA 100%);
-    color: white;
-    text-align: center;
-    padding: 36px 20px 20px;
-    position: relative;
-    overflow: hidden;
-  }
-  .header::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0; right: 0;
-    height: 24px;
-    background: var(--bg);
-    border-radius: 24px 24px 0 0;
-  }
-  .header h1 { font-size: 26px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 1px 8px rgba(0,0,0,0.1); }
-  .header .subtitle { font-size: 14px; opacity: 0.92; margin-top: 4px; font-weight: 500; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--dark);
+  min-height: 100vh;
+  padding-bottom: 80px;
+  -webkit-tap-highlight-color: transparent;
+}
 
-  /* ===== DAY TABS ===== */
-  .day-tabs {
-    display: flex;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    gap: 8px;
-    padding: 8px 16px 4px;
-    scrollbar-width: none;
-    position: sticky;
-    top: 0;
-    z-index: 200;
-    background: var(--bg);
-  }
-  .day-tabs::-webkit-scrollbar { display: none; }
-  .day-tab {
-    flex: 0 0 auto;
-    padding: 10px 18px;
-    border-radius: 24px;
-    border: none;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    background: var(--card);
-    color: var(--gray);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    transition: all 0.25s;
-    white-space: nowrap;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .day-tab.active {
-    background: var(--pink-dark);
-    color: white;
-    box-shadow: 0 4px 14px rgba(192,90,140,0.35);
-  }
-  .day-tab .tab-icon { margin-right: 4px; }
+/* Header */
+.header {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: var(--white);
+  padding: 20px 16px 16px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+.header h1 { font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+.header .subtitle { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+.header .heart-btn {
+  position: absolute;
+  right: 16px;
+  top: 20px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
 
-  /* ===== VIEW TOGGLE ===== */
-  .view-toggle {
-    display: flex;
-    justify-content: center;
-    gap: 0;
-    padding: 8px 16px;
-    margin-bottom: 4px;
-  }
-  .view-btn {
-    padding: 9px 24px;
-    border: 2px solid #E0E0E0;
-    background: var(--card);
-    color: var(--gray);
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .view-btn:first-child { border-radius: 20px 0 0 20px; border-right: 1px solid #E0E0E0; }
-  .view-btn:last-child { border-radius: 0 20px 20px 0; border-left: 1px solid #E0E0E0; }
-  .view-btn.active { background: var(--pink-dark); color: white; border-color: var(--pink-dark); }
+/* Day Tabs */
+.day-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.day-tabs::-webkit-scrollbar { display: none; }
+.day-tab {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 2px solid var(--gray-border);
+  background: var(--white);
+  color: var(--gray);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.day-tab.active {
+  background: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+}
 
-  /* ===== CONTENT ===== */
-  .page { display: none; }
-  .page.active { display: block; }
-  .page-inner { max-width: 600px; margin: 0 auto; padding: 8px 14px; }
+/* View Toggle */
+.view-toggle {
+  display: flex;
+  gap: 0;
+  margin: 8px 16px;
+  background: var(--gray-light);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.view-btn {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--gray);
+  transition: all 0.2s;
+}
+.view-btn.active {
+  background: var(--white);
+  color: var(--primary);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
 
-  /* ===== MAP ===== */
-  .map-container {
-    display: none;
-    height: 55vh;
-    min-height: 350px;
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin: 0 14px 12px;
-    box-shadow: var(--shadow-lg);
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
-  }
-  .map-container.active { display: block; }
-  .map-container .leaflet-container { height: 100%; width: 100%; }
+/* Content */
+.content { padding: 0 16px 16px; }
+.content.hidden { display: none; }
 
-  /* custom map markers */
-  .custom-marker {
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    background: var(--pink-dark);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    font-size: 14px;
-    border: 3px solid white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-  }
-  .custom-marker.checked-marker { background: var(--green); }
-  .leaflet-popup-content { font-family: inherit; font-size: 14px; line-height: 1.5; }
-  .popup-title { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
-  .popup-tags { margin: 4px 0 8px; }
-  .popup-nav-btn {
-    display: inline-block;
-    background: var(--blue);
-    color: white;
-    padding: 6px 14px;
-    border-radius: 16px;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-  }
+/* Spot Card */
+.spot-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 4px;
+  box-shadow: var(--shadow);
+  position: relative;
+  transition: all 0.2s;
+}
+.spot-card.completed { opacity: 0.55; }
+.spot-card.completed .spot-name { text-decoration: line-through; }
+.spot-card.optional-spot { border-left: 3px solid var(--orange); opacity: 0.85; }
+.spot-time {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+.spot-name {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.spot-tags { display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap; }
+.spot-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.tag-food { background: #FFF3E0; color: #E65100; }
+.tag-sight { background: #E3F2FD; color: #1565C0; }
+.tag-temple { background: #FCE4EC; color: #C62828; }
+.tag-nature { background: #E8F5E9; color: #2E7D32; }
+.tag-shop { background: #F3E5F5; color: #6A1B9A; }
+.tag-transport { background: #ECEFF1; color: #455A64; }
+.spot-desc {
+  font-size: 14px;
+  color: var(--gray);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.spot-tips {
+  background: var(--orange-light);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #E65100;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+.spot-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.spot-actions button {
+  flex: 1;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--gray-border);
+  background: var(--white);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.spot-actions button:active { transform: scale(0.97); }
+.spot-check-btn.checked {
+  background: var(--green-light);
+  border-color: var(--green);
+  color: var(--green);
+}
 
-  /* ===== SPOT CARD ===== */
-  .spot-card {
-    background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 0;
-    margin-bottom: 14px;
-    overflow: hidden;
-    transition: transform 0.15s;
-    position: relative;
-  }
-  .spot-card:active { transform: scale(0.99); }
-  .spot-card-inner {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 16px;
-  }
+/* Connector */
+.connector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.5;
+}
+.connector::before {
+  content: '';
+  width: 2px;
+  height: 20px;
+  background: var(--gray-border);
+  flex-shrink: 0;
+  margin-left: 8px;
+}
 
-  /* number badge */
-  .spot-num {
-    width: 34px; height: 34px;
-    border-radius: 50%;
-    background: var(--pink-dark);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    font-size: 15px;
-    flex-shrink: 0;
-    box-shadow: 0 2px 6px rgba(192,90,140,0.3);
-    cursor: pointer;
-    transition: all 0.2s;
-    -webkit-tap-highlight-color: transparent;
-    position: relative;
-  }
-  .spot-num.done {
-    background: var(--green);
-    box-shadow: 0 2px 6px rgba(76,175,125,0.3);
-  }
-  .spot-num.done::after {
-    content: '✓';
-    position: absolute;
-    font-size: 18px;
-    font-weight: 700;
-  }
-  .spot-num.done .num-text { visibility: hidden; }
+/* Start Transit */
+.start-transit {
+  background: var(--primary-light);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--primary-dark);
+  line-height: 1.5;
+  font-weight: 500;
+}
 
-  .spot-body { flex: 1; min-width: 0; }
-  .spot-time { font-size: 13px; color: var(--pink-dark); font-weight: 700; }
-  .spot-name {
-    font-size: 18px;
-    font-weight: 700;
-    margin: 2px 0 4px;
-    line-height: 1.35;
-  }
-  .spot-name.done-text { text-decoration: line-through; color: #aaa; }
-  .spot-jp { font-size: 13px; color: #999; margin-bottom: 6px; }
-  .spot-desc { font-size: 14px; color: var(--gray); margin-bottom: 8px; line-height: 1.55; }
+/* Section Card (solo etc) */
+.section-card {
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  margin-top: 14px;
+}
+.solo-section {
+  background: linear-gradient(135deg, #FFF3E0, #FFF8E1);
+  border: 2px solid #FFCC80;
+}
+.section-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.section-desc {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.5;
+}
 
-  /* tags */
-  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
-  .tag {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-  .tag-sight { background: #E3F2FD; color: #1565C0; }
-  .tag-food { background: #FFF3E0; color: #E65100; }
-  .tag-shop { background: #F3E5F5; color: #7B1FA2; }
-  .tag-nature { background: #E8F5E9; color: #2E7D32; }
-  .tag-temple { background: #FFF8E1; color: #F57F17; }
-  .tag-transport { background: #ECEFF1; color: #455A64; }
-  .tag-play { background: #FCE4EC; color: #C62828; }
+/* Group cards (Day 2) */
+.group-card {
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.group-card-a {
+  background: linear-gradient(135deg, #E8F5E9, #F1F8E9);
+  border: 2px solid #A5D6A7;
+}
+.group-card-b {
+  background: linear-gradient(135deg, #EBF0FA, #E3F2FD);
+  border: 2px solid #90CAF9;
+}
+.group-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.group-subtitle {
+  font-size: 14px;
+  color: var(--gray);
+  line-height: 1.5;
+}
 
-  /* tips */
-  .spot-tips {
-    background: var(--gray-light);
-    border-radius: 10px;
-    padding: 10px 12px;
-    margin-top: 8px;
-    font-size: 13px;
-    color: var(--gray);
-    line-height: 1.6;
-  }
-  .spot-tips strong { color: var(--text); }
+/* Optional spot badge */
+.spot-optional-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #FFF3E0;
+  color: #E65100;
+  margin-left: 8px;
+  vertical-align: middle;
+}
 
-  /* actions */
-  .spot-actions {
-    display: flex;
-    gap: 8px;
-    padding: 0 16px 14px;
-    flex-wrap: wrap;
-  }
-  .act-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 7px 14px;
-    border-radius: 18px;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: all 0.15s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .act-btn:active { transform: scale(0.95); }
-  .act-nav { background: var(--blue-light); color: var(--blue); }
-  .act-check { background: var(--green-light); color: var(--green); }
-  .act-check.is-done { background: var(--green); color: white; }
+/* Route info box */
+.route-info {
+  background: var(--blue-light);
+  border: 1.5px solid #90CAF9;
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--blue);
+  line-height: 1.6;
+}
 
-  /* connector line between cards */
-  .connector {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 0 0 30px;
-    margin: -6px 0;
-    position: relative;
-  }
-  .connector::before {
-    content: '';
-    position: absolute;
-    left: 30px;
-    top: 0; bottom: 0;
-    width: 2px;
-    background: repeating-linear-gradient(to bottom, var(--pink) 0, var(--pink) 4px, transparent 4px, transparent 8px);
-  }
-  .connector-text {
-    background: var(--bg);
-    padding: 3px 12px;
-    font-size: 12px;
-    color: var(--gray);
-    z-index: 1;
-    border-radius: 20px;
-    border: 1px solid #e8e8e8;
-  }
-  .connector-text.loading { color: #ccc; border-color: transparent; }
+/* Note connector */
+.note-connector {
+  background: var(--gray-light);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.5;
+  text-align: center;
+  font-weight: 500;
+}
 
-  /* ===== SOLO CARD ===== */
-  .solo-section {
-    background: var(--orange-light);
-    border: 2px solid #F5C89A;
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 14px;
-  }
-  .solo-title { font-size: 16px; font-weight: 700; color: var(--orange); margin-bottom: 10px; }
+/* Backup number badge */
+.backup-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--orange);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
 
-  /* ===== SECTION CARD ===== */
-  .section-card {
-    background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 20px;
-    margin-bottom: 14px;
-  }
-  .section-title {
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
+/* Map */
+#map {
+  height: calc(100vh - 260px);
+  min-height: 300px;
+  border-radius: var(--radius);
+  margin: 0 0 16px;
+  z-index: 1;
+}
 
-  /* ===== CHECKLIST ===== */
-  .cl-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 0;
-    border-bottom: 1px solid #F0F0F0;
-  }
-  .cl-item:last-child { border-bottom: none; }
-  .cl-check {
-    width: 28px; height: 28px;
-    border-radius: 8px;
-    border: 2.5px solid #D1D5DB;
-    background: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-size: 15px;
-    color: transparent;
-    transition: all 0.2s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .cl-check.done { background: var(--green); border-color: var(--green); color: white; }
-  .cl-text { flex: 1; font-size: 16px; }
-  .cl-text.done-text { text-decoration: line-through; color: #aaa; }
-  .cl-text a { color: var(--blue); }
-  .cl-sub { font-size: 13px; color: #999; display: block; }
-  .cl-map {
-    padding: 6px 12px;
-    background: var(--blue-light);
-    color: var(--blue);
-    border-radius: 14px;
-    text-decoration: none;
-    font-size: 12px;
-    font-weight: 600;
-    flex-shrink: 0;
-  }
+/* Checklist */
+.cl-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--gray-border);
+}
+.cl-item:last-child { border-bottom: none; }
+.cl-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 2px solid var(--gray-border);
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+  transition: all 0.2s;
+}
+.cl-check.checked {
+  background: var(--green);
+  border-color: var(--green);
+}
+.cl-check.checked::after {
+  content: '\2713';
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 700;
+}
+.cl-text { font-size: 14px; line-height: 1.5; flex: 1; }
+.cl-text.checked { text-decoration: line-through; color: var(--gray); }
+.cl-text a { color: var(--primary); text-decoration: underline; }
 
-  /* ===== PROGRESS ===== */
-  .progress-ring { text-align: center; padding: 10px 0; }
-  .progress-ring svg { width: 120px; height: 120px; }
-  .progress-ring .ring-bg { fill: none; stroke: #E5E7EB; stroke-width: 10; }
-  .progress-ring .ring-fill { fill: none; stroke: var(--green); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
-  .progress-pct { font-size: 28px; font-weight: 800; }
-  .progress-label { font-size: 13px; color: var(--gray); margin-top: 4px; }
+/* Progress Ring */
+.progress-ring-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+}
+.progress-ring { transform: rotate(-90deg); }
+.progress-ring-bg { fill: none; stroke: var(--gray-border); stroke-width: 8; }
+.progress-ring-fill { fill: none; stroke: var(--green); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.5s; }
+.progress-text { font-size: 14px; font-weight: 600; margin-top: 8px; color: var(--dark); }
 
-  /* ===== INFO GRID ===== */
-  .info-grid { display: grid; gap: 10px; }
-  .info-item { background: var(--gray-light); border-radius: var(--radius-sm); padding: 14px 16px; }
-  .info-label { font-size: 12px; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-  .info-value { font-size: 16px; font-weight: 700; }
+/* Expense Tracker */
+.exp-summary {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.exp-total { font-size: 28px; font-weight: 700; color: var(--primary); }
+.exp-total-sub { font-size: 14px; color: var(--gray); margin-top: 4px; }
+.exp-form {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+.exp-input, .exp-select {
+  padding: 10px 12px;
+  border: 1.5px solid var(--gray-border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: var(--font);
+  min-width: 0;
+}
+.exp-input:focus, .exp-select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+.exp-input-amount { width: 100px; }
+.exp-input-note { flex: 1; min-width: 120px; }
+.exp-select { width: 90px; min-width: 0; }
+.exp-add-btn {
+  padding: 10px 18px;
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.exp-list { display: flex; flex-direction: column; gap: 8px; }
+.exp-item {
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.exp-item-icon { font-size: 20px; flex-shrink: 0; }
+.exp-item-body {
+  flex: 1;
+  overflow: hidden;
+}
+.exp-item-note { font-size: 14px; font-weight: 600; }
+.exp-item-meta {
+  font-size: 12px;
+  color: var(--gray);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.exp-item-jpy {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--dark);
+  text-align: right;
+  white-space: nowrap;
+}
+.exp-item-twd {
+  font-size: 12px;
+  color: var(--gray);
+  text-align: right;
+  white-space: nowrap;
+}
+.exp-item-del {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--accent);
+  padding: 4px;
+  flex-shrink: 0;
+}
+.exp-day-filter {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+.exp-day-filter::-webkit-scrollbar { display: none; }
+.exp-day-btn {
+  padding: 6px 12px;
+  border-radius: 16px;
+  border: 1.5px solid var(--gray-border);
+  background: var(--white);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.exp-day-btn.active {
+  background: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+}
+.exp-rate-note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--gray);
+  margin-top: 12px;
+}
 
-  /* ===== BOTTOM BAR	===== */
-  .bottom-bar {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: rgba(255,255,255,0.92);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-top: 1px solid rgba(0,0,0,0.06);
-    padding: 10px 16px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    z-index: 300;
-  }
-  .bottom-btn {
-    padding: 9px 18px;
-    border-radius: 20px;
-    border: 1.5px solid #E0E0E0;
-    background: white;
-    color: var(--gray);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .bottom-btn:active { background: var(--gray-light); }
+/* Google Sheets Sync */
+.sync-section {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+.sync-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sync-desc {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.sync-url-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--gray-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: var(--font);
+  margin-bottom: 8px;
+  min-width: 0;
+}
+.sync-url-input:focus { outline: none; border-color: var(--primary); }
+.sync-btn {
+  width: 100%;
+  padding: 10px;
+  background: #0F9D58;
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.sync-btn:disabled { opacity: 0.5; }
+.sync-status {
+  font-size: 12px;
+  margin-top: 8px;
+  text-align: center;
+}
+.sync-status.success { color: var(--green); }
+.sync-status.error { color: var(--accent); }
+.sync-instructions {
+  background: var(--gray-light);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--gray);
+  line-height: 1.6;
+}
+.sync-instructions summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+.sync-instructions code {
+  background: #E8E8E8;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+}
 
-  /* ===== SECRET UNLOCK HEART ===== */
-  .unlock-heart {
-    position: absolute;
-    top: 14px;
-    right: 16px;
-    font-size: 14px;
-    opacity: 0.25;
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    transition: all 0.4s ease;
-    filter: grayscale(1);
-  }
-  .unlock-heart.unlocked {
-    opacity: 0.75;
-    filter: grayscale(0);
-    transform: scale(1.15);
-  }
-  .unlock-heart.pressing {
-    transform: scale(0.85);
-    opacity: 0.5;
-  }
+/* Info page sections */
+.info-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+}
+.info-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
-  /* ===== EXPENSE TRACKER ===== */
-  .exp-dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-  .exp-stat { background: var(--card); border-radius: var(--radius-sm); padding: 14px 16px; box-shadow: var(--shadow); text-align: center; }
-  .exp-stat-label { font-size: 12px; color: var(--gray); font-weight: 600; margin-bottom: 4px; }
-  .exp-stat-value { font-size: 22px; font-weight: 800; }
-  .exp-stat-sub { font-size: 12px; color: #999; margin-top: 2px; }
-  .exp-stat.full { grid-column: 1 / -1; }
-  .exp-rate { text-align: center; font-size: 13px; color: var(--gray); margin-bottom: 12px; }
-  .exp-rate input { width: 60px; border: 1.5px solid #ddd; border-radius: 8px; padding: 4px 8px; font-size: 13px; text-align: center; }
+/* Cafe card */
+.cafe-card {
+  background: var(--white);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow);
+}
+.cafe-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.cafe-desc { font-size: 13px; color: var(--gray); line-height: 1.4; margin-bottom: 6px; }
+.cafe-link {
+  font-size: 12px;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
 
-  .exp-form { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; margin-bottom: 14px; }
-  .exp-form-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
-  .exp-row { display: flex; gap: 8px; margin-bottom: 10px; }
-  .exp-input { flex: 1; min-width: 0; padding: 10px 12px; border: 1.5px solid #E0E0E0; border-radius: 10px; font-size: 15px; font-family: inherit; -webkit-appearance: none; }
-  .exp-input:focus { outline: none; border-color: var(--pink-dark); }
-  .exp-select { min-width: 0; padding: 10px 12px; border: 1.5px solid #E0E0E0; border-radius: 10px; font-size: 14px; font-family: inherit; background: white; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
-  .exp-submit { width: 100%; padding: 12px; border: none; border-radius: 12px; background: var(--orange); color: white; font-size: 16px; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  .exp-submit:active { transform: scale(0.98); }
+/* Walking distance */
+.walking-info {
+  background: var(--green-light);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #2E7D32;
+  text-align: center;
+  margin: 8px 0;
+}
 
-  .exp-day-group { margin-bottom: 14px; }
-  .exp-day-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 2px solid #eee; margin-bottom: 8px; }
-  .exp-day-date { font-size: 15px; font-weight: 700; }
-  .exp-day-total { font-size: 13px; color: var(--gray); font-weight: 600; }
-  .exp-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F0F0F0; }
-  .exp-item:last-child { border-bottom: none; }
-  .exp-item-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-  .exp-item-body { flex: 1; min-width: 0; }
-  .exp-item-name { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .exp-item-meta { font-size: 12px; color: #999; margin-top: 2px; }
-  .exp-item-amount { text-align: right; flex-shrink: 0; }
-  .exp-item-jpy { font-size: 16px; font-weight: 700; }
-  .exp-item-twd { font-size: 12px; color: #999; }
-  .exp-item-del { background: none; border: none; color: #ccc; font-size: 18px; cursor: pointer; padding: 4px; -webkit-tap-highlight-color: transparent; }
-  .exp-item-del:active { color: var(--red); }
-  .exp-empty { text-align: center; color: #bbb; padding: 40px 0; font-size: 15px; }
+/* Bottom Bar */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  border-top: 1px solid var(--gray-border);
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0;
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  z-index: 100;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
+}
+.bar-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  font-size: 10px;
+  color: var(--gray);
+  cursor: pointer;
+  padding: 4px 8px;
+  font-family: var(--font);
+}
+.bar-btn .bar-icon { font-size: 20px; }
+.bar-btn.active { color: var(--primary); }
 
-  /* Google Sheets sync */
-  .exp-sync-section { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; margin-bottom: 14px; }
-  .exp-sync-btn { width: 100%; padding: 12px; border: none; border-radius: 12px; background: #34A853; color: white; font-size: 16px; font-weight: 700; cursor: pointer; -webkit-tap-highlight-color: transparent; display: flex; align-items: center; justify-content: center; gap: 8px; }
-  .exp-sync-btn:active { transform: scale(0.98); }
-  .exp-sync-btn:disabled { background: #9E9E9E; cursor: not-allowed; }
-  .exp-sync-btn.syncing { background: #FFA726; }
-  .exp-sync-status { text-align: center; font-size: 13px; margin-top: 8px; min-height: 20px; }
-  .exp-sync-setup { margin-top: 12px; padding: 14px; background: var(--gray-light); border-radius: 10px; }
-  .exp-sync-setup summary { font-size: 14px; font-weight: 600; color: var(--gray); cursor: pointer; }
-  .exp-sync-setup .setup-content { margin-top: 10px; font-size: 13px; color: var(--gray); line-height: 1.7; }
-  .exp-sync-setup code { background: #E8E8E8; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
-  .exp-sync-setup .url-input { width: 100%; padding: 8px 10px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 13px; font-family: monospace; margin-top: 6px; }
-  .exp-sync-setup .url-input:focus { outline: none; border-color: #34A853; }
-
-  /* ===== RESPONSIVE ===== */
-  @media (min-width: 768px) {
-    body { font-size: 18px; }
-    .spot-name { font-size: 20px; }
-    .page-inner { padding: 12px 24px; }
-  }
+/* Reset modal */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.hidden { display: none; }
+.modal-box {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 24px;
+  max-width: 300px;
+  width: 90%;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+}
+.modal-box h3 { margin-bottom: 12px; }
+.modal-box p { font-size: 14px; color: var(--gray); margin-bottom: 16px; }
+.modal-btns { display: flex; gap: 10px; }
+.modal-btns button {
+  flex: 1;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.modal-cancel { background: var(--gray-light); color: var(--dark); }
+.modal-confirm { background: var(--accent); color: var(--white); }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>大阪家族旅行</h1>
-  <div class="subtitle">2026 / 5 / 8 (五) — 5 / 12 (二)  ·  5 天 4 夜</div>
+  <h1>🌸 大阪家族旅行 2026</h1>
+  <div class="subtitle">5/8 (五) ~ 5/12 (二) · 5 天 4 夜</div>
+  <button class="heart-btn" id="heartBtn">🤍</button>
 </div>
 
-<nav class="day-tabs" id="dayTabs"></nav>
-<div class="view-toggle" id="viewToggle" style="display:none;">
-  <button class="view-btn active" data-view="list">行程</button>
-  <button class="view-btn" data-view="map">地圖</button>
+<div class="day-tabs" id="dayTabs"></div>
+
+<div id="viewToggle" class="view-toggle" style="display:none;">
+  <button class="view-btn active" data-view="list" onclick="setView('list')">📋 列表</button>
+  <button class="view-btn" data-view="map" onclick="setView('map')">🗺️ 地圖</button>
 </div>
 
-<div id="appRoot"></div>
+<div class="content" id="mainContent"></div>
 
 <div class="bottom-bar">
-  <button class="bottom-btn" onclick="if(confirm('確定要重置所有打勾紀錄嗎？')){localStorage.removeItem('osaka2026v2');location.reload();}">重置紀錄</button>
+  <button class="bar-btn active" data-page="itinerary" onclick="switchPage('itinerary')">
+    <span class="bar-icon">📅</span>行程
+  </button>
+  <button class="bar-btn" data-page="info" onclick="switchPage('info')">
+    <span class="bar-icon">📌</span>資訊
+  </button>
+  <button class="bar-btn" data-page="backup" onclick="switchPage('backup')">
+    <span class="bar-icon">🔄</span>備案
+  </button>
+  <button class="bar-btn" data-page="todo" onclick="switchPage('todo')">
+    <span class="bar-icon">📋</span>待辦
+  </button>
+  <button class="bar-btn" data-page="expense" onclick="switchPage('expense')">
+    <span class="bar-icon">💰</span>記帳
+  </button>
+  <button class="bar-btn" data-page="reset" onclick="showResetModal()">
+    <span class="bar-icon">🔄</span>重置
+  </button>
+</div>
+
+<div class="modal-overlay hidden" id="resetModal">
+  <div class="modal-box">
+    <h3>重置所有資料？</h3>
+    <p>將清除所有打卡記錄、記帳資料和勾選狀態，無法復原。</p>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="hideResetModal()">取消</button>
+      <button class="modal-confirm" onclick="doReset()">確認重置</button>
+    </div>
+  </div>
 </div>
 
 <script>
-// ============================================================
-// DATA — enriched with coordinates, categories, tips
-// ============================================================
-const DAYS_DATA = [
-  { id:'day1', label:'5/8', icon:'🛬', weekday:'五', title:'Day 1 · 抵達大阪', spots:[
-    { name:"關西機場 KIX", jp:"関西国際空港", time:"12:50", tags:["transport"], desc:"抵達關西國際機場，搭南海電鐵前往市區", lat:34.4320, lng:135.2304, maps:"https://maps.google.com/?q=Kansai+International+Airport" , transitToNext:"🚃 南海電鐵到難波 約 40 分 → 轉長堀鶴見緑地線到大正 約 10 分"},
-    { name:"Airbnb Check-in", jp:"大正駅 徒歩4分", time:"16:00", tags:["transport"], desc:"放行李、稍作休息，準備出發逛街", tips:"入住 16:00，可先聯繫房東確認能否提早寄放行李", lat:34.6515, lng:135.4818, maps:"https://maps.google.com/?q=大正駅" , transitToNext:"🚃 長堀鶴見緑地線 · 心齋橋駅 · 約 10 分鐘"},
-    { name:"心齋橋筋商店街", jp:"心斎橋筋商店街", tags:["shop"], desc:"大阪最熱鬧的購物商店街，600 公尺長的拱廊", tips:"可逛藥妝店、服飾、伴手禮，建議留 1-2 小時", lat:34.6723, lng:135.5016, maps:"https://maps.google.com/?q=心斎橋筋商店街" },
-    { name:"道頓堀", jp:"道頓堀", tags:["food","sight"], desc:"大阪美食地標，固力果跑跑人、螃蟹道樂都在這", tips:"必吃：章魚燒、大阪燒、串炸。傍晚霓虹燈最美", lat:34.6687, lng:135.5013, maps:"https://maps.google.com/?q=道頓堀" },
-  ], solo:[
-    { name:"飯店下午茶", tags:["food"] }
-  ]},
-  { id:'day2', label:'5/9', icon:'🏯', weekday:'六', title:'Day 2 · 大阪市區經典', startTransit:"🏠 → 🚃 長堀鶴見緑地線 大正→森ノ宮 · 約 15 分鐘 + 步行", spots:[
-    { name:"大阪城公園 · 天守閣", jp:"大阪城天守閣", tags:["sight","temple"], desc:"豐臣秀吉建造的歷史名城，天守閣可眺望大阪全景", tips:"天守閣門票 ¥600 / 9:00-17:00。城公園免費，櫻花季很美", lat:34.6873, lng:135.5262, maps:"https://maps.google.com/?q=大阪城天守閣" , transitToNext:"🚃 谷町線 谷町四丁目→日本橋 · 約 15 分鐘"},
-    { name:"黑門市場", jp:"黒門市場", tags:["food","shop"], desc:"「大阪的廚房」，超過 170 年歷史的生鮮市場", tips:"推薦：新鮮海鮮丼、黑門三平鮪魚、現烤扇貝", lat:34.6627, lng:135.5063, maps:"https://maps.google.com/?q=黒門市場" },
-    { name:"すき焼き しゃぶしゃぶ 豚々 心斎橋店", jp:"すき焼き しゃぶしゃぶ 豚々 心斎橋店", tags:["food"], desc:"心齋橋人氣壽喜燒＆涮涮鍋專門店，食材新鮮、適合家族共享的午餐", tips:"建議提前訂位 / 午餐時段約 ¥2,000–4,000 / 人，可選豬肉套餐（豚々招牌）", lat:34.6723, lng:135.5009, maps:"https://maps.google.com/?q=すき焼き+しゃぶしゃぶ+豚々+心斎橋店" },
-    { name:"難波", jp:"なんば", tags:["shop","food"], desc:"大阪南區最繁華的商圈，連接心齋橋與道頓堀", lat:34.6659, lng:135.5013, maps:"https://maps.google.com/?q=難波" },
-    { name:"法善寺橫丁", jp:"法善寺横丁", tags:["sight","food"], desc:"充滿懷舊風情的石板小巷，不動明王佛像被苔蘚覆蓋", tips:"可以往佛像潑水許願，巷內也有高級割烹餐廳", lat:34.6681, lng:135.5034, maps:"https://maps.google.com/?q=法善寺横丁" , transitToNext:"🚃 御堂筋線 なんば→天王寺 · 約 10 分鐘"},
-    { name:"HARUKAS 300 展望台", jp:"ハルカス300", tags:["sight"], desc:"日本最高的百貨大樓（300m），360度全景展望台", tips:"門票 ¥1,500 / 營業至 22:00。建議傍晚來看夕陽+夜景", lat:34.6464, lng:135.5133, maps:"https://maps.google.com/?q=HARUKAS+300+展望台" },
-  ], solo:[
-    { name:"アニメイトカフェ天王寺", jp:"アニメイトカフェ天王寺", tags:["play"], maps:"https://maps.google.com/?q=アニメイトカフェ+天王寺", lat:34.6467, lng:135.5144 }
-  ]},
-  { id:'day3', label:'5/10', icon:'🦌', weekday:'日', title:'Day 3 · 奈良一日遊', startTransit:"🏠 → 🚃 長堀鶴見緑地線到なんば → 近鐵奈良線 · 約 60 分鐘", spots:[
-    { name:"奈良", jp:"奈良", tags:["sight"], desc:"從大阪搭近鐵約 45 分鐘，千年古都一日遊", tips:"建議搭近鐵奈良線，比 JR 更近市中心景點", lat:34.6851, lng:135.8048, maps:"https://maps.google.com/?q=近鉄奈良駅" },
-    { name:"焼肉キング", jp:"焼肉キング", tags:["food"], desc:"日式燒肉吃到飽連鎖，CP 值高適合家族午餐", tips:"午餐吃到飽約 ¥2,680 起，建議先用 Hot Pepper 訂位", lat:34.6950, lng:135.8020, maps:"https://maps.google.com/?q=焼肉キング+奈良" },
-    { name:"東大寺大佛殿", jp:"東大寺大仏殿", tags:["temple","sight"], desc:"世界最大木造建築，供奉 15 公尺高的盧舍那大佛", tips:"門票 ¥600 / 8:00-17:00。鑽大佛鼻孔洞可祈求好運", lat:34.6891, lng:135.8399, maps:"https://maps.google.com/?q=東大寺大仏殿" },
-    { name:"興福寺五重塔", jp:"興福寺五重塔", tags:["temple"], desc:"奈良代表性地標，高 50 公尺的五重塔", tips:"目前維修中，可能有圍欄，但仍值得路過拍照", lat:34.6832, lng:135.8328, maps:"https://maps.google.com/?q=興福寺五重塔" },
-    { name:"春日大社", jp:"春日大社", tags:["temple","nature"], desc:"世界遺產，朱紅色的千座石燈籠非常壯觀", tips:"免費參拜 / 本殿特別參拜 ¥500。路上可能遇到小鹿", lat:34.6812, lng:135.8498, maps:"https://maps.google.com/?q=春日大社" },
-  ]},
-  { id:'day4', label:'5/11', icon:'🍁', weekday:'一', title:'Day 4 · 箕面自然 + 梅田', startTransit:"🏠 → 🚃 長堀鶴見緑地線到心齋橋 → 御堂筋線到梅田 → 阪急箕面線 · 約 50 分鐘", spots:[
-    { name:"箕面瀑布", jp:"箕面大滝", tags:["nature","sight"], desc:"落差 33 公尺的壯觀瀑布，日本百選瀑布之一", tips:"從箕面站步行約 40 分鐘。步道平緩適合長輩，建議穿好走的鞋", lat:34.8536, lng:135.4697, maps:"https://maps.google.com/?q=箕面大滝" , transitToNext:"🚌 阪急巴士 · 約 15 分鐘（班次少，建議先查時刻表）"},
-    { name:"勝尾寺", jp:"勝尾寺", tags:["temple","nature"], desc:"「勝運之寺」，以達摩不倒翁和美麗庭園聞名", tips:"門票 ¥500 / 寺內可以買達摩許願", lat:34.8614, lng:135.4858, maps:"https://maps.google.com/?q=勝尾寺" , transitToNext:"🚌 巴士回箕面駅 → 🚃 阪急線到梅田 · 約 50 分鐘"},
-    { name:"梅田藍天大廈", jp:"梅田スカイビル", tags:["sight"], desc:"空中庭園展望台，獨特的連接雙塔設計地標", tips:"門票 ¥1,500 / 開放至 22:30。地下有昭和復古美食街「瀧見小路」", lat:34.7052, lng:135.4906, maps:"https://maps.google.com/?q=梅田スカイビル" },
-    { name:"天神橋筋商店街", jp:"天神橋筋商店街", tags:["shop","food"], desc:"日本最長商店街（2.6km），在地庶民美食天堂", tips:"必吃：中村屋可樂餅、春駒壽司。可邊走邊吃", lat:34.7044, lng:135.5126, maps:"https://maps.google.com/?q=天神橋筋商店街" },
-  ]},
-  { id:'day5', label:'5/12', icon:'🛍', weekday:'二', title:'Day 5 · 購物 + 回程', startTransit:"🏠 → 🚃 JR 環狀線 大正→新今宮 → 南海線到りんくうタウン · 約 55 分鐘", spots:[
-    { name:"臨空城 Outlet", jp:"りんくうプレミアム・アウトレット", tags:["shop"], desc:"關西機場旁的大型 Outlet，離機場搭電車只要一站", tips:"10:00 開門，建議早到。離機場近適合最後一天逛", lat:34.4073, lng:135.2913, maps:"https://maps.google.com/?q=りんくうプレミアム・アウトレット" , transitToNext:"🚃 南海電鐵 · 1 站 · 約 5 分鐘"},
-    { name:"關西機場 · 回程", jp:"関西国際空港", time:"19:05", tags:["transport"], desc:"搭乘 19:05 班機返回台灣", tips:"建議 16:30 前抵達機場，預留退稅和安檢時間", lat:34.4320, lng:135.2304, maps:"https://maps.google.com/?q=Kansai+International+Airport" },
-  ]},
+// ========== DATA ==========
+var DAYS_DATA = [
+  {
+    id: 'day1',
+    label: 'Day1',
+    date: '5/8 五',
+    title: '抵達大阪',
+    subtitle: '全員同行',
+    startTransit: null,
+    spots: [
+      { time: '12:50', name: '關西機場 KIX', tags: ['transport'], desc: '搭南海電鐵前往市區', tips: null, lat: 34.4320, lng: 135.2304, transitToNext: '🚃 南海電鐵到難波 約 40 分 → 轉長堀鶴見緑地線到大正 約 10 分' },
+      { time: '16:00', name: 'Airbnb Check-in，大正駅 徒歩4分', tags: ['transport'], desc: '放行李、稍作休息', tips: '入住 16:00，可先聯繫房東確認能否提早寄放行李', lat: 34.6515, lng: 135.4818, transitToNext: '🚃 長堀鶴見緑地線 · 心齋橋駅 · 約 10 分鐘' },
+      { time: '傍晚', name: '心齋橋筋商店街', tags: ['shop'], desc: '藥妝、伴手禮、輕鬆逛', tips: '可逛藥妝店、服飾、伴手禮，建議留 1-2 小時', lat: 34.6723, lng: 135.5016, transitToNext: null },
+      { time: '晚餐', name: '道頓堀', tags: ['food', 'sight'], desc: '章魚燒、大阪燒、看固力果跑跑人', tips: '必吃：章魚燒、大阪燒、串炸。傍晚霓虹燈最美', lat: 34.6687, lng: 135.5013, transitToNext: null }
+    ],
+    solo: [
+      { name: '飯店下午茶', tags: ['food'] }
+    ],
+    routeNote: null,
+    endNote: null
+  },
+  {
+    id: 'day2',
+    label: 'Day2',
+    date: '5/9 六',
+    title: '脫隊日',
+    subtitle: '分組行動',
+    isDay2: true,
+    groupA: { title: 'Joyce + 朋友｜自由行', note: '行程自訂，享受脫隊時光！' },
+    groupB: {
+      title: '長輩 5 人｜輕鬆購物日',
+      startTransit: '🏠 → 🚃 長堀鶴見緑地線 大正→心齋橋 · 約 10 分鐘',
+      spots: [
+        { time: '09:30', name: '心齋橋藥妝', tags: ['shop'], desc: '松本清、AINZ&TULPE，地鐵出口即到', tips: null, lat: 34.6723, lng: 135.5016, transitToNext: null },
+        { time: '11:30', name: '午餐：大丸心齋橋 B1 or 高島屋食堂', tags: ['food'], desc: '不用訂位，圖片點餐，長輩友善', tips: null, lat: 34.6715, lng: 135.5014, transitToNext: null },
+        { time: '13:30', name: '大丸心齋橋・高島屋百貨', tags: ['shop'], desc: '冷氣、椅子多，B1 試吃選伴手禮', tips: null, lat: 34.6715, lng: 135.5014, transitToNext: '🚃 御堂筋線 心齋橋→天王寺 · 約 10 分鐘' },
+        { time: '15:30', name: '慶澤園', tags: ['nature'], desc: '日式庭園 ¥150，池塘水景，有石椅可坐', tips: '視體力選配', lat: 34.6530, lng: 135.5145, transitToNext: null },
+        { time: '16:30', name: 'HARUKAS 近鐵百貨', tags: ['shop', 'sight'], desc: '天王寺站直結，壓軸購物 + 館內吃晚餐', tips: 'あべのハルカス，日本最高百貨', lat: 34.6464, lng: 135.5133, transitToNext: null }
+      ]
+    },
+    solo: null,
+    routeNote: null,
+    endNote: null
+  },
+  {
+    id: 'day3',
+    label: 'Day3',
+    date: '5/10 日',
+    title: '奈良一日遊',
+    subtitle: '全員同行',
+    startTransit: '🏠 → 🚃 長堀鶴見緑地線到なんば → 近鐵奈良線 · 約 60 分鐘（週日早出發避人潮）',
+    spots: [
+      { time: '09:30', name: '春日大社', tags: ['temple', 'nature'], desc: '早上人少最美，朱紅色千座石燈籠', tips: '免費參拜 / 本殿特別參拜 ¥500。早上去人最少', lat: 34.6812, lng: 135.8498, transitToNext: null },
+      { time: '11:00', name: '東大寺大佛殿', tags: ['temple', 'sight'], desc: '世界最大木造建築，15公尺高盧舍那大佛', tips: '門票 ¥600 / 8:00-17:00。鑽大佛鼻孔洞可祈求好運', lat: 34.6891, lng: 135.8399, transitToNext: '🚶 步行約 15 分鐘' },
+      { time: '12:30', name: '午餐：焼肉キング 奈良', tags: ['food'], desc: '燒肉吃到飽，CP值高適合家族午餐', tips: '午餐吃到飽約 ¥2,680 起，建議先用 Hot Pepper 訂位', lat: 34.6851, lng: 135.8048, transitToNext: null },
+      { time: '14:00', name: '興福寺五重塔', tags: ['temple'], desc: '回程方向順路，目前維修中仍可拍照', tips: null, lat: 34.6832, lng: 135.8328, transitToNext: null }
+    ],
+    endNote: '15:30 搭近鐵返回大阪',
+    routeNote: '💡 動線說明：春日大社（最遠）→ 東大寺 → 興福寺（最近，回程方向），比順序走少 30 分鐘回頭路',
+    solo: null
+  },
+  {
+    id: 'day4',
+    label: 'Day4',
+    date: '5/11 一',
+    title: '箕面自然 + 梅田',
+    subtitle: '全員同行',
+    startTransit: '🏠 → 🚃 長堀鶴見緑地線到心齋橋 → 御堂筋線到梅田 → 阪急箕面線 · 約 50 分鐘',
+    spots: [
+      { time: '10:00', name: '箕面瀑布', tags: ['nature', 'sight'], desc: '平緩步道約 40 分，日本百選瀑布，落差 33m', tips: '從箕面站步行約 40 分鐘。步道平緩適合長輩，建議穿好走的鞋', lat: 34.8536, lng: 135.4697, transitToNext: '🚌 阪急巴士 · 約 15 分鐘（班次少，建議先查時刻表）' },
+      { time: null, name: '勝尾寺', tags: ['temple', 'nature'], desc: '「勝運之寺」，達摩不倒翁和美麗庭園', tips: '門票 ¥500 / ⚠️ 視體力選配！出發前先確認阪急巴士 19 號線時刻表', lat: 34.8614, lng: 135.4858, transitToNext: '🚌 巴士回箕面駅 → 🚃 阪急線到梅田 · 約 50 分鐘', optional: true },
+      { time: '13:30', name: '午餐：梅田壽喜燒吃到飽', tags: ['food'], desc: '推薦「但馬屋」或「モーパラ」，梅田站直結', tips: '壽喜燒吃到飽，建議先訂位確認可接受 7 人以上', lat: 34.7024, lng: 135.4959, transitToNext: null },
+      { time: '15:30', name: '梅田藍天大廈', tags: ['sight'], desc: '空中庭園展望台，獨特連接雙塔設計', tips: '門票 ¥1,500 / 開放至 22:30。地下有昭和復古美食街「瀧見小路」', lat: 34.7052, lng: 135.4906, transitToNext: null },
+      { time: '17:30', name: '天神橋筋商店街', tags: ['shop', 'food'], desc: '日本最長商店街 2.6km，在地庶民美食天堂', tips: '必吃：中村屋可樂餅、春駒壽司。可邊走邊吃', lat: 34.7044, lng: 135.5126, transitToNext: null }
+    ],
+    solo: null,
+    routeNote: null,
+    endNote: null
+  },
+  {
+    id: 'day5',
+    label: 'Day5',
+    date: '5/12 二',
+    title: '購物 + 回程',
+    subtitle: '全員同行',
+    startTransit: '🏠 → 🚃 JR 環狀線 大正→新今宮 → 南海線到りんくうタウン · 約 55 分鐘',
+    spots: [
+      { time: '10:00', name: '臨空城 Outlet', tags: ['shop'], desc: '離機場搭電車只要一站', tips: '10:00 開門，建議早到。⚠️ 實際可逛約 5 小時，建議事先列好品牌清單', lat: 34.4073, lng: 135.2913, transitToNext: '🚃 南海電鐵 · 1 站 · 約 5 分鐘' },
+      { time: '19:05', name: '關西機場出發返台', tags: ['transport'], desc: null, tips: '⚠️ 務必 16:30 前抵達機場，預留退稅和安檢時間', lat: 34.4320, lng: 135.2304, transitToNext: null }
+    ],
+    solo: null,
+    routeNote: null,
+    endNote: null
+  }
 ];
 
-const CAFES = [
-  { name:"Twinkle", area:"谷町六丁目駅", url:"https://www.instagram.com/twinkle_cafe_/", maps:"https://maps.google.com/?q=Twinkle+cafe+谷町六丁目" },
-  { name:"fran cafe", area:"心斎橋", url:"https://www.google.com/maps/place/fran+cafe/", maps:"https://www.google.com/maps/place/fran+cafe/" },
-  { name:"Ha-neul Cafe", area:"大阪", url:"https://tabelog.com/osaka/A2701/A270205/27141886/", maps:"https://maps.google.com/?q=Ha-neul+Cafe+大阪" },
-  { name:"ciel byfrancafe", area:"大阪", url:"https://www.google.com/maps/place/ciel+byfrancafe/", maps:"https://www.google.com/maps/place/ciel+byfrancafe/" },
-  { name:"tea lab", area:"天王寺", url:"https://tabelog.com/osaka/A2701/A270203/27112636/", maps:"https://maps.google.com/?q=tea+lab+天王寺" },
-  { name:"BabuTea CAFE", area:"十三", url:"https://www.instagram.com/babutea.cafe/", maps:"https://maps.google.com/?q=BabuTea+CAFE+十三" },
-  { name:"cafe crerumi", area:"鶴橋", url:"https://www.instagram.com/cafe_crerumi/", maps:"https://maps.google.com/?q=cafe+crerumi+鶴橋" },
-  { name:"BIMMIE CAFE", area:"森ノ宮", url:"https://www.instagram.com/bimmie.cafe/", maps:"https://maps.google.com/?q=BIMMIE+CAFE+森ノ宮" },
-  { name:"coucou amande", area:"中崎町", url:"https://www.instagram.com/coucou_amande/", maps:"https://maps.google.com/?q=coucou+amande+中崎町" },
-  { name:"Picco Latte", area:"中崎町", url:"https://www.instagram.com/picco.latte/", maps:"https://maps.google.com/?q=Picco+Latte+中崎町" },
-  { name:"cafe seukon kitahama", area:"北浜", url:"https://tabelog.com/tw/osaka/A2701/A270102/27126089/", maps:"https://maps.google.com/?q=cafe+seukon+kitahama+北浜" },
-  { name:"cafe BPM", area:"塚本", url:"https://www.instagram.com/cafe_bpm/", maps:"https://maps.google.com/?q=cafe+BPM+塚本" },
-  { name:"サントルエム", area:"心斎橋", url:"https://akr2545955585.owst.jp/", maps:"https://maps.google.com/?q=サントルエム+心斎橋" },
-  { name:"LOHE COFFEE", area:"梅田", url:"https://www.instagram.com/lohe_coffee_coffeecocktail/", maps:"https://maps.google.com/?q=LOHE+COFFEE+梅田" },
-  { name:"BOYA COFFEE", area:"梅田", url:"https://tabelog.com/tw/osaka/A2701/A270101/27142196/", maps:"https://maps.google.com/?q=BOYA+COFFEE+梅田" },
-  { name:"monoGRAM studio cafe", area:"茨木市", url:"https://www.instagram.com/monogram_studio_cafe/", maps:"https://maps.google.com/?q=monoGRAM+studio+cafe+茨木市" },
-  { name:"cafe i-eum", area:"西大橋", url:"https://www.instagram.com/i_eum_cafe/", maps:"https://maps.google.com/?q=cafe+i-eum+西大橋" },
-];
-
-// ============================================================
-// BACKUP PLANS — 備案行程
-// ============================================================
-const BACKUP_PLANS = [
+var BACKUP_PLANS = [
   {
     id: 'backup1',
     priority: 1,
-    title: '姬路城一日遊',
     icon: '🏰',
-    subtitle: '可替代 Day 3 奈良 或 Day 4 箕面',
-    transit: '🏠 → 🚃 JR環狀線 大正→大阪 → JR新快速 大阪→姫路 · 約 90 分鐘',
+    title: '姬路城 + 明石一日遊',
+    subtitle: '可替代 Day 3 奈良人潮太多時',
+    transit: '🏠 → JR環狀線 大正→大阪 → JR新快速 大阪→姫路 · 約 90 分鐘',
     spots: [
-      { name:"姬路城", jp:"姫路城", tags:["sight","temple"], desc:"日本第一座世界文化遺產，有「白鷺城」之稱的國寶天守閣，保存最完整的日本城堡", tips:"門票 ¥1,050 / 9:00-17:00（16:00 最後入城）。建議預留 2 小時參觀，週日人稍多但比奈良好很多", lat:34.8394, lng:134.6939, maps:"https://maps.google.com/?q=姫路城", transitToNext:"🚶 步行約 5 分鐘" },
-      { name:"好古園", jp:"好古園", tags:["nature","sight"], desc:"姬路城旁的池泉回遊式日本庭園，九個風格各異的美麗庭園", tips:"門票 ¥310（與姬路城聯票 ¥1,050 更划算）/ 9:00-17:00。拍照非常美", lat:34.8383, lng:134.6896, maps:"https://maps.google.com/?q=好古園+姫路", transitToNext:"🚶 步行回姫路駅 約 15 分鐘" },
-      { name:"姬路午餐 · 穴子飯", jp:"姫路駅周辺", tags:["food"], desc:"姬路名物穴子飯（星鰻蓋飯）是當地必吃美食，炭火烤星鰻搭配醬汁超香", tips:"推薦「穴子料理 柊」或站前「炭火焼穴子 あなご亭」，約 ¥1,500-2,500", lat:34.8266, lng:134.6914, maps:"https://maps.google.com/?q=姫路駅" },
+      { time: null, name: '姬路城', tags: ['sight', 'temple'], desc: '日本第一名城，純白天守閣，世界文化遺產', tips: '門票 ¥1,050 / 9:00-17:00（16:00 最後入城）。車站徒步 15 分或搭 ¥210 公車', lat: 34.8394, lng: 134.6939, transitToNext: '🚶 步行回姫路駅 約 15 分鐘' },
+      { time: null, name: '午餐：姬路名物穴子飯', tags: ['food'], desc: '炭火烤星鰻蓋飯', tips: '推薦「穴子料理 柊」或「炭火焼穴子 あなご亭」，約 ¥1,500-2,500', lat: 34.8266, lng: 134.6914, transitToNext: '🚃 JR 神戶線 姫路→明石 · 約 30 分鐘' },
+      { time: null, name: '魚の棚商店街 + 明石焼', tags: ['food', 'shop'], desc: '明石名物明石燒（玉子焼）必吃！', tips: '推薦「たこ磯」（穴子口味）、「本家きむらや」、「こだま」（駅直結Piole內）', lat: 34.6430, lng: 134.9970, transitToNext: '🚃 JR 明石→舞子 · 約 5 分鐘' },
+      { time: null, name: '舞子公園 + 明石海峽大橋', tags: ['sight', 'nature'], desc: '近距離觀賞世界第二長吊橋', tips: '舞子海上步道門票 ¥300，可走在大橋下方玻璃地板上', lat: 34.6310, lng: 135.0280, transitToNext: null }
     ]
   },
   {
     id: 'backup2',
     priority: 2,
-    title: '太陽之塔 + 萬博紀念公園',
     icon: '☀️',
-    subtitle: '可替代 Day 4 箕面，下午接梅田行程',
-    transit: '🏠 → 🚃 長堀鶴見緑地線到心齋橋 → 御堂筋線到千里中央 → 大阪モノレール · 約 50 分鐘',
+    title: '太陽之塔 + 萬博紀念公園',
+    subtitle: '適合天氣好時的半日遊',
+    transit: '🏠 → 🚃 長堀鶴見緑地線→門真市 → 大阪モノレール → 萬博記念公園 · 約 50 分鐘',
     spots: [
-      { name:"萬博紀念公園", jp:"万博記念公園", tags:["nature","sight"], desc:"1970 年大阪萬國博覽會舊址，廣大綠地公園，有自然文化園和日本庭園", tips:"入園 ¥260 / 9:30-17:00（16:30 最後入園）。園區很大很舒服，建議預留 2 小時慢慢逛", lat:34.8109, lng:135.5318, maps:"https://maps.google.com/?q=万博記念公園", transitToNext:"🚶 園區內 · 步行約 3 分鐘" },
-      { name:"太陽之塔", jp:"太陽の塔", tags:["sight"], desc:"岡本太郎設計的 70 公尺高藝術巨作，大阪萬博的永恆象徵。三張臉代表過去、現在、未來", tips:"內部參觀需預約（¥720）→ taiyounotou-expo70.jp。即使不進去，外觀拍照也很震撼", lat:34.8116, lng:135.5327, maps:"https://maps.google.com/?q=太陽の塔", transitToNext:"🚃 大阪モノレール→千里中央 → 御堂筋線到梅田 · 約 40 分鐘" },
+      { time: null, name: '太陽之塔（內部參觀）', tags: ['sight'], desc: '岡本太郎代表作，高 70m，可入內參觀生命之樹', tips: '門票 ¥930 / 需上官網預約。內部生命之樹非常震撼', lat: 34.8103, lng: 135.5317, transitToNext: null },
+      { time: null, name: '萬博紀念公園', tags: ['nature'], desc: '260 公頃大公園，日本庭園、花田', tips: '公園入場 ¥260。春天有罌粟花田，秋天有紅葉', lat: 34.8114, lng: 135.5311, transitToNext: null },
+      { time: null, name: 'EXPOCITY', tags: ['shop', 'food'], desc: '大型商場，有 NIFREL 水族館和摩天輪', tips: 'NIFREL 門票 ¥2,200。商場免費逛，美食街選擇多', lat: 34.8053, lng: 135.5317, transitToNext: null }
     ]
   }
 ];
 
-const BRING = ["日本 eSIM","通鼻液","鼻炎藥","熱水器"];
-const SOUVENIRS = ["🐷","ㄒㄘ"];
-const WISHES = [
-  { name:"吃麥當勞" },
-  { name:"Refa 捲髮器" },
-  { name:"固定劉海的膠水 or 噴霧", url:"https://x.com/yuatanfjpu/status/2018519190165155877" },
-  { name:"貼眼睛亮片", url:"https://x.com/3710cos/status/2021112622071079018" },
+var CAFES = [
+  { name: 'Twinkle', desc: '谷町六丁目駅', url: 'https://maps.google.com/?q=Twinkle+cafe+谷町六丁目' },
+  { name: 'fran cafe', desc: '心斎橋', url: 'https://www.google.com/maps/place/fran+cafe/' },
+  { name: 'Ha-neul Cafe', desc: '大阪', url: 'https://maps.google.com/?q=Ha-neul+Cafe+大阪' },
+  { name: 'ciel byfrancafe', desc: '大阪', url: 'https://www.google.com/maps/place/ciel+byfrancafe/' },
+  { name: 'tea lab', desc: '天王寺', url: 'https://maps.google.com/?q=tea+lab+天王寺' },
+  { name: 'BabuTea CAFE', desc: '十三', url: 'https://maps.google.com/?q=BabuTea+CAFE+十三' },
+  { name: 'cafe crerumi', desc: '鶴橋', url: 'https://maps.google.com/?q=cafe+crerumi+鶴橋' },
+  { name: 'BIMMIE CAFE', desc: '森ノ宮', url: 'https://maps.google.com/?q=BIMMIE+CAFE+森ノ宮' },
+  { name: 'coucou amande', desc: '中崎町', url: 'https://maps.google.com/?q=coucou+amande+中崎町' },
+  { name: 'Picco Latte', desc: '中崎町', url: 'https://maps.google.com/?q=Picco+Latte+中崎町' },
+  { name: 'cafe seukon kitahama', desc: '北浜', url: 'https://maps.google.com/?q=cafe+seukon+kitahama+北浜' },
+  { name: 'cafe BPM', desc: '塚本', url: 'https://maps.google.com/?q=cafe+BPM+塚本' },
+  { name: 'サントルエム', desc: '心斎橋', url: 'https://maps.google.com/?q=サントルエム+心斎橋' },
+  { name: 'LOHE COFFEE', desc: '梅田', url: 'https://maps.google.com/?q=LOHE+COFFEE+梅田' },
+  { name: 'BOYA COFFEE', desc: '梅田', url: 'https://maps.google.com/?q=BOYA+COFFEE+梅田' },
+  { name: 'monoGRAM studio cafe', desc: '茨木市', url: 'https://maps.google.com/?q=monoGRAM+studio+cafe+茨木市' },
+  { name: 'cafe i-eum', desc: '西大橋', url: 'https://maps.google.com/?q=cafe+i-eum+西大橋' }
 ];
 
-const TAG_MAP = {
-  sight: { label:"觀光", cls:"tag-sight" },
-  food: { label:"美食", cls:"tag-food" },
-  shop: { label:"購物", cls:"tag-shop" },
-  nature: { label:"自然", cls:"tag-nature" },
-  temple: { label:"寺廟", cls:"tag-temple" },
-  transport: { label:"交通", cls:"tag-transport" },
-  play: { label:"娛樂", cls:"tag-play" },
+var WISHES = [
+  { name: '吃麥當勞' },
+  { name: 'Refa 捲髮器' },
+  { name: '固定劉海的膠水 or 噴霧', url: 'https://x.com/yuatanfjpu/status/2018519190165155877' },
+  { name: '貼眼睛亮片', url: 'https://x.com/3710cos/status/2021112622071079018' }
+];
+
+var SOUVENIRS = ['🐷', 'ㄒㄘ'];
+
+var BRING = ['日本 eSIM', '通鼻液', '鼻炎藥', '熱水器'];
+
+var TODO_ITEMS = [
+  { text: '訂位：焼肉キング 奈良（Hot Pepper）', url: 'https://www.hotpepper.jp/' },
+  { text: '訂位：梅田壽喜燒（但馬屋 or モーパラ，確認可接受 7 人以上）' },
+  { text: '確認：阪急巴士 19 號線箕面→勝尾寺時刻表，截圖備用' },
+  { text: '預約：太陽之塔內部（如使用備案 2）', url: 'https://taiyounotou-expo70.jp' },
+  { text: '確認：全員日本 eSIM / SIM 卡' },
+  { text: '準備：ICOCA 或 Suica（建議抵達關西機場當天辦）' }
+];
+
+var TAG_MAP = {
+  food: { label: '美食', cls: 'tag-food' },
+  sight: { label: '景點', cls: 'tag-sight' },
+  temple: { label: '寺社', cls: 'tag-temple' },
+  nature: { label: '自然', cls: 'tag-nature' },
+  shop: { label: '購物', cls: 'tag-shop' },
+  transport: { label: '交通', cls: 'tag-transport' }
 };
 
-// ============================================================
-// STATE
-// ============================================================
-let state = {};
-try { state = JSON.parse(localStorage.getItem('osaka2026v2') || '{}'); } catch(e) { state = {}; }
-function save() { localStorage.setItem('osaka2026v2', JSON.stringify(state)); }
-function isChecked(k) { return !!state[k]; }
-function toggle(k) { state[k] = !state[k]; save(); }
+var CAT_ICONS = { food: '🍽️', transport: '🚃', shop: '🛍️', ticket: '🎟️', other: '📦' };
+var JPY_TO_TWD = 0.22;
 
-// secret unlock: hides solo / cafe / wishlist / bring list from family view
-let isUnlocked = localStorage.getItem('osaka2026_unlock') === '1';
-function setUnlocked(v) {
-  isUnlocked = v;
-  localStorage.setItem('osaka2026_unlock', v ? '1' : '0');
-}
+// ========== STATE ==========
+var state = loadState();
+var currentPage = 'itinerary';
+var currentDay = 0;
+var currentView = 'list';
+var map = null;
+var markers = [];
+var secretUnlocked = state.secretUnlocked || false;
 
-// expense tracker
-let expenses = [];
-try { expenses = JSON.parse(localStorage.getItem('osaka2026_exp') || '[]'); } catch(e) { expenses = []; }
-function saveExp() { localStorage.setItem('osaka2026_exp', JSON.stringify(expenses)); }
-let expRate = parseFloat(localStorage.getItem('osaka2026_rate') || '0.206');
-function saveRate() { localStorage.setItem('osaka2026_rate', String(expRate)); }
-const EXP_CATS = { food:'餐飲', transport:'交通', shop:'購物', stay:'住宿', ticket:'門票', other:'其他' };
-const EXP_CAT_ICONS = { food:'🍽️', transport:'🚃', shop:'🛍️', stay:'🏠', ticket:'🎫', other:'📦' };
-const EXP_CAT_COLORS = { food:'#FFF3E0', transport:'#E3F2FD', shop:'#FCE4EC', stay:'#E8F5E9', ticket:'#F3E5F5', other:'#ECEFF1' };
-const EXP_PAYS = { cash:'現金', card:'信用卡', paypay:'PayPay', icoca:'ICOCA' };
-const TRIP_DATES = ['2026-05-08','2026-05-09','2026-05-10','2026-05-11','2026-05-12'];
-
-// Google Sheets sync
-let sheetUrl = localStorage.getItem('osaka2026_sheet_url') || '';
-function saveSheetUrl() { localStorage.setItem('osaka2026_sheet_url', sheetUrl); }
-let syncStatus = ''; // '', 'syncing', 'ok', 'error'
-let syncMsg = '';
-let lastSyncTime = localStorage.getItem('osaka2026_last_sync') || '';
-
-async function syncToSheets() {
-  if (!sheetUrl) { syncStatus = 'error'; syncMsg = '請先設定 Google Apps Script 網址'; render(); return; }
-  if (!expenses.length) { syncStatus = 'error'; syncMsg = '沒有任何記錄可以同步'; render(); return; }
-  if (!confirm(`確定要同步 ${expenses.length} 筆記錄到 Google Sheets？\n（會覆寫 Sheet 上的 A~G 欄資料）`)) return;
-  syncStatus = 'syncing'; syncMsg = '同步中…'; render();
+function loadState() {
   try {
-    const res = await fetch(sheetUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ expenses, rate: expRate, cats: EXP_CATS, pays: EXP_PAYS })
-    });
-    const data = await res.json();
-    if (data.ok) {
-      lastSyncTime = new Date().toLocaleString('zh-TW');
-      localStorage.setItem('osaka2026_last_sync', lastSyncTime);
-      syncStatus = 'ok'; syncMsg = `✅ 已同步 ${data.count || expenses.length} 筆`;
-    } else {
-      syncStatus = 'error'; syncMsg = '❌ 同步失敗：' + (data.error || '未知錯誤');
-    }
-  } catch(e) {
-    syncStatus = 'error'; syncMsg = '❌ 連線失敗，請確認網址是否正確';
-  }
-  render();
+    return JSON.parse(localStorage.getItem('osakaTrip2026') || '{}');
+  } catch(e) { return {}; }
 }
-
-async function testSheetConnection() {
-  if (!sheetUrl) { alert('請先貼上網址'); return; }
-  try {
-    const res = await fetch(sheetUrl);
-    const data = await res.json();
-    if (data.ok) { alert('✅ 連線成功！可以開始同步了'); }
-    else { alert('⚠️ 收到回應但格式不對，請確認 Apps Script 有部署 doGet'); }
-  } catch(e) {
-    alert('❌ 連線失敗，請確認網址是否正確，以及是否已部署為「所有人」可存取');
-  }
+function saveState() {
+  state.secretUnlocked = secretUnlocked;
+  localStorage.setItem('osakaTrip2026', JSON.stringify(state));
 }
+function getChecked(key) { return state[key] || false; }
+function setChecked(key, val) { state[key] = val; saveState(); }
 
-let currentDay = 'info';
-let currentView = 'list';
-let maps = {};
+// ========== HEART / SECRET ==========
+var heartTimer = null;
+var heartBtn = document.getElementById('heartBtn');
+var tapCount = 0;
+var tapTimer = null;
 
-// ============================================================
-// RENDER — Tabs
-// ============================================================
-function renderTabs() {
-  const nav = document.getElementById('dayTabs');
-  let html = `<button class="day-tab ${currentDay==='info'?'active':''}" data-day="info"><span class="tab-icon">📋</span> 總覽</button>`;
-  DAYS_DATA.forEach(d => {
-    html += `<button class="day-tab ${currentDay===d.id?'active':''}" data-day="${d.id}"><span class="tab-icon">${d.icon}</span> ${d.label} (${d.weekday})</button>`;
-  });
-  html += `<button class="day-tab ${currentDay==='backup'?'active':''}" data-day="backup"><span class="tab-icon">🔄</span> 備案</button>`;
-  html += `<button class="day-tab ${currentDay==='expense'?'active':''}" data-day="expense"><span class="tab-icon">💰</span> 記帳</button>`;
-  if (isUnlocked) {
-    html += `<button class="day-tab ${currentDay==='cafe'?'active':''}" data-day="cafe"><span class="tab-icon">☕</span> 咖啡廳</button>`;
-    html += `<button class="day-tab ${currentDay==='lists'?'active':''}" data-day="lists"><span class="tab-icon">📝</span> 清單</button>`;
-  }
-  nav.innerHTML = html;
-}
-
-// ============================================================
-// RENDER — Tags
-// ============================================================
-function renderTags(tags) {
-  if (!tags || !tags.length) return '';
-  return '<div class="tags">' + tags.map(t => {
-    const info = TAG_MAP[t];
-    return info ? `<span class="tag ${info.cls}">${info.label}</span>` : '';
-  }).join('') + '</div>';
-}
-
-// ============================================================
-// RENDER — Day page (list view)
-// ============================================================
-function renderDayList(day) {
-  let html = '';
-  if (day.startTransit) {
-    html += `<div class="connector" style="padding-left:0;justify-content:center;"><span class="connector-text" style="border-color:var(--pink);color:var(--pink-dark);font-weight:600;">${day.startTransit}</span></div>`;
-  }
-  day.spots.forEach((s, i) => {
-    const key = day.id + '_' + i;
-    const done = isChecked(key);
-    if (i > 0) html += `<div class="connector" id="conn-${day.id}-${i}"><span class="connector-text loading">…</span></div>`;
-    html += `
-      <div class="spot-card">
-        <div class="spot-card-inner">
-          <div class="spot-num ${done?'done':''}" data-key="${key}"><span class="num-text">${i+1}</span></div>
-          <div class="spot-body">
-            ${s.time ? `<div class="spot-time">${s.time}</div>` : ''}
-            <div class="spot-name ${done?'done-text':''}">${s.name}</div>
-            ${s.jp ? `<div class="spot-jp">${s.jp}</div>` : ''}
-            ${renderTags(s.tags)}
-            ${s.desc ? `<div class="spot-desc">${s.desc}</div>` : ''}
-            ${s.tips ? `<div class="spot-tips"><strong>💡 小提醒</strong><br>${s.tips}</div>` : ''}
-          </div>
-        </div>
-        <div class="spot-actions">
-          ${s.maps ? `<a class="act-btn act-nav" href="${s.maps}" target="_blank" rel="noopener">📍 Google Maps 導航</a>` : ''}
-          <button class="act-btn act-check ${done?'is-done':''}" data-key="${key}">${done?'✓ 已完成':'標記完成'}</button>
-        </div>
-      </div>`;
-  });
-
-  if (isUnlocked && day.solo && day.solo.length) {
-    html += `<div class="solo-section"><div class="solo-title">🧡 脫隊行程</div>`;
-    day.solo.forEach((s, i) => {
-      const key = day.id + '_solo_' + i;
-      const done = isChecked(key);
-      html += `
-        <div class="cl-item">
-          <button class="cl-check ${done?'done':''}" data-key="${key}">✓</button>
-          <div class="cl-text ${done?'done-text':''}">${s.name} ${renderTags(s.tags)}</div>
-          ${s.maps ? `<a class="cl-map" href="${s.maps}" target="_blank" rel="noopener">📍</a>` : ''}
-        </div>`;
-    });
-    html += `</div>`;
-  }
-
-  // show backup hint on Day 3 (Nara) and Day 4 (Minoh)
-  if (day.id === 'day3') {
-    html += `<div style="text-align:center;padding:16px 0 8px;">
-      <button class="day-tab" data-day="backup" style="font-size:13px;color:var(--orange);border:1.5px solid var(--orange);background:var(--orange-light);">🔄 人太多？看備案（姬路城）→</button>
-    </div>`;
-  }
-  if (day.id === 'day4') {
-    html += `<div style="text-align:center;padding:16px 0 8px;">
-      <button class="day-tab" data-day="backup" style="font-size:13px;color:var(--orange);border:1.5px solid var(--orange);background:var(--orange-light);">🔄 想換行程？看備案（萬博公園）→</button>
-    </div>`;
-  }
-
-  return html;
-}
-
-// ============================================================
-// RENDER — Day page (map view)
-// ============================================================
-function renderDayMap(day) {
-  const mapId = 'map-' + day.id;
-  setTimeout(() => initMap(day, mapId), 50);
-  return `<div class="map-container active" id="${mapId}"></div>`;
-}
-
-function initMap(day, mapId) {
-  const el = document.getElementById(mapId);
-  if (!el || el._leaflet_id) return;
-  const spots = day.spots.filter(s => s.lat && s.lng);
-  if (!spots.length) return;
-
-  const map = L.map(el, { zoomControl: false });
-  L.control.zoom({ position: 'topright' }).addTo(map);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap',
-    maxZoom: 18,
-  }).addTo(map);
-
-  const coords = spots.map(s => [s.lat, s.lng]);
-
-  // dashed route line
-  L.polyline(coords, { color: '#C05A8C', weight: 3, dashArray: '8,8', opacity: 0.7 }).addTo(map);
-
-  // markers
-  spots.forEach((s, i) => {
-    const key = day.id + '_' + i;
-    const done = isChecked(key);
-    const icon = L.divIcon({
-      className: '',
-      html: `<div class="custom-marker ${done?'checked-marker':''}">${i+1}</div>`,
-      iconSize: [32, 32],
-      iconAnchor: [16, 16],
-    });
-    const marker = L.marker([s.lat, s.lng], { icon }).addTo(map);
-    const tagsHtml = (s.tags||[]).map(t => { const info = TAG_MAP[t]; return info ? `<span class="tag ${info.cls}" style="font-size:11px;padding:1px 6px;">${info.label}</span>` : ''; }).join(' ');
-    marker.bindPopup(`
-      <div class="popup-title">${s.name}</div>
-      ${s.jp ? `<div style="color:#999;font-size:12px;margin-bottom:4px;">${s.jp}</div>` : ''}
-      <div class="popup-tags">${tagsHtml}</div>
-      ${s.desc ? `<div style="margin-bottom:8px;">${s.desc}</div>` : ''}
-      ${s.maps ? `<a class="popup-nav-btn" href="${s.maps}" target="_blank" rel="noopener">📍 Google Maps 導航</a>` : ''}
-    `, { maxWidth: 260 });
-  });
-
-  map.fitBounds(L.latLngBounds(coords).pad(0.15));
-  maps[day.id] = map;
-}
-
-// ============================================================
-// RENDER — Info page
-// ============================================================
-function renderInfo() {
-  // count progress (solo items only count when unlocked)
-  let total = 0, done = 0;
-  DAYS_DATA.forEach(d => {
-    d.spots.forEach((_,i) => { total++; if(isChecked(d.id+'_'+i)) done++; });
-    if(isUnlocked && d.solo) d.solo.forEach((_,i) => { total++; if(isChecked(d.id+'_solo_'+i)) done++; });
-  });
-  const pct = total ? Math.round(done/total*100) : 0;
-  const circ = 2 * Math.PI * 48;
-  const offset = circ - (pct/100) * circ;
-
-  let html = `
-    <div class="section-card">
-      <div class="section-title">✈️ 航班資訊</div>
-      <div class="info-grid">
-        <div class="info-item"><div class="info-label">去程</div><div class="info-value">5/8 (五) → 12:50 抵達關西機場 KIX</div></div>
-        <div class="info-item"><div class="info-label">回程</div><div class="info-value">5/12 (二) 19:05 關西機場出發</div></div>
-      </div>
-    </div>
-    <div class="section-card" style="position:relative;">
-      <span id="unlockHeart" class="unlock-heart ${isUnlocked?'unlocked':''}">💗</span>
-      <div class="section-title">🏠 住宿資訊</div>
-      <div style="font-size:15px;color:var(--gray);line-height:1.6;">大正駅 徒步約 4 分鐘 ・ 16:00 入住 / 10:00 退房</div>
-    </div>
-    <div class="section-card">
-      <div class="section-title">📊 行程進度</div>
-      <div class="progress-ring">
-        <svg viewBox="0 0 120 120">
-          <circle class="ring-bg" cx="60" cy="60" r="48"/>
-          <circle class="ring-fill" cx="60" cy="60" r="48" stroke-dasharray="${circ}" stroke-dashoffset="${offset}" transform="rotate(-90 60 60)"/>
-        </svg>
-        <div class="progress-pct">${pct}%</div>
-        <div class="progress-label">已完成 ${done} / ${total} 個景點</div>
-      </div>
-    </div>
-`;
-  if (isUnlocked) {
-    html += `<div class="section-card"><div class="section-title">📦 攜帶物品</div>`;
-    BRING.forEach((item,i) => {
-      const key = 'bring_'+i, d = isChecked(key);
-      html += `<div class="cl-item"><button class="cl-check ${d?'done':''}" data-key="${key}">✓</button><div class="cl-text ${d?'done-text':''}">${item}</div></div>`;
-    });
-    html += `</div>`;
-  }
-  return html;
-}
-
-// ============================================================
-// RENDER — Cafe page
-// ============================================================
-function renderCafe() {
-  let html = `<div class="section-card"><div class="section-title">☕ 脫隊咖啡廳候選清單</div>`;
-  CAFES.forEach((c,i) => {
-    const key='cafe_'+i, d=isChecked(key);
-    html += `<div class="cl-item">
-      <button class="cl-check ${d?'done':''}" data-key="${key}">✓</button>
-      <div class="cl-text ${d?'done-text':''}"><a href="${c.url}" target="_blank" rel="noopener">${c.name}</a><span class="cl-sub">📍 ${c.area}</span></div>
-      <a class="cl-map" href="${c.maps}" target="_blank" rel="noopener">導航</a>
-    </div>`;
-  });
-  html += `</div>`;
-  return html;
-}
-
-// ============================================================
-// RENDER — Lists page
-// ============================================================
-function renderLists() {
-  let html = `<div class="section-card"><div class="section-title">🎁 伴手禮對象</div>`;
-  SOUVENIRS.forEach((s,i) => {
-    const key='sou_'+i, d=isChecked(key);
-    html += `<div class="cl-item"><button class="cl-check ${d?'done':''}" data-key="${key}">✓</button><div class="cl-text ${d?'done-text':''}">${s}</div></div>`;
-  });
-  html += `</div><div class="section-card"><div class="section-title">⭐ 願望清單</div>`;
-  WISHES.forEach((w,i) => {
-    const key='wish_'+i, d=isChecked(key), name=typeof w==='string'?w:w.name, url=typeof w==='object'?w.url:null;
-    html += `<div class="cl-item"><button class="cl-check ${d?'done':''}" data-key="${key}">✓</button><div class="cl-text ${d?'done-text':''}">${url?`<a href="${url}" target="_blank" rel="noopener">${name}</a>`:name}</div></div>`;
-  });
-  html += `</div>`;
-  return html;
-}
-
-// ============================================================
-// RENDER — Backup plans page
-// ============================================================
-function renderBackup() {
-  let html = `<div class="section-card" style="background:linear-gradient(135deg,#FFF8E1,#FFF3E0);border:1.5px solid #FFD54F;">
-    <div class="section-title">🔄 備案行程</div>
-    <div style="font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:4px;">如果碰上人潮太多、天氣不好或臨時想換行程，可以直接參考這裡！</div>
-  </div>`;
-
-  BACKUP_PLANS.forEach(plan => {
-    // header card
-    html += `<div class="section-card">
-      <div class="section-title">${plan.icon} 備案 ${plan.priority}：${plan.title}</div>
-      <div style="font-size:14px;color:var(--gray);margin-bottom:10px;">${plan.subtitle}</div>
-      <div class="connector" style="padding-left:0;justify-content:center;margin-bottom:8px;">
-        <span class="connector-text" style="border-color:var(--pink);color:var(--pink-dark);font-weight:600;">${plan.transit}</span>
-      </div>
-    </div>`;
-
-    // spot cards — same style as day pages, with check functionality
-    plan.spots.forEach((s, i) => {
-      const key = plan.id + '_' + i;
-      const done = isChecked(key);
-      if (i > 0 && plan.spots[i-1].transitToNext) {
-        html += `<div class="connector" style="padding-left:30px;"><span class="connector-text">${plan.spots[i-1].transitToNext}</span></div>`;
-      } else if (i > 0) {
-        html += `<div class="connector" id="conn-${plan.id}-${i}"><span class="connector-text loading">…</span></div>`;
-      }
-      html += `
-        <div class="spot-card">
-          <div class="spot-card-inner">
-            <div class="spot-num ${done?'done':''}" data-key="${key}" style="${done?'':'background:var(--orange);box-shadow:0 2px 6px rgba(232,152,94,0.3);'}"><span class="num-text">${i+1}</span></div>
-            <div class="spot-body">
-              <div class="spot-name ${done?'done-text':''}">${s.name}</div>
-              ${s.jp ? `<div class="spot-jp">${s.jp}</div>` : ''}
-              ${renderTags(s.tags)}
-              ${s.desc ? `<div class="spot-desc">${s.desc}</div>` : ''}
-              ${s.tips ? `<div class="spot-tips"><strong>💡 小提醒</strong><br>${s.tips}</div>` : ''}
-            </div>
-          </div>
-          <div class="spot-actions">
-            ${s.maps ? `<a class="act-btn act-nav" href="${s.maps}" target="_blank" rel="noopener">📍 Google Maps 導航</a>` : ''}
-            <button class="act-btn act-check ${done?'is-done':''}" data-key="${key}">${done?'✓ 已完成':'標記完成'}</button>
-          </div>
-        </div>`;
-    });
-    // spacer between plans
-    html += `<div style="height:10px;"></div>`;
-  });
-
-  return html;
-}
-
-// ============================================================
-// WALKING DISTANCE (OSRM)
-// ============================================================
-const routeCache = {};
-async function fetchRoute(lat1, lng1, lat2, lng2) {
-  const key = lat1+','+lng1+'_'+lat2+','+lng2;
-  if (routeCache[key]) return routeCache[key];
-  try {
-    const r = await fetch('https://router.project-osrm.org/route/v1/foot/'+lng1+','+lat1+';'+lng2+','+lat2+'?overview=false');
-    const d = await r.json();
-    if (d.code === 'Ok' && d.routes && d.routes[0]) {
-      const result = { dist: d.routes[0].distance, dur: d.routes[0].duration };
-      routeCache[key] = result;
-      return result;
-    }
-  } catch(e) {}
-  return null;
-}
-function fmtWalk(dist, dur) {
-  const mins = Math.max(1, Math.round(dur / 60));
-  const ds = dist >= 1000 ? (dist/1000).toFixed(1)+' km' : Math.round(dist)+' m';
-  return '🚶 '+ds+' · 步行約 '+mins+' 分鐘';
-}
-async function loadWalkingData(day) {
-  for (let i = 1; i < day.spots.length; i++) {
-    const a = day.spots[i-1], b = day.spots[i];
-    const el = document.getElementById('conn-'+day.id+'-'+i);
-    if (!el) continue;
-    const span = el.querySelector('.connector-text');
-    if (!span) continue;
-    if (a.transitToNext) {
-      span.textContent = a.transitToNext;
-      span.classList.remove('loading');
-      continue;
-    }
-    if (!a.lat || !b.lat) { span.textContent = ''; span.classList.remove('loading'); continue; }
-    const res = await fetchRoute(a.lat, a.lng, b.lat, b.lng);
-    span.textContent = res ? fmtWalk(res.dist, res.dur) : '';
-    span.classList.remove('loading');
-  }
-}
-
-// ============================================================
-// RENDER — Expense tracker
-// ============================================================
-function renderExpense() {
-  const today = new Date().toISOString().slice(0,10);
-  const todayExp = expenses.filter(e => e.date === today);
-  const todayTotal = todayExp.reduce((s,e) => s + e.amount, 0);
-  const tripTotal = expenses.reduce((s,e) => s + e.amount, 0);
-
-  let html = `
-    <div class="exp-rate">匯率　¥1 = NT$ <input type="number" step="0.001" id="expRateInput" value="${expRate}"> <span style="color:#bbb;">（可自行調整）</span></div>
-    <div class="exp-dashboard">
-      <div class="exp-stat">
-        <div class="exp-stat-label">🧾 今日支出</div>
-        <div class="exp-stat-value">¥${todayTotal.toLocaleString()}</div>
-        <div class="exp-stat-sub">≈ NT$${Math.round(todayTotal * expRate).toLocaleString()}</div>
-      </div>
-      <div class="exp-stat">
-        <div class="exp-stat-label">📊 旅程累計</div>
-        <div class="exp-stat-value">¥${tripTotal.toLocaleString()}</div>
-        <div class="exp-stat-sub">≈ NT$${Math.round(tripTotal * expRate).toLocaleString()} · ${expenses.length} 筆</div>
-      </div>
-    </div>
-
-    <div class="exp-sync-section">
-      <button class="exp-sync-btn ${syncStatus==='syncing'?'syncing':''}" id="expSyncBtn" ${syncStatus==='syncing'?'disabled':''}>
-        ${syncStatus==='syncing'?'⏳ 同步中…':'📤 一鍵同步到 Google Sheets'}
-      </button>
-      <div class="exp-sync-status" style="color:${syncStatus==='ok'?'var(--green)':syncStatus==='error'?'var(--red)':'var(--gray)'}">
-        ${syncMsg}${!syncMsg && lastSyncTime ? '<span style="color:#999;font-size:12px;">上次同步：'+lastSyncTime+'</span>' : ''}
-      </div>
-      <details class="exp-sync-setup">
-        <summary>⚙️ 設定 Google Sheets 連結</summary>
-        <div class="setup-content">
-          <strong>第一次使用？按以下步驟設定：</strong><br>
-          1. 開一個新的 <a href="https://sheets.google.com" target="_blank" rel="noopener">Google Sheets</a><br>
-          2. 點選「擴充功能」→「Apps Script」<br>
-          3. 把以下程式碼貼進去，取代原本的內容：<br>
-          <div style="background:#1E1E1E;color:#D4D4D4;padding:10px;border-radius:8px;margin:8px 0;font-size:11px;line-height:1.5;overflow-x:auto;white-space:pre;font-family:monospace;">// 健康檢查（驗證網址用）
-function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({ok:true}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = JSON.parse(e.postData.contents);
-  // 清除 A~G 欄舊資料（保留標題列，H 欄以後不動）
-  if (sheet.getLastRow() > 1)
-    sheet.getRange(2,1,sheet.getLastRow()-1,7).clearContent();
-  // 寫入標題（如果是空的）
-  if (sheet.getLastRow() === 0)
-    sheet.appendRow(['ID','日期','金額(¥)','店名','類別','付款方式','NT$']);
-  // 寫入資料
-  data.expenses.forEach(function(exp) {
-    sheet.appendRow([
-      exp.id, exp.date, exp.amount,
-      exp.store || '', data.cats[exp.cat]||'',
-      data.pays[exp.pay]||'',
-      Math.round(exp.amount * data.rate)
-    ]);
-  });
-  return ContentService
-    .createTextOutput(JSON.stringify({ok:true,count:data.expenses.length}))
-    .setMimeType(ContentService.MimeType.JSON);
-}</div>
-          4. 點「部署」→「新增部署」→ 類型選「網頁應用程式」<br>
-          5. 存取權限設為「所有人」→ 按「部署」<br>
-          6. 複製產生的網址，貼到下方，然後按「測試連線」：<br>
-          <input class="url-input" id="sheetUrlInput" type="url" placeholder="https://script.google.com/macros/s/..." value="${sheetUrl}">
-          <button id="testSheetBtn" style="margin-top:8px;padding:6px 14px;border:1.5px solid #34A853;border-radius:8px;background:white;color:#34A853;font-size:13px;font-weight:600;cursor:pointer;">🔗 測試連線</button>
-          <div style="margin-top:6px;font-size:12px;color:#999;">同步只會覆寫 A~G 欄，H 欄以後的備註/公式不受影響</div>
-        </div>
-      </details>
-    </div>
-
-    <div class="exp-form">
-      <div class="exp-form-title">➕ 新增花費</div>
-      <div class="exp-row">
-        <input class="exp-input" id="expAmount" type="number" placeholder="金額（¥）" inputmode="numeric" style="flex:1;">
-        <input class="exp-input" id="expStore" type="text" placeholder="店名 / 備註" style="flex:1.5;">
-      </div>
-      <div class="exp-row">
-        <select class="exp-select" id="expCat" style="flex:1;">${Object.entries(EXP_CATS).map(([k,v]) => `<option value="${k}">${EXP_CAT_ICONS[k]} ${v}</option>`).join('')}</select>
-        <select class="exp-select" id="expPay" style="flex:1;">${Object.entries(EXP_PAYS).map(([k,v]) => `<option value="${k}">${v}</option>`).join('')}</select>
-      </div>
-      <button class="exp-submit" id="expSubmit">記錄花費</button>
-    </div>`;
-
-  // group by date, sorted newest first
-  const grouped = {};
-  expenses.slice().sort((a,b) => b.date.localeCompare(a.date) || b.id - a.id).forEach(e => {
-    if (!grouped[e.date]) grouped[e.date] = [];
-    grouped[e.date].push(e);
-  });
-
-  if (Object.keys(grouped).length === 0) {
-    html += `<div class="exp-empty">還沒有任何花費紀錄<br>開始記帳吧！</div>`;
-  } else {
-    Object.entries(grouped).forEach(([date, items]) => {
-      const dayTotal = items.reduce((s,e) => s + e.amount, 0);
-      const d = new Date(date);
-      const weekdays = ['日','一','二','三','四','五','六'];
-      const dateLabel = `${d.getMonth()+1}/${d.getDate()} (${weekdays[d.getDay()]})`;
-      html += `<div class="exp-day-group">
-        <div class="exp-day-header">
-          <span class="exp-day-date">${dateLabel}</span>
-          <span class="exp-day-total">¥${dayTotal.toLocaleString()} ≈ NT$${Math.round(dayTotal * expRate).toLocaleString()}</span>
-        </div>`;
-      items.forEach(e => {
-        html += `<div class="exp-item">
-          <div class="exp-item-icon" style="background:${EXP_CAT_COLORS[e.cat]||'#f5f5f5'}">${EXP_CAT_ICONS[e.cat]||'📦'}</div>
-          <div class="exp-item-body">
-            <div class="exp-item-name">${e.store || EXP_CATS[e.cat] || '其他'}</div>
-            <div class="exp-item-meta"><span class="tag" style="background:${EXP_CAT_COLORS[e.cat]||'#eee'};color:#555;font-size:11px;padding:1px 6px;">${EXP_CATS[e.cat]||'其他'}</span> ${EXP_PAYS[e.pay]||''}</div>
-          </div>
-          <div class="exp-item-amount">
-            <div class="exp-item-jpy">¥${e.amount.toLocaleString()}</div>
-            <div class="exp-item-twd">NT$${Math.round(e.amount * expRate).toLocaleString()}</div>
-          </div>
-          <button class="exp-item-del" data-expid="${e.id}">✕</button>
-        </div>`;
-      });
-      html += `</div>`;
-    });
-  }
-  return html;
-}
-
-// ============================================================
-// MAIN RENDER
-// ============================================================
-function render() {
-  // if locked and user somehow on a hidden tab, bounce to info
-  if (!isUnlocked && (currentDay === 'cafe' || currentDay === 'lists')) {
-    currentDay = 'info';
-  }
-  renderTabs();
-  const root = document.getElementById('appRoot');
-  const vt = document.getElementById('viewToggle');
-  const isDayPage = DAYS_DATA.some(d => d.id === currentDay);
-  const isBackupPage = currentDay === 'backup';
-  vt.style.display = (isDayPage || isBackupPage) ? 'flex' : 'none';
-
-  // invalidate old maps
-  Object.keys(maps).forEach(k => { if(maps[k]) { maps[k].remove(); delete maps[k]; } });
-
-  let walkDay = null;
-  let content = '';
-  if (currentDay === 'info') {
-    content = renderInfo();
-  } else if (currentDay === 'backup') {
-    if (currentView === 'map') {
-      // show all backup plans on one map
-      const allBackupSpots = [];
-      BACKUP_PLANS.forEach(p => p.spots.forEach(s => { if(s.lat && s.lng) allBackupSpots.push(s); }));
-      const backupMapDay = { id:'backup', spots: allBackupSpots };
-      content = renderDayMap(backupMapDay);
-      content += `<div class="page-inner">${renderBackup()}</div>`;
-    } else {
-      content = renderBackup();
-    }
-  } else if (currentDay === 'expense') {
-    content = renderExpense();
-  } else if (currentDay === 'cafe') {
-    content = renderCafe();
-  } else if (currentDay === 'lists') {
-    content = renderLists();
-  } else {
-    const day = DAYS_DATA.find(d => d.id === currentDay);
-    if (day) {
-      walkDay = day;
-      if (currentView === 'map') {
-        content = renderDayMap(day);
-        // also show list below map
-        content += `<div class="page-inner">${renderDayList(day)}</div>`;
-      } else {
-        content = `<div class="page-inner">${renderDayList(day)}</div>`;
-      }
-    }
-  }
-
-  const useMapLayout = (isDayPage || isBackupPage) && currentView === 'map';
-  if (!useMapLayout) {
-    root.innerHTML = `<div class="page active"><div class="page-inner">${content}</div></div>`;
-  } else {
-    root.innerHTML = `<div class="page active">${content}</div>`;
-  }
-  if (walkDay) setTimeout(() => loadWalkingData(walkDay), 100);
-  if (currentDay === 'backup') {
-    setTimeout(() => { BACKUP_PLANS.forEach(p => loadWalkingData(p)); }, 100);
-  }
-}
-
-// ============================================================
-// EVENTS
-// ============================================================
-document.addEventListener('click', e => {
-  // Tab click
-  const tab = e.target.closest('.day-tab');
-  if (tab) {
-    currentDay = tab.dataset.day;
-    currentView = 'list';
-    document.querySelectorAll('.view-btn').forEach(b => b.classList.toggle('active', b.dataset.view === 'list'));
-    render();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
-  }
-  // View toggle
-  const vb = e.target.closest('.view-btn');
-  if (vb) {
-    currentView = vb.dataset.view;
-    document.querySelectorAll('.view-btn').forEach(b => b.classList.toggle('active', b.dataset.view === currentView));
-    render();
-    return;
-  }
-  // Check buttons
-  const ck = e.target.closest('.cl-check, .spot-num, .act-check');
-  if (ck && ck.dataset.key) {
-    toggle(ck.dataset.key);
-    render();
-    return;
-  }
-  // Expense — submit
-  if (e.target.closest('#expSubmit')) {
-    const amt = parseInt(document.getElementById('expAmount').value);
-    if (!amt || amt <= 0) { document.getElementById('expAmount').focus(); return; }
-    const store = document.getElementById('expStore').value.trim();
-    const cat = document.getElementById('expCat').value;
-    const pay = document.getElementById('expPay').value;
-    expenses.push({ id: Date.now(), date: new Date().toISOString().slice(0,10), amount: amt, store, cat, pay });
-    saveExp();
-    render();
-    // scroll to top of expense list after short delay
-    setTimeout(() => { const el = document.querySelector('.exp-dashboard'); if(el) el.scrollIntoView({behavior:'smooth'}); }, 50);
-    return;
-  }
-  // Expense — delete
-  const del = e.target.closest('.exp-item-del');
-  if (del && del.dataset.expid) {
-    expenses = expenses.filter(e => e.id !== parseInt(del.dataset.expid));
-    saveExp();
-    render();
-    return;
-  }
-});
-
-// Expense — rate change (partial update to avoid destroying form state)
-document.addEventListener('change', e => {
-  if (e.target.id === 'expRateInput') {
-    const v = parseFloat(e.target.value);
-    if (v > 0) {
-      expRate = v; saveRate();
-      // partial update: only refresh dashboard + item TWD values, don't rebuild form
-      document.querySelectorAll('.exp-stat-sub').forEach(el => {
-        const m = el.textContent.match(/NT\$/);
-        if (!m) return;
-      });
-      // just update all TWD displays in-place
-      const today = new Date().toISOString().slice(0,10);
-      const todayTotal = expenses.filter(x => x.date === today).reduce((s,x) => s + x.amount, 0);
-      const tripTotal = expenses.reduce((s,x) => s + x.amount, 0);
-      const stats = document.querySelectorAll('.exp-stat');
-      if (stats[0]) stats[0].querySelector('.exp-stat-sub').textContent = '≈ NT$' + Math.round(todayTotal * expRate).toLocaleString();
-      if (stats[1]) stats[1].querySelector('.exp-stat-sub').textContent = '≈ NT$' + Math.round(tripTotal * expRate).toLocaleString() + ' · ' + expenses.length + ' 筆';
-      document.querySelectorAll('.exp-item-twd').forEach(el => {
-        const jpy = el.closest('.exp-item')?.querySelector('.exp-item-jpy');
-        if (jpy) {
-          const amt = parseInt(jpy.textContent.replace(/[¥,]/g, ''));
-          if (!isNaN(amt)) el.textContent = 'NT$' + Math.round(amt * expRate).toLocaleString();
-        }
-      });
-      document.querySelectorAll('.exp-day-total').forEach(el => {
-        const m = el.textContent.match(/¥([\d,]+)/);
-        if (m) {
-          const amt = parseInt(m[1].replace(/,/g, ''));
-          el.textContent = '¥' + amt.toLocaleString() + ' ≈ NT$' + Math.round(amt * expRate).toLocaleString();
-        }
-      });
-    }
-  }
-  if (e.target.id === 'sheetUrlInput') {
-    sheetUrl = e.target.value.trim();
-    saveSheetUrl();
-  }
-});
-// Expense — sync & test buttons
-document.addEventListener('click', e => {
-  if (e.target.closest('#expSyncBtn')) { syncToSheets(); }
-  if (e.target.closest('#testSheetBtn')) { testSheetConnection(); }
-});
-
-// ============================================================
-// SECRET UNLOCK — long-press 💗 to toggle
-// ============================================================
-(function() {
-  // --- Long-press to UNLOCK ---
-  let pressTimer = null;
-  function onStart(e) {
-    if (isUnlocked) return; // already unlocked, long-press does nothing
-    e.preventDefault();
-    const heart = document.getElementById('unlockHeart');
-    if (!heart) return;
-    heart.classList.add('pressing');
-    pressTimer = setTimeout(() => {
-      setUnlocked(true);
-      heart.classList.remove('pressing');
-      render();
-    }, 800);
-  }
-  function onEnd() {
-    clearTimeout(pressTimer);
-    const heart = document.getElementById('unlockHeart');
-    if (heart) heart.classList.remove('pressing');
-  }
-  document.addEventListener('touchstart', e => { if (e.target.closest('#unlockHeart')) onStart(e); }, { passive: false });
-  document.addEventListener('touchend', onEnd);
-  document.addEventListener('touchcancel', onEnd);
-  document.addEventListener('mousedown', e => { if (e.target.closest('#unlockHeart')) onStart(e); });
-  document.addEventListener('mouseup', onEnd);
-
-  // --- Triple-tap to LOCK ---
-  let tapCount = 0, tapTimer = null;
-  document.addEventListener('click', e => {
-    if (!e.target.closest('#unlockHeart') || !isUnlocked) return;
+heartBtn.addEventListener('touchstart', function(e) {
+  e.preventDefault();
+  startHeartPress();
+}, { passive: false });
+heartBtn.addEventListener('mousedown', function() { startHeartPress(); });
+heartBtn.addEventListener('touchend', function() { endHeartPress(); });
+heartBtn.addEventListener('mouseup', function() { endHeartPress(); });
+heartBtn.addEventListener('click', function() {
+  if (secretUnlocked) {
     tapCount++;
-    clearTimeout(tapTimer);
-    if (tapCount >= 3) {
+    if (tapCount === 3) {
+      secretUnlocked = false;
+      saveState();
       tapCount = 0;
-      setUnlocked(false);
-      render();
-    } else {
-      tapTimer = setTimeout(() => { tapCount = 0; }, 500);
+      updateHeartIcon();
+      renderCurrentPage();
     }
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(function() { tapCount = 0; }, 600);
+  }
+});
+
+function startHeartPress() {
+  heartTimer = setTimeout(function() {
+    secretUnlocked = true;
+    saveState();
+    updateHeartIcon();
+    renderCurrentPage();
+  }, 1500);
+}
+function endHeartPress() { clearTimeout(heartTimer); }
+function updateHeartIcon() { heartBtn.textContent = secretUnlocked ? '❤️' : '🤍'; }
+updateHeartIcon();
+
+// ========== TABS ==========
+function renderDayTabs() {
+  var tabs = document.getElementById('dayTabs');
+  var html = '';
+  for (var i = 0; i < DAYS_DATA.length; i++) {
+    var d = DAYS_DATA[i];
+    html += '<button class="day-tab ' + (i === currentDay ? 'active' : '') + '" onclick="selectDay(' + i + ')">' + d.label + '<br><span style="font-size:11px;font-weight:400">' + d.date + '</span></button>';
+  }
+  tabs.innerHTML = html;
+}
+
+function selectDay(i) {
+  currentDay = i;
+  renderDayTabs();
+  renderCurrentPage();
+}
+
+// ========== PAGE SWITCH ==========
+function switchPage(page) {
+  currentPage = page;
+  var btns = document.querySelectorAll('.bar-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.toggle('active', btns[i].dataset.page === page);
+  }
+  var dayTabsEl = document.getElementById('dayTabs');
+  var viewToggleEl = document.getElementById('viewToggle');
+  if (page === 'itinerary') {
+    dayTabsEl.style.display = 'flex';
+    viewToggleEl.style.display = 'flex';
+  } else {
+    dayTabsEl.style.display = 'none';
+    viewToggleEl.style.display = 'none';
+  }
+  renderCurrentPage();
+}
+
+function setView(v) {
+  currentView = v;
+  var btns = document.querySelectorAll('.view-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.toggle('active', btns[i].dataset.view === v);
+  }
+  renderCurrentPage();
+}
+
+function renderCurrentPage() {
+  var el = document.getElementById('mainContent');
+  switch (currentPage) {
+    case 'itinerary': renderItinerary(el); break;
+    case 'info': renderInfo(el); break;
+    case 'backup': renderBackup(el); break;
+    case 'todo': renderTodo(el); break;
+    case 'expense': renderExpense(el); break;
+  }
+}
+
+// ========== ESCAPE HTML ==========
+function escapeAttr(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ========== RENDER SPOT CARD ==========
+function spotCardHTML(spot, dayId, idx, prefix) {
+  var key = (prefix || dayId) + '_spot_' + idx;
+  var checked = getChecked(key);
+  var isOptional = spot.optional;
+  var html = '<div class="spot-card ' + (checked ? 'completed' : '') + ' ' + (isOptional ? 'optional-spot' : '') + '">';
+  if (spot.time) html += '<div class="spot-time">' + spot.time + '</div>';
+  html += '<div class="spot-name">' + spot.name;
+  if (isOptional) html += '<span class="spot-optional-badge">選配</span>';
+  html += '</div>';
+  if (spot.tags && spot.tags.length) {
+    html += '<div class="spot-tags">';
+    for (var t = 0; t < spot.tags.length; t++) {
+      var tm = TAG_MAP[spot.tags[t]];
+      if (tm) html += '<span class="spot-tag ' + tm.cls + '">' + tm.label + '</span>';
+    }
+    html += '</div>';
+  }
+  if (spot.desc) html += '<div class="spot-desc">' + spot.desc + '</div>';
+  if (spot.tips) html += '<div class="spot-tips">💡 ' + spot.tips + '</div>';
+  html += '<div class="spot-actions">';
+  html += '<button class="spot-check-btn ' + (checked ? 'checked' : '') + '" onclick="toggleSpot(\'' + key + '\')">✓ ' + (checked ? '已完成' : '打卡') + '</button>';
+  if (spot.lat && spot.lng) {
+    html += '<button onclick="window.open(\'https://maps.google.com/?q=' + spot.lat + ',' + spot.lng + '\',\'_blank\')">📍 地圖</button>';
+  }
+  html += '</div></div>';
+  if (spot.transitToNext) {
+    html += '<div class="connector">' + spot.transitToNext + '</div>';
+  }
+  return html;
+}
+
+function toggleSpot(key) {
+  setChecked(key, !getChecked(key));
+  renderCurrentPage();
+}
+
+// ========== RENDER ITINERARY ==========
+function renderItinerary(el) {
+  if (currentView === 'map') {
+    el.innerHTML = '<div id="map"></div><div id="walkingInfo" class="walking-info" style="display:none"></div>';
+    setTimeout(function() { initMap(); }, 50);
+    return;
+  }
+  var day = DAYS_DATA[currentDay];
+  var html = '<div style="margin-bottom:10px;"><strong style="font-size:17px;">' + day.title + '</strong><span style="color:var(--gray);font-size:13px;margin-left:8px;">' + day.subtitle + '</span></div>';
+
+  if (day.isDay2) {
+    // Day 2 special rendering
+    html += '<div class="group-card group-card-a">';
+    html += '<div class="group-title">🌿 ' + day.groupA.title + '</div>';
+    html += '<div class="group-subtitle">' + day.groupA.note + '</div>';
+    html += '</div>';
+
+    html += '<div class="group-card group-card-b">';
+    html += '<div class="group-title">🛍️ ' + day.groupB.title + '</div>';
+    html += '</div>';
+
+    if (day.groupB.startTransit) {
+      html += '<div class="start-transit">' + day.groupB.startTransit + '</div>';
+    }
+    for (var i = 0; i < day.groupB.spots.length; i++) {
+      html += spotCardHTML(day.groupB.spots[i], day.id, i, day.id + '_groupB');
+    }
+  } else {
+    if (day.startTransit) {
+      html += '<div class="start-transit">' + day.startTransit + '</div>';
+    }
+    for (var i = 0; i < day.spots.length; i++) {
+      html += spotCardHTML(day.spots[i], day.id, i);
+    }
+    if (day.endNote) {
+      html += '<div class="note-connector">🚃 ' + day.endNote + '</div>';
+    }
+    if (day.routeNote) {
+      html += '<div class="route-info">' + day.routeNote + '</div>';
+    }
+    // Solo section
+    if (day.solo && day.solo.length && secretUnlocked) {
+      html += '<div class="section-card solo-section">';
+      html += '<div class="section-title">🔒 Solo 行程</div>';
+      for (var s = 0; s < day.solo.length; s++) {
+        var solo = day.solo[s];
+        var tagHtml = '';
+        for (var t = 0; t < solo.tags.length; t++) {
+          var tm = TAG_MAP[solo.tags[t]];
+          if (tm) tagHtml += '<span class="spot-tag ' + tm.cls + '" style="font-size:10px;padding:1px 6px;">' + tm.label + '</span> ';
+        }
+        html += '<div class="section-desc">' + tagHtml + solo.name + '</div>';
+      }
+      html += '</div>';
+    }
+  }
+  el.innerHTML = html;
+}
+
+// ========== MAP ==========
+function initMap() {
+  var mapEl = document.getElementById('map');
+  if (!mapEl) return;
+  if (map) { map.remove(); map = null; }
+  map = L.map('map');
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap'
+  }).addTo(map);
+  markers = [];
+  var spots = [];
+  var day = DAYS_DATA[currentDay];
+  if (day.isDay2) {
+    spots = day.groupB.spots;
+  } else {
+    spots = day.spots;
+  }
+  var validSpots = [];
+  for (var i = 0; i < spots.length; i++) {
+    if (spots[i].lat && spots[i].lng) validSpots.push(spots[i]);
+  }
+  if (validSpots.length === 0) {
+    map.setView([34.6937, 135.5023], 12);
+    return;
+  }
+  var bounds = [];
+  for (var i = 0; i < validSpots.length; i++) {
+    var s = validSpots[i];
+    var m = L.marker([s.lat, s.lng]).addTo(map)
+      .bindPopup('<b>' + s.name + '</b>' + (s.desc ? '<br>' + s.desc : ''));
+    markers.push(m);
+    bounds.push([s.lat, s.lng]);
+  }
+  if (bounds.length === 1) {
+    map.setView(bounds[0], 15);
+  } else {
+    map.fitBounds(bounds, { padding: [40, 40] });
+  }
+  // Walking distance via OSRM
+  if (validSpots.length >= 2) {
+    var coords = '';
+    for (var i = 0; i < validSpots.length; i++) {
+      if (i > 0) coords += ';';
+      coords += validSpots[i].lng + ',' + validSpots[i].lat;
+    }
+    fetch('https://router.project-osrm.org/route/v1/foot/' + coords + '?overview=false')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.routes && data.routes[0]) {
+          var dist = data.routes[0].distance;
+          var dur = data.routes[0].duration;
+          var walkEl = document.getElementById('walkingInfo');
+          if (walkEl) {
+            walkEl.style.display = 'block';
+            walkEl.innerHTML = '🚶 今日步行總距離約 ' + (dist / 1000).toFixed(1) + ' km，約 ' + Math.round(dur / 60) + ' 分鐘';
+          }
+        }
+      })
+      .catch(function() {});
+  }
+}
+
+// ========== INFO PAGE ==========
+function renderInfo(el) {
+  var totalSpots = countAllSpots();
+  var doneSpots = countDoneSpots();
+  var pct = totalSpots > 0 ? Math.round(doneSpots / totalSpots * 100) : 0;
+  var r = 50;
+  var circ = 2 * Math.PI * r;
+  var offset = circ - (pct / 100) * circ;
+
+  var html = '<div class="progress-ring-wrap">';
+  html += '<svg class="progress-ring" width="120" height="120">';
+  html += '<circle class="progress-ring-bg" cx="60" cy="60" r="' + r + '"/>';
+  html += '<circle class="progress-ring-fill" cx="60" cy="60" r="' + r + '" stroke-dasharray="' + circ + '" stroke-dashoffset="' + offset + '"/>';
+  html += '<text x="60" y="60" text-anchor="middle" dominant-baseline="central" fill="var(--dark)" font-size="22" font-weight="700" style="transform:rotate(90deg);transform-origin:center;">' + pct + '%</text>';
+  html += '</svg>';
+  html += '<div class="progress-text">' + doneSpots + ' / ' + totalSpots + ' 景點已打卡</div>';
+  html += '</div>';
+
+  // Wishes
+  html += '<div class="info-card"><h3>⭐ 願望清單</h3>';
+  for (var i = 0; i < WISHES.length; i++) {
+    var w = WISHES[i];
+    var key = 'wish_' + i;
+    var ck = getChecked(key);
+    var wName = typeof w === 'string' ? w : w.name;
+    var wUrl = typeof w === 'object' ? w.url : null;
+    html += '<div class="cl-item">';
+    html += '<div class="cl-check ' + (ck ? 'checked' : '') + '" onclick="setChecked(\'' + key + '\',' + (!ck) + ');renderCurrentPage()"></div>';
+    html += '<div class="cl-text ' + (ck ? 'checked' : '') + '">' + (wUrl ? '<a href="' + wUrl + '" target="_blank">' + wName + '</a>' : wName) + '</div>';
+    html += '</div>';
+  }
+  html += '</div>';
+
+  // Souvenirs
+  html += '<div class="info-card"><h3>🎁 伴手禮清單</h3>';
+  for (var i = 0; i < SOUVENIRS.length; i++) {
+    var key = 'souv_' + i;
+    var ck = getChecked(key);
+    html += '<div class="cl-item">';
+    html += '<div class="cl-check ' + (ck ? 'checked' : '') + '" onclick="setChecked(\'' + key + '\',' + (!ck) + ');renderCurrentPage()"></div>';
+    html += '<div class="cl-text ' + (ck ? 'checked' : '') + '">' + SOUVENIRS[i] + '</div>';
+    html += '</div>';
+  }
+  html += '</div>';
+
+  // Bring
+  html += '<div class="info-card"><h3>🎒 行前準備</h3>';
+  for (var i = 0; i < BRING.length; i++) {
+    var key = 'bring_' + i;
+    var ck = getChecked(key);
+    html += '<div class="cl-item">';
+    html += '<div class="cl-check ' + (ck ? 'checked' : '') + '" onclick="setChecked(\'' + key + '\',' + (!ck) + ');renderCurrentPage()"></div>';
+    html += '<div class="cl-text ' + (ck ? 'checked' : '') + '">' + BRING[i] + '</div>';
+    html += '</div>';
+  }
+  html += '</div>';
+
+  // Cafes (secret)
+  if (secretUnlocked) {
+    html += '<div class="info-card"><h3>☕ 脫隊咖啡廳候選清單</h3>';
+    for (var i = 0; i < CAFES.length; i++) {
+      var c = CAFES[i];
+      var cKey = 'cafe_' + i;
+      var cCk = getChecked(cKey);
+      html += '<div class="cl-item">';
+      html += '<div class="cl-check ' + (cCk ? 'checked' : '') + '" onclick="setChecked(\'' + cKey + '\',' + (!cCk) + ');renderCurrentPage()"></div>';
+      html += '<div class="cl-text ' + (cCk ? 'checked' : '') + '"><a href="' + c.url + '" target="_blank">' + c.name + '</a><br><span style="font-size:12px;color:var(--gray);">📍 ' + c.desc + '</span></div>';
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+
+  el.innerHTML = html;
+}
+
+function countAllSpots() {
+  var c = 0;
+  for (var d = 0; d < DAYS_DATA.length; d++) {
+    var day = DAYS_DATA[d];
+    if (day.isDay2) {
+      c += day.groupB.spots.length;
+    } else {
+      c += day.spots.length;
+    }
+  }
+  return c;
+}
+
+function countDoneSpots() {
+  var c = 0;
+  for (var d = 0; d < DAYS_DATA.length; d++) {
+    var day = DAYS_DATA[d];
+    if (day.isDay2) {
+      for (var i = 0; i < day.groupB.spots.length; i++) {
+        if (getChecked(day.id + '_groupB_spot_' + i)) c++;
+      }
+    } else {
+      for (var i = 0; i < day.spots.length; i++) {
+        if (getChecked(day.id + '_spot_' + i)) c++;
+      }
+    }
+  }
+  return c;
+}
+
+// ========== BACKUP ==========
+function renderBackup(el) {
+  var html = '';
+  for (var b = 0; b < BACKUP_PLANS.length; b++) {
+    var bp = BACKUP_PLANS[b];
+    html += '<div style="margin-bottom:20px;">';
+    html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">';
+    html += '<span style="font-size:28px;">' + bp.icon + '</span>';
+    html += '<div>';
+    html += '<div style="font-size:17px;font-weight:700;">' + bp.title + '</div>';
+    html += '<div style="font-size:13px;color:var(--gray);">' + bp.subtitle + '</div>';
+    html += '</div></div>';
+    html += '<div class="start-transit">' + bp.transit + '</div>';
+    for (var i = 0; i < bp.spots.length; i++) {
+      var spot = bp.spots[i];
+      var key = bp.id + '_spot_' + i;
+      var checked = getChecked(key);
+      html += '<div class="spot-card ' + (checked ? 'completed' : '') + '">';
+      html += '<div class="spot-name"><span class="backup-badge">' + (i + 1) + '</span> ' + spot.name + '</div>';
+      if (spot.tags && spot.tags.length) {
+        html += '<div class="spot-tags">';
+        for (var t = 0; t < spot.tags.length; t++) {
+          var tm = TAG_MAP[spot.tags[t]];
+          if (tm) html += '<span class="spot-tag ' + tm.cls + '">' + tm.label + '</span>';
+        }
+        html += '</div>';
+      }
+      if (spot.desc) html += '<div class="spot-desc">' + spot.desc + '</div>';
+      if (spot.tips) html += '<div class="spot-tips">💡 ' + spot.tips + '</div>';
+      html += '<div class="spot-actions">';
+      html += '<button class="spot-check-btn ' + (checked ? 'checked' : '') + '" onclick="toggleSpot(\'' + key + '\')">✓ ' + (checked ? '已完成' : '打卡') + '</button>';
+      if (spot.lat && spot.lng) {
+        html += '<button onclick="window.open(\'https://maps.google.com/?q=' + spot.lat + ',' + spot.lng + '\',\'_blank\')">📍 地圖</button>';
+      }
+      html += '</div></div>';
+      if (spot.transitToNext) {
+        html += '<div class="connector">' + spot.transitToNext + '</div>';
+      }
+    }
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+// ========== TODO ==========
+function renderTodo(el) {
+  var html = '<div style="margin-bottom:12px;font-size:17px;font-weight:700;">📋 待辦事項</div>';
+  html += '<div class="info-card">';
+  for (var i = 0; i < TODO_ITEMS.length; i++) {
+    var item = TODO_ITEMS[i];
+    var key = 'todo_' + i;
+    var ck = getChecked(key);
+    html += '<div class="cl-item">';
+    html += '<div class="cl-check ' + (ck ? 'checked' : '') + '" onclick="setChecked(\'' + key + '\',' + (!ck) + ');renderCurrentPage()"></div>';
+    html += '<div class="cl-text ' + (ck ? 'checked' : '') + '">' + item.text;
+    if (item.url) html += ' <a href="' + item.url + '" target="_blank">🔗 連結</a>';
+    html += '</div></div>';
+  }
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+// ========== EXPENSE ==========
+function getExpenses() {
+  return state.expenses || [];
+}
+function setExpenses(list) {
+  state.expenses = list;
+  saveState();
+}
+
+function renderExpense(el) {
+  var expenses = getExpenses();
+  var totalJPY = 0;
+  for (var i = 0; i < expenses.length; i++) totalJPY += expenses[i].amount;
+  var totalTWD = Math.round(totalJPY * JPY_TO_TWD);
+
+  var html = '<div class="exp-summary">';
+  html += '<div class="exp-total">&yen;' + totalJPY.toLocaleString() + '</div>';
+  html += '<div class="exp-total-sub">&asymp; NT$' + totalTWD.toLocaleString() + '</div>';
+  html += '</div>';
+
+  // Day filter
+  var allDays = ['全部'];
+  for (var i = 0; i < DAYS_DATA.length; i++) allDays.push(DAYS_DATA[i].label);
+  var filterDay = state.expFilterDay || '全部';
+  html += '<div class="exp-day-filter">';
+  for (var i = 0; i < allDays.length; i++) {
+    html += '<button class="exp-day-btn ' + (filterDay === allDays[i] ? 'active' : '') + '" onclick="setExpFilter(\'' + allDays[i] + '\')">' + allDays[i] + '</button>';
+  }
+  html += '</div>';
+
+  // Add form
+  html += '<div class="exp-form">';
+  html += '<input class="exp-input exp-input-amount" type="number" placeholder="金額 &yen;" id="expAmount">';
+  html += '<select class="exp-select" id="expCat">';
+  html += '<option value="food">🍽️ 餐飲</option>';
+  html += '<option value="transport">🚃 交通</option>';
+  html += '<option value="shop">🛍️ 購物</option>';
+  html += '<option value="ticket">🎟️ 門票</option>';
+  html += '<option value="other">📦 其他</option>';
+  html += '</select>';
+  html += '<select class="exp-select" id="expDay">';
+  for (var i = 0; i < DAYS_DATA.length; i++) {
+    html += '<option value="' + DAYS_DATA[i].label + '">' + DAYS_DATA[i].label + '</option>';
+  }
+  html += '</select>';
+  html += '<input class="exp-input exp-input-note" type="text" placeholder="備註" id="expNote">';
+  html += '<button class="exp-add-btn" onclick="addExpense()">新增</button>';
+  html += '</div>';
+
+  // Sync section
+  html += renderSyncSection();
+
+  // Filtered list
+  var filtered = [];
+  for (var i = 0; i < expenses.length; i++) {
+    if (filterDay === '全部' || expenses[i].day === filterDay) filtered.push({ exp: expenses[i], origIdx: i });
+  }
+  html += '<div class="exp-list">';
+  for (var ri = filtered.length - 1; ri >= 0; ri--) {
+    var e = filtered[ri].exp;
+    var origIdx = filtered[ri].origIdx;
+    html += '<div class="exp-item">';
+    html += '<div class="exp-item-icon">' + (CAT_ICONS[e.cat] || '📦') + '</div>';
+    html += '<div class="exp-item-body">';
+    html += '<div class="exp-item-note">' + (e.note || '（無備註）') + '</div>';
+    html += '<div class="exp-item-meta">' + e.day + ' · ' + (e.catLabel || e.cat) + '</div>';
+    html += '</div>';
+    html += '<div style="text-align:right;">';
+    html += '<div class="exp-item-jpy">&yen;' + e.amount.toLocaleString() + '</div>';
+    html += '<div class="exp-item-twd">&asymp; NT$' + Math.round(e.amount * JPY_TO_TWD).toLocaleString() + '</div>';
+    html += '</div>';
+    html += '<button class="exp-item-del" onclick="delExpense(' + origIdx + ')">✕</button>';
+    html += '</div>';
+  }
+  html += '</div>';
+  html += '<div class="exp-rate-note">匯率 1 JPY &asymp; ' + JPY_TO_TWD + ' TWD（僅供參考）</div>';
+  el.innerHTML = html;
+}
+
+function addExpense() {
+  var amount = parseInt(document.getElementById('expAmount').value);
+  if (!amount || amount <= 0) return;
+  var cat = document.getElementById('expCat').value;
+  var catLabels = { food: '餐飲', transport: '交通', shop: '購物', ticket: '門票', other: '其他' };
+  var note = document.getElementById('expNote').value;
+  var day = document.getElementById('expDay').value;
+  var exps = getExpenses();
+  exps.push({ amount: amount, cat: cat, catLabel: catLabels[cat], note: note, day: day, ts: Date.now() });
+  setExpenses(exps);
+  renderCurrentPage();
+}
+
+function delExpense(idx) {
+  var exps = getExpenses();
+  exps.splice(idx, 1);
+  setExpenses(exps);
+  renderCurrentPage();
+}
+
+function setExpFilter(d) {
+  state.expFilterDay = d;
+  saveState();
+  renderCurrentPage();
+}
+
+// ========== GOOGLE SHEETS SYNC ==========
+function renderSyncSection() {
+  var url = state.sheetsUrl || '';
+  var html = '<div class="sync-section">';
+  html += '<div class="sync-title">📊 同步到 Google Sheets</div>';
+  html += '<div class="sync-desc">將記帳資料同步到 Google Sheets，方便分帳和統計。</div>';
+  html += '<input class="sync-url-input" type="text" placeholder="貼上 Apps Script Web App URL" id="syncUrl" value="' + escapeAttr(url) + '">';
+  html += '<button class="sync-btn" onclick="syncToSheets()" id="syncBtn">同步</button>';
+  html += '<div class="sync-status" id="syncStatus"></div>';
+  html += '<details class="sync-instructions">';
+  html += '<summary>如何設定 Google Sheets 同步？</summary>';
+  html += '<ol>';
+  html += '<li>開一個新的 Google Sheet</li>';
+  html += '<li>點選「擴充功能 → Apps Script」</li>';
+  html += '<li>貼上以下程式碼：</li>';
+  html += '</ol>';
+  html += '<pre style="font-size:11px;overflow-x:auto;background:#f0f0f0;padding:8px;border-radius:6px;margin:8px 0;"><code>function doPost(e) {\n';
+  html += '  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();\n';
+  html += '  var data = JSON.parse(e.postData.contents);\n';
+  html += '  if (data.clear) {\n';
+  html += '    sheet.clear();\n';
+  html += '    sheet.appendRow([\'日期\',\'分類\',\'金額(JPY)\',\'金額(TWD)\',\'備註\',\'時間戳\']);\n';
+  html += '  }\n';
+  html += '  data.expenses.forEach(function(exp) {\n';
+  html += '    sheet.appendRow([\n';
+  html += '      exp.day,\n';
+  html += '      exp.catLabel || exp.cat,\n';
+  html += '      exp.amount,\n';
+  html += '      Math.round(exp.amount * 0.22),\n';
+  html += '      exp.note || \'\',\n';
+  html += '      new Date(exp.ts).toLocaleString(\'zh-TW\')\n';
+  html += '    ]);\n';
+  html += '  });\n';
+  html += '  return ContentService\n';
+  html += '    .createTextOutput(JSON.stringify({status:\'ok\'}))\n';
+  html += '    .setMimeType(ContentService.MimeType.JSON);\n';
+  html += '}</code></pre>';
+  html += '<ol start="4">';
+  html += '<li>部署為「Web App」，權限選「任何人」</li>';
+  html += '<li>將部署的 URL 貼到上方輸入框</li>';
+  html += '</ol>';
+  html += '</details>';
+  html += '</div>';
+  return html;
+}
+
+function syncToSheets() {
+  var url = document.getElementById('syncUrl').value.trim();
+  if (!url) {
+    showSyncStatus('請先貼上 Apps Script URL', 'error');
+    return;
+  }
+  state.sheetsUrl = url;
+  saveState();
+  var btn = document.getElementById('syncBtn');
+  btn.disabled = true;
+  btn.textContent = '同步中...';
+  var expenses = getExpenses();
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ clear: true, expenses: expenses })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.status === 'ok') {
+      showSyncStatus('✓ 已同步 ' + expenses.length + ' 筆資料', 'success');
+    } else {
+      showSyncStatus('同步失敗，請檢查 URL', 'error');
+    }
+  })
+  .catch(function(err) {
+    showSyncStatus('同步失敗: ' + err.message, 'error');
+  })
+  .finally(function() {
+    btn.disabled = false;
+    btn.textContent = '同步';
   });
-})();
+}
 
-// Auto-select today
-(function() {
-  const t = new Date(), key = `${t.getFullYear()}-${t.getMonth()+1}-${t.getDate()}`;
-  const map = {'2026-5-8':'day1','2026-5-9':'day2','2026-5-10':'day3','2026-5-11':'day4','2026-5-12':'day5'};
-  if (map[key]) currentDay = map[key];
-})();
+function showSyncStatus(msg, type) {
+  var el = document.getElementById('syncStatus');
+  if (el) {
+    el.textContent = msg;
+    el.className = 'sync-status ' + type;
+  }
+}
 
-render();
+// ========== RESET ==========
+function showResetModal() {
+  document.getElementById('resetModal').classList.remove('hidden');
+}
+function hideResetModal() {
+  document.getElementById('resetModal').classList.add('hidden');
+}
+function doReset() {
+  localStorage.removeItem('osakaTrip2026');
+  state = {};
+  secretUnlocked = false;
+  updateHeartIcon();
+  hideResetModal();
+  renderCurrentPage();
+}
+
+// ========== INIT ==========
+renderDayTabs();
+switchPage('itinerary');
 </script>
 </body>
 </html>
