@@ -56,7 +56,7 @@
     color: var(--text);
     font-size: 16px;
     line-height: 1.7;
-    padding-bottom: 72px;
+    padding-bottom: 80px;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -120,20 +120,132 @@
     z-index: 1;
   }
 
-  /* ===== DAY TABS ===== */
-  .day-tabs {
+  /* ===== BOTTOM NAV ===== */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 68px;
+    background: oklch(1 0 0 / 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid oklch(0.92 0.008 255);
+    padding: 0 12px;
     display: flex;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    gap: 6px;
-    padding: 10px 16px 6px;
-    scrollbar-width: none;
-    position: sticky;
-    top: 0;
-    z-index: 200;
-    background: var(--bg);
+    align-items: center;
+    gap: 8px;
+    z-index: 300;
   }
-  .day-tabs::-webkit-scrollbar { display: none; }
+  .bnav-day-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 14px;
+    border-radius: 16px;
+    background: var(--ink);
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
+    font-family: inherit;
+    transition: transform 0.12s, opacity 0.15s;
+    min-width: 0;
+    height: 48px;
+  }
+  .bnav-day-btn:active { transform: scale(0.97); }
+  .bnav-day-btn.is-section { background: var(--gray-light); color: var(--text); }
+  .bnav-day-icon { font-size: 20px; line-height: 1; flex-shrink: 0; }
+  .bnav-day-text { flex: 1; min-width: 0; }
+  .bnav-day-label { font-size: 11px; font-weight: 600; opacity: 0.6; letter-spacing: 0.3px; line-height: 1.2; }
+  .bnav-day-title { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; }
+  .bnav-chevron { font-size: 10px; opacity: 0.4; flex-shrink: 0; transition: transform 0.2s; }
+  .bnav-chevron.open { transform: rotate(180deg); }
+  .bnav-icon-btn {
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    border: none;
+    background: var(--gray-light);
+    color: var(--gray);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .bnav-icon-btn:active { transform: scale(0.91); }
+  .bnav-icon-btn.active { background: var(--primary-bg); color: var(--primary); }
+
+  /* ===== DAY DRAWER ===== */
+  .drawer-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    bottom: 68px;
+    background: oklch(0.14 0.03 255 / 0.45);
+    z-index: 390;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .drawer-overlay.open { opacity: 1; pointer-events: all; }
+  .day-drawer {
+    position: fixed;
+    bottom: 68px; left: 0; right: 0;
+    background: var(--bg);
+    border-radius: 20px 20px 0 0;
+    z-index: 391;
+    padding: 12px 16px 20px;
+    transform: translateY(110%);
+    transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
+    box-shadow: 0 -8px 32px oklch(0.14 0.03 255 / 0.14);
+  }
+  .day-drawer.open { transform: translateY(0); }
+  .drawer-handle {
+    width: 36px; height: 4px;
+    background: oklch(0.84 0.01 255);
+    border-radius: 4px;
+    margin: 0 auto 14px;
+  }
+  .drawer-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gray);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .drawer-days { display: flex; flex-direction: column; gap: 8px; }
+  .drawer-day-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: var(--radius);
+    background: var(--card);
+    box-shadow: var(--shadow);
+    border: 2px solid transparent;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: all 0.15s;
+  }
+  .drawer-day-card:active { transform: scale(0.98); }
+  .drawer-day-card.active { border-color: var(--primary); background: var(--primary-bg); }
+  .drawer-day-icon { font-size: 22px; flex-shrink: 0; }
+  .drawer-day-body { flex: 1; min-width: 0; }
+  .drawer-day-meta { font-size: 11px; font-weight: 600; color: var(--gray); letter-spacing: 0.3px; }
+  .drawer-day-title { font-size: 15px; font-weight: 700; color: var(--text); }
+  .drawer-day-card.active .drawer-day-title { color: var(--primary); }
+  .drawer-dots { display: flex; gap: 4px; align-items: center; flex-shrink: 0; }
+  .drawer-dot { width: 7px; height: 7px; border-radius: 50%; background: oklch(0.87 0.01 255); }
+  .drawer-dot.done { background: var(--green); }
+  .drawer-dot.current { background: var(--primary); }
+
+  /* ===== DAY TAB (inline backup hint buttons still use this class) ===== */
   .day-tab {
     flex: 0 0 auto;
     padding: 8px 15px;
@@ -466,33 +578,6 @@
   .info-label  { font-size: 11px; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
   .info-value  { font-size: 15px; font-weight: 700; color: var(--text); }
 
-  /* ===== BOTTOM BAR ===== */
-  .bottom-bar {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: oklch(1 0 0 / 0.94);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-top: 1px solid oklch(0.92 0.008 255);
-    padding: 10px 16px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    z-index: 300;
-  }
-  .bottom-btn {
-    padding: 9px 18px;
-    border-radius: 18px;
-    border: 1.5px solid oklch(0.88 0.01 255);
-    background: var(--card);
-    color: var(--gray);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    font-family: inherit;
-  }
-  .bottom-btn:active { background: var(--gray-light); }
 
   /* ===== SECRET UNLOCK HEART ===== */
   .unlock-heart {
@@ -576,7 +661,6 @@
   <div class="subtitle">2026 · 5/8（五）― 5/12（二）· 5天4夜</div>
 </div>
 
-<nav class="day-tabs" id="dayTabs"></nav>
 <div class="view-toggle" id="viewToggle" style="display:none;">
   <button class="view-btn active" data-view="list">行程</button>
   <button class="view-btn" data-view="map">地圖</button>
@@ -584,7 +668,18 @@
 
 <div id="appRoot"></div>
 
-<div class="bottom-bar"></div>
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div class="day-drawer" id="dayDrawer">
+  <div class="drawer-handle"></div>
+  <div class="drawer-title">選擇行程日</div>
+  <div class="drawer-days" id="drawerDays"></div>
+</div>
+<nav class="bottom-nav">
+  <button class="bnav-day-btn" id="bnavDayBtn"></button>
+  <button class="bnav-icon-btn" data-day="info" title="總覽">📋</button>
+  <button class="bnav-icon-btn" data-day="expense" title="記帳">💰</button>
+  <button class="bnav-icon-btn" data-day="backup" title="備案">🔄</button>
+</nav>
 
 <script>
 // ============================================================
@@ -774,23 +869,85 @@ async function testSheetConnection() {
 let currentDay = 'info';
 let currentView = 'list';
 let maps = {};
+let drawerOpen = false;
 
-// ============================================================
-// RENDER — Tabs
-// ============================================================
-function renderTabs() {
-  const nav = document.getElementById('dayTabs');
-  let html = `<button class="day-tab ${currentDay==='info'?'active':''}" data-day="info"><span class="tab-icon">📋</span> 總覽</button>`;
+function openDrawer() {
+  drawerOpen = true;
+  document.getElementById('dayDrawer').classList.add('open');
+  document.getElementById('drawerOverlay').classList.add('open');
+  renderDrawer();
+  renderBottomNav();
+}
+
+function closeDrawer() {
+  drawerOpen = false;
+  const dr = document.getElementById('dayDrawer');
+  const ov = document.getElementById('drawerOverlay');
+  if (dr) dr.classList.remove('open');
+  if (ov) ov.classList.remove('open');
+}
+
+function renderDrawer() {
+  const container = document.getElementById('drawerDays');
+  if (!container) return;
+  let html = '';
   DAYS_DATA.forEach(d => {
-    html += `<button class="day-tab ${currentDay===d.id?'active':''}" data-day="${d.id}"><span class="tab-icon">${d.icon}</span> ${d.label} (${d.weekday})</button>`;
+    const isActive = currentDay === d.id;
+    const nextIdx = d.spots.findIndex((_, i) => !isChecked(d.id + '_' + i));
+    const dotsHtml = d.spots.map((_, i) => {
+      const done = isChecked(d.id + '_' + i);
+      const isCurrent = isActive && i === nextIdx && !done;
+      return `<div class="drawer-dot ${done ? 'done' : (isCurrent ? 'current' : '')}"></div>`;
+    }).join('');
+    html += `
+      <div class="drawer-day-card ${isActive ? 'active' : ''}" data-day="${d.id}">
+        <div class="drawer-day-icon">${d.icon}</div>
+        <div class="drawer-day-body">
+          <div class="drawer-day-meta">${d.label} (${d.weekday})</div>
+          <div class="drawer-day-title">${d.title}</div>
+        </div>
+        <div class="drawer-dots">${dotsHtml}</div>
+      </div>`;
   });
-  html += `<button class="day-tab ${currentDay==='backup'?'active':''}" data-day="backup"><span class="tab-icon">🔄</span> 備案</button>`;
-  html += `<button class="day-tab ${currentDay==='expense'?'active':''}" data-day="expense"><span class="tab-icon">💰</span> 記帳</button>`;
-  if (isUnlocked) {
-    html += `<button class="day-tab ${currentDay==='cafe'?'active':''}" data-day="cafe"><span class="tab-icon">☕</span> 咖啡廳</button>`;
-    html += `<button class="day-tab ${currentDay==='lists'?'active':''}" data-day="lists"><span class="tab-icon">📝</span> 清單</button>`;
+  container.innerHTML = html;
+}
+
+function renderBottomNav() {
+  const btn = document.getElementById('bnavDayBtn');
+  if (!btn) return;
+  const day = DAYS_DATA.find(d => d.id === currentDay);
+  const chevron = `<div class="bnav-chevron ${drawerOpen ? 'open' : ''}">▲</div>`;
+  if (day) {
+    const doneCount = day.spots.filter((_, i) => isChecked(day.id + '_' + i)).length;
+    btn.className = 'bnav-day-btn';
+    btn.innerHTML = `
+      <div class="bnav-day-icon">${day.icon}</div>
+      <div class="bnav-day-text">
+        <div class="bnav-day-label">${day.label} (${day.weekday}) · ${doneCount}/${day.spots.length} 個景點</div>
+        <div class="bnav-day-title">${day.title}</div>
+      </div>
+      ${chevron}`;
+  } else {
+    const sections = {
+      info:    { icon: '📋', title: '行程總覽' },
+      backup:  { icon: '🔄', title: '備案行程' },
+      expense: { icon: '💰', title: '旅遊記帳' },
+      cafe:    { icon: '☕', title: '咖啡廳清單' },
+      lists:   { icon: '📝', title: '個人清單' },
+    };
+    const sec = sections[currentDay] || { icon: '📋', title: '行程總覽' };
+    btn.className = 'bnav-day-btn is-section';
+    btn.innerHTML = `
+      <div class="bnav-day-icon">${sec.icon}</div>
+      <div class="bnav-day-text">
+        <div class="bnav-day-label">切換行程日 ▸</div>
+        <div class="bnav-day-title">${sec.title}</div>
+      </div>
+      ${chevron}`;
   }
-  nav.innerHTML = html;
+  document.querySelectorAll('.bnav-icon-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.day === currentDay);
+  });
 }
 
 // ============================================================
@@ -1235,11 +1392,11 @@ function doPost(e) {
 // MAIN RENDER
 // ============================================================
 function render() {
-  // if locked and user somehow on a hidden tab, bounce to info
   if (!isUnlocked && (currentDay === 'cafe' || currentDay === 'lists')) {
     currentDay = 'info';
   }
-  renderTabs();
+  closeDrawer();
+  renderBottomNav();
   const root = document.getElementById('appRoot');
   const vt = document.getElementById('viewToggle');
   const isDayPage = DAYS_DATA.some(d => d.id === currentDay);
@@ -1300,7 +1457,37 @@ function render() {
 // EVENTS
 // ============================================================
 document.addEventListener('click', e => {
-  // Tab click
+  // Bottom nav: day pill button → toggle drawer
+  if (e.target.closest('#bnavDayBtn')) {
+    if (drawerOpen) { closeDrawer(); renderBottomNav(); }
+    else { openDrawer(); }
+    return;
+  }
+  // Bottom nav: icon section buttons
+  const bnavIcon = e.target.closest('.bnav-icon-btn');
+  if (bnavIcon) {
+    currentDay = bnavIcon.dataset.day;
+    currentView = 'list';
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+  // Drawer overlay → close
+  if (e.target.closest('#drawerOverlay')) {
+    closeDrawer();
+    renderBottomNav();
+    return;
+  }
+  // Drawer day card → navigate
+  const drawerCard = e.target.closest('.drawer-day-card');
+  if (drawerCard) {
+    currentDay = drawerCard.dataset.day;
+    currentView = 'list';
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+  // Inline tab buttons (backup hint buttons inside day pages still use .day-tab class)
   const tab = e.target.closest('.day-tab');
   if (tab) {
     currentDay = tab.dataset.day;
