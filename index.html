@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
@@ -11,39 +10,29 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
   :root {
-    /* === Osaka palette === */
-    /* Primary: torii vermilion */
-    --primary:     oklch(0.55 0.22 28);
-    --primary-dim: oklch(0.72 0.14 28);
-    --primary-bg:  oklch(0.97 0.015 28);
-
-    /* Ink & neutrals */
-    --ink:        oklch(0.14 0.03 255);
-    --text:       oklch(0.20 0.025 255);
-    --gray:       oklch(0.50 0.015 255);
-    --gray-light: oklch(0.95 0.008 255);
-    --bg:         oklch(0.985 0.008 62);
-    --card:       #ffffff;
-
-    /* Semantic aliases — keep these so generated HTML still works */
-    --pink:       var(--primary-dim);
-    --pink-light: var(--primary-bg);
-    --pink-dark:  var(--primary);
-    --blue:       oklch(0.50 0.16 240);
-    --blue-light: oklch(0.94 0.04 240);
-    --green:      oklch(0.52 0.15 145);
-    --green-light:oklch(0.95 0.04 145);
-    --orange:     oklch(0.63 0.17 56);
-    --orange-light:oklch(0.97 0.03 56);
-    --red:        oklch(0.55 0.21 25);
-    --purple:     oklch(0.54 0.17 293);
-    --teal:       oklch(0.60 0.12 190);
-
-    /* Elevation */
+    --primary:      oklch(0.55 0.22 28);
+    --primary-dim:  oklch(0.72 0.14 28);
+    --primary-bg:   oklch(0.97 0.015 28);
+    --ink:          oklch(0.14 0.03 255);
+    --text:         oklch(0.20 0.025 255);
+    --gray:         oklch(0.50 0.015 255);
+    --gray-light:   oklch(0.95 0.008 255);
+    --bg:           oklch(0.985 0.008 62);
+    --card:         #ffffff;
+    --pink:         var(--primary-dim);
+    --pink-light:   var(--primary-bg);
+    --pink-dark:    var(--primary);
+    --blue:         oklch(0.50 0.16 240);
+    --blue-light:   oklch(0.94 0.04 240);
+    --green:        oklch(0.52 0.15 145);
+    --green-light:  oklch(0.95 0.04 145);
+    --orange:       oklch(0.63 0.17 56);
+    --orange-light: oklch(0.97 0.03 56);
+    --red:          oklch(0.55 0.21 25);
+    --purple:       oklch(0.54 0.17 293);
+    --teal:         oklch(0.60 0.12 190);
     --shadow:    0 1px 8px oklch(0.14 0.03 255 / 0.06), 0 0 0 1px oklch(0.14 0.03 255 / 0.04);
     --shadow-lg: 0 8px 24px oklch(0.14 0.03 255 / 0.10);
-
-    /* Geometry */
     --radius:    14px;
     --radius-sm: 10px;
   }
@@ -54,241 +43,115 @@
     font-family: "Noto Sans TC", -apple-system, "Hiragino Sans", sans-serif;
     background: var(--bg);
     color: var(--text);
-    font-size: 16px;
-    line-height: 1.7;
-    padding-bottom: 80px;
+    font-size: 18px;
+    line-height: 1.75;
+    padding-bottom: 30px;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
   /* ===== HEADER ===== */
   .header {
-    background: var(--ink);
-    color: white;
+    background: linear-gradient(160deg, #FADADD 0%, #F9C6D0 30%, #F2B8D0 60%, #E8A8C8 100%);
+    color: #3D1A26;
     text-align: center;
-    padding: 52px 24px 40px;
+    padding: 52px 24px 50px;
     position: relative;
     overflow: hidden;
   }
-  /* Faint 大阪 watermark */
+  /* Soft blobs */
   .header::before {
-    content: '大阪';
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 148px;
-    font-weight: 900;
-    letter-spacing: -6px;
-    color: oklch(1 0 0 / 0.045);
+    content: '';
+    position: absolute; top: -40px; right: -40px;
+    width: 220px; height: 220px; border-radius: 50%;
+    background: oklch(0.92 0.08 350 / 0.45);
     pointer-events: none;
-    user-select: none;
-    line-height: 1;
-    white-space: nowrap;
   }
-  /* Pill curve into content */
   .header::after {
     content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0; right: 0;
-    height: 28px;
-    background: var(--bg);
-    border-radius: 28px 28px 0 0;
+    position: absolute; bottom: -1px; left: 0; right: 0;
+    height: 32px; background: var(--bg); border-radius: 32px 32px 0 0;
+  }
+  .header-blob2 {
+    position: absolute; bottom: 20px; left: -30px;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: oklch(0.90 0.07 320 / 0.35);
+    pointer-events: none;
   }
   .header-accent {
-    width: 28px; height: 3px;
-    background: var(--primary);
-    border-radius: 3px;
-    margin: 0 auto 22px;
-    position: relative;
-    z-index: 1;
+    width: 36px; height: 3px;
+    background: oklch(0.60 0.18 350);
+    border-radius: 3px; margin: 0 auto 20px;
+    position: relative; z-index: 1;
   }
   .header h1 {
-    font-size: 26px;
-    font-weight: 900;
-    letter-spacing: 4px;
-    line-height: 1.2;
-    position: relative;
-    z-index: 1;
+    font-size: 28px; font-weight: 900; letter-spacing: 5px; line-height: 1.2;
+    position: relative; z-index: 1;
+    color: #2D1018;
   }
   .header .subtitle {
-    font-size: 13px;
-    color: oklch(0.68 0.02 255);
-    margin-top: 10px;
-    font-weight: 400;
-    letter-spacing: 0.5px;
-    position: relative;
-    z-index: 1;
+    font-size: 13px; color: oklch(0.45 0.06 350);
+    margin-top: 10px; font-weight: 500; letter-spacing: 0.5px;
+    position: relative; z-index: 1;
+  }
+  .header-days {
+    display: flex; justify-content: center; gap: 8px; margin-top: 20px;
+    position: relative; z-index: 1; flex-wrap: wrap;
+  }
+  .header-day-chip {
+    padding: 5px 14px; border-radius: 20px;
+    background: oklch(1 0 0 / 0.55); color: #2D1018;
+    font-size: 12px; font-weight: 700;
+    backdrop-filter: blur(8px);
   }
 
-  /* ===== BOTTOM NAV ===== */
-  .bottom-nav {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    height: 68px;
-    background: oklch(1 0 0 / 0.96);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid oklch(0.92 0.008 255);
-    padding: 0 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    z-index: 300;
+  /* ===== DAY TITLE BAR ===== */
+  .day-hero {
+    max-width: 572px; margin: 10px auto 0;
+    padding: 10px 16px 8px;
+    display: flex; align-items: center; gap: 10px;
   }
-  .bnav-day-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 0 14px;
-    border-radius: 16px;
-    background: var(--ink);
-    color: white;
-    border: none;
-    cursor: pointer;
-    text-align: left;
-    -webkit-tap-highlight-color: transparent;
-    font-family: inherit;
-    transition: transform 0.12s, opacity 0.15s;
-    min-width: 0;
-    height: 48px;
+  .day-hero-icon { font-size: 22px; flex-shrink: 0; }
+  .day-hero-body { flex: 1; min-width: 0; }
+  .day-hero-label { font-size: 13px; font-weight: 700; color: var(--gray); letter-spacing: 0.3px; }
+  .day-hero-title { font-size: 22px; font-weight: 900; color: var(--text); line-height: 1.3; }
+  .day-hero-transit { display: none; }
+
+  /* ===== TOP NAV ===== */
+  .top-nav {
+    position: sticky; top: 0; z-index: 200;
+    background: oklch(1 0 0 / 0.97); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid oklch(0.92 0.008 255);
   }
-  .bnav-day-btn:active { transform: scale(0.97); }
-  .bnav-day-btn.is-section { background: var(--gray-light); color: var(--text); }
-  .bnav-day-icon { font-size: 20px; line-height: 1; flex-shrink: 0; }
-  .bnav-day-text { flex: 1; min-width: 0; }
-  .bnav-day-label { font-size: 11px; font-weight: 600; opacity: 0.6; letter-spacing: 0.3px; line-height: 1.2; }
-  .bnav-day-title { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.3; }
-  .bnav-chevron { font-size: 10px; opacity: 0.4; flex-shrink: 0; transition: transform 0.2s; }
-  .bnav-chevron.open { transform: rotate(180deg); }
-  .bnav-icon-btn {
-    width: 44px; height: 44px;
-    border-radius: 14px;
-    border: none;
-    background: var(--gray-light);
-    color: var(--gray);
-    font-size: 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
+  .top-nav-pills {
+    display: flex; gap: 6px; padding: 10px 14px;
+    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
     justify-content: center;
-    flex-shrink: 0;
-    -webkit-tap-highlight-color: transparent;
-    transition: all 0.15s;
-    font-family: inherit;
   }
-  .bnav-icon-btn:active { transform: scale(0.91); }
-  .bnav-icon-btn.active { background: var(--primary-bg); color: var(--primary); }
+  .top-nav-pills::-webkit-scrollbar { display: none; }
+  .tnav-pill {
+    flex-shrink: 0; padding: 9px 18px; border-radius: 22px;
+    border: 1.5px solid var(--gray-light); font-size: 15px; font-weight: 700;
+    cursor: pointer; background: var(--card); color: var(--gray);
+    transition: all 0.18s; -webkit-tap-highlight-color: transparent; font-family: inherit;
+    white-space: nowrap; min-height: 44px; display: inline-flex; align-items: center;
+  }
+  .tnav-pill:active { transform: scale(0.96); }
+  .tnav-pill.active { background: var(--ink); color: white; border-color: var(--ink); }
+  .tnav-pill.sec { font-size: 14px; }
+  .tnav-pill.sec.active { background: var(--primary); color: white; border-color: var(--primary); }
+  .tnav-divider { width: 1.5px; background: oklch(0.88 0.01 255); margin: 8px 4px; flex-shrink: 0; align-self: stretch; }
+  .tnav-progress { height: 3px; background: oklch(0.93 0.008 255); }
+  .tnav-progress-fill { height: 100%; background: var(--green); transition: width 0.45s ease; }
 
-  /* ===== DAY DRAWER ===== */
-  .drawer-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    bottom: 68px;
-    background: oklch(0.14 0.03 255 / 0.45);
-    z-index: 390;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s;
-  }
-  .drawer-overlay.open { opacity: 1; pointer-events: all; }
-  .day-drawer {
-    position: fixed;
-    bottom: 68px; left: 0; right: 0;
-    background: var(--bg);
-    border-radius: 20px 20px 0 0;
-    z-index: 391;
-    padding: 12px 16px 20px;
-    transform: translateY(110%);
-    transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
-    box-shadow: 0 -8px 32px oklch(0.14 0.03 255 / 0.14);
-    pointer-events: none;
-  }
-  .day-drawer.open { transform: translateY(0); pointer-events: all; }
-  .drawer-handle {
-    width: 36px; height: 4px;
-    background: oklch(0.84 0.01 255);
-    border-radius: 4px;
-    margin: 0 auto 14px;
-  }
-  .drawer-title {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--gray);
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    text-align: center;
-  }
-  .drawer-days { display: flex; flex-direction: column; gap: 8px; }
-  .drawer-day-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    border-radius: var(--radius);
-    background: var(--card);
-    box-shadow: var(--shadow);
-    border: 2px solid transparent;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition: all 0.15s;
-  }
-  .drawer-day-card:active { transform: scale(0.98); }
-  .drawer-day-card.active { border-color: var(--primary); background: var(--primary-bg); }
-  .drawer-day-icon { font-size: 22px; flex-shrink: 0; }
-  .drawer-day-body { flex: 1; min-width: 0; }
-  .drawer-day-meta { font-size: 11px; font-weight: 600; color: var(--gray); letter-spacing: 0.3px; }
-  .drawer-day-title { font-size: 15px; font-weight: 700; color: var(--text); }
-  .drawer-day-card.active .drawer-day-title { color: var(--primary); }
-  .drawer-dots { display: flex; gap: 4px; align-items: center; flex-shrink: 0; }
-  .drawer-dot { width: 7px; height: 7px; border-radius: 50%; background: oklch(0.87 0.01 255); }
-  .drawer-dot.done { background: var(--green); }
-  .drawer-dot.current { background: var(--primary); }
 
-  /* ===== DAY TAB (inline backup hint buttons still use this class) ===== */
-  .day-tab {
-    flex: 0 0 auto;
-    padding: 8px 15px;
-    border-radius: 20px;
-    border: 1.5px solid var(--gray-light);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    background: var(--card);
-    color: var(--gray);
-    transition: all 0.2s;
-    white-space: nowrap;
-    -webkit-tap-highlight-color: transparent;
-    font-family: inherit;
-  }
-  .day-tab.active {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-    box-shadow: 0 3px 12px oklch(0.55 0.22 28 / 0.28);
-  }
-  .day-tab .tab-icon { margin-right: 4px; }
 
   /* ===== VIEW TOGGLE ===== */
-  .view-toggle {
-    display: flex;
-    justify-content: center;
-    gap: 0;
-    padding: 6px 16px 10px;
-    margin-bottom: 2px;
-  }
+  .view-toggle { display: flex; justify-content: center; gap: 0; padding: 6px 16px 10px; margin-bottom: 2px; }
   .view-btn {
-    padding: 8px 22px;
-    border: 1.5px solid var(--gray-light);
-    background: var(--card);
-    color: var(--gray);
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.18s;
-    -webkit-tap-highlight-color: transparent;
-    font-family: inherit;
+    padding: 8px 22px; border: 1.5px solid var(--gray-light);
+    background: var(--card); color: var(--gray); font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.18s; -webkit-tap-highlight-color: transparent; font-family: inherit;
   }
   .view-btn:first-child { border-radius: 20px 0 0 20px; border-right-width: 1px; }
   .view-btn:last-child  { border-radius: 0 20px 20px 0; border-left-width: 1px; }
@@ -299,121 +162,57 @@
   .page.active { display: block; }
   .page-inner { max-width: 600px; margin: 0 auto; padding: 8px 14px; }
 
-  /* ===== MAP ===== */
-  .map-container {
-    display: none;
-    height: 55vh;
-    min-height: 350px;
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin: 0 14px 12px;
-    box-shadow: var(--shadow-lg);
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    position: relative;
+  /* ===== MAP POOL ===== */
+  /* Maps live in a persistent pool and are moved into view rather than recreated */
+  #map-pool { display: none; }
+  .map-frame {
+    height: 55vh; min-height: 350px;
+    border-radius: var(--radius); overflow: hidden;
+    margin: 0 14px 12px; box-shadow: var(--shadow-lg);
+    max-width: 572px; margin-left: auto; margin-right: auto;
   }
-  .map-container.active { display: block; }
-  .map-container .leaflet-container { height: 100%; width: 100%; }
+  .map-frame .leaflet-container { height: 100%; width: 100%; }
 
-  /* Custom map markers */
   .custom-marker {
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    background: var(--primary);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    font-size: 13px;
-    border: 2.5px solid white;
-    box-shadow: 0 2px 8px oklch(0 0 0 / 0.25);
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--primary); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 13px;
+    border: 2.5px solid white; box-shadow: 0 2px 8px oklch(0 0 0 / 0.25);
   }
   .custom-marker.checked-marker { background: var(--green); }
-  .leaflet-popup-content {
-    font-family: "Noto Sans TC", sans-serif;
-    font-size: 14px;
-    line-height: 1.55;
-  }
+  .leaflet-popup-content { font-family: "Noto Sans TC", sans-serif; font-size: 14px; line-height: 1.55; }
   .popup-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
-  .popup-tags  { margin: 4px 0 8px; }
-  .popup-nav-btn {
-    display: inline-block;
-    background: var(--blue);
-    color: white;
-    padding: 6px 14px;
-    border-radius: 16px;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-  }
+  .popup-tags { margin: 4px 0 8px; }
+  .popup-nav-btn { display: inline-block; background: var(--blue); color: white; padding: 6px 14px; border-radius: 16px; text-decoration: none; font-size: 13px; font-weight: 600; }
 
   /* ===== SPOT CARD ===== */
   .spot-card {
-    background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 0;
-    margin-bottom: 12px;
-    overflow: hidden;
-    transition: transform 0.12s;
-    position: relative;
+    background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+    padding: 0; margin-bottom: 16px; overflow: hidden; transition: transform 0.12s; position: relative;
   }
+  .spot-card.done-card { background: oklch(0.97 0.018 145); }
   .spot-card:active { transform: scale(0.99); }
-  .spot-card-inner {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 16px 16px 12px;
-  }
-
-  /* Number badge */
+  .spot-card-inner { display: flex; align-items: flex-start; gap: 14px; padding: 20px 16px 14px; }
   .spot-num {
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    background: var(--primary);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 14px;
-    flex-shrink: 0;
-    box-shadow: 0 2px 6px oklch(0.55 0.22 28 / 0.28);
-    cursor: pointer;
-    transition: all 0.18s;
-    -webkit-tap-highlight-color: transparent;
-    position: relative;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--primary); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 17px; flex-shrink: 0;
+    box-shadow: 0 2px 8px oklch(0.55 0.22 28 / 0.28);
+    cursor: pointer; transition: all 0.18s; -webkit-tap-highlight-color: transparent; position: relative;
   }
-  .spot-num.done {
-    background: var(--green);
-    box-shadow: 0 2px 6px oklch(0.52 0.15 145 / 0.28);
-  }
-  .spot-num.done::after {
-    content: '✓';
-    position: absolute;
-    font-size: 16px;
-    font-weight: 700;
-  }
+  .spot-num.done { background: var(--green); box-shadow: 0 2px 8px oklch(0.52 0.15 145 / 0.28); }
+  .spot-num.done::after { content: ''; position: absolute; font-size: 16px; font-weight: 700; }
   .spot-num.done .num-text { visibility: hidden; }
-
   .spot-body    { flex: 1; min-width: 0; }
-  .spot-time    { font-size: 12px; color: var(--primary); font-weight: 700; letter-spacing: 0.3px; }
-  .spot-name    { font-size: 17px; font-weight: 700; margin: 2px 0 3px; line-height: 1.3; }
+  .spot-time    { font-size: 15px; color: var(--primary); font-weight: 800; letter-spacing: 0.3px; margin-bottom: 3px; }
+  .spot-name    { font-size: 19px; font-weight: 800; margin: 0 0 4px; line-height: 1.3; }
   .spot-name.done-text { text-decoration: line-through; color: var(--gray); }
-  .spot-jp      { font-size: 12px; color: var(--gray); margin-bottom: 6px; }
-  .spot-desc    { font-size: 14px; color: var(--gray); margin-bottom: 8px; line-height: 1.6; }
-
-  /* Tags */
+  .spot-jp      { font-size: 13px; color: var(--gray); margin-bottom: 6px; }
+  .spot-desc    { font-size: 15px; color: var(--gray); margin-bottom: 8px; line-height: 1.65; }
   .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
-  .tag {
-    display: inline-block;
-    padding: 2px 9px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-weight: 600;
-  }
+  .tag { display: inline-block; padding: 2px 9px; border-radius: 8px; font-size: 11px; font-weight: 600; }
   .tag-sight     { background: oklch(0.94 0.04 240); color: oklch(0.38 0.13 240); }
   .tag-food      { background: oklch(0.95 0.04 56);  color: oklch(0.44 0.14 56);  }
   .tag-shop      { background: oklch(0.95 0.03 295); color: oklch(0.42 0.12 295); }
@@ -421,149 +220,62 @@
   .tag-temple    { background: oklch(0.96 0.04 75);  color: oklch(0.44 0.13 75);  }
   .tag-transport { background: var(--gray-light);    color: var(--gray);          }
   .tag-play      { background: oklch(0.95 0.03 350); color: oklch(0.44 0.12 350); }
-
-  /* Tips */
   .spot-tips {
-    background: oklch(0.97 0.008 62);
-    border-radius: 8px;
+    background: oklch(0.97 0.008 62); border-radius: 8px;
     border-left: 3px solid oklch(0.85 0.05 62);
-    padding: 10px 12px;
-    margin-top: 8px;
-    font-size: 13px;
-    color: var(--gray);
-    line-height: 1.65;
+    padding: 10px 12px; margin-top: 8px; font-size: 13px; color: var(--gray); line-height: 1.65;
   }
   .spot-tips strong { color: var(--text); }
-
-  /* Actions */
-  .spot-actions {
-    display: flex;
-    gap: 8px;
-    padding: 0 16px 14px;
-    flex-wrap: wrap;
-  }
+  .spot-actions { display: flex; gap: 10px; padding: 0 16px 18px; flex-wrap: wrap; }
   .act-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 7px 14px;
-    border-radius: 16px;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-    border: none;
-    cursor: pointer;
-    transition: all 0.12s;
-    -webkit-tap-highlight-color: transparent;
-    font-family: inherit;
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 12px 20px; border-radius: 14px; text-decoration: none;
+    font-size: 15px; font-weight: 700; border: none; cursor: pointer;
+    transition: all 0.12s; -webkit-tap-highlight-color: transparent; font-family: inherit;
+    min-height: 48px;
   }
   .act-btn:active    { transform: scale(0.96); }
-  .act-nav           { background: var(--blue-light);  color: var(--blue);  }
-  .act-check         { background: var(--gray-light);  color: var(--gray);  }
-  .act-check.is-done { background: var(--green);       color: white;        }
-
-  /* Connector line between cards */
+  .act-nav           { background: var(--blue-light);  color: oklch(0.32 0.18 240); }
+  .act-check         { background: var(--gray-light);  color: oklch(0.30 0.015 255); }
+  .act-check.is-done { background: var(--green);       color: white; }
   .connector {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 0 0 30px;
-    margin: -4px 0;
-    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 0 0 38px; margin: -2px 0; position: relative;
   }
   .connector::before {
-    content: '';
-    position: absolute;
-    left: 30px;
-    top: 0; bottom: 0;
-    width: 1.5px;
-    background: repeating-linear-gradient(
-      to bottom,
-      var(--primary-dim) 0,
-      var(--primary-dim) 4px,
-      transparent 4px,
-      transparent 9px
-    );
+    content: ''; position: absolute; left: 38px; top: 0; bottom: 0;
+    width: 2px; background: oklch(0.88 0.01 255);
   }
   .connector-text {
-    background: var(--bg);
-    padding: 3px 12px;
-    font-size: 12px;
-    color: var(--gray);
-    z-index: 1;
-    border-radius: 16px;
-    border: 1px solid oklch(0.89 0.01 255);
+    background: var(--bg); padding: 5px 14px; font-size: 14px; color: var(--gray);
+    z-index: 1; border-radius: 16px; border: 1px solid oklch(0.87 0.01 255); font-weight: 500;
   }
   .connector-text.loading { color: oklch(0.88 0.01 255); border-color: transparent; }
 
-  /* ===== SOLO CARD ===== */
-  .solo-section {
-    background: var(--orange-light);
-    border: 1.5px solid oklch(0.88 0.06 56);
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 12px;
-  }
+  /* ===== SOLO SECTION ===== */
+  .solo-section { background: var(--orange-light); border: 1.5px solid oklch(0.88 0.06 56); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
   .solo-title { font-size: 15px; font-weight: 700; color: var(--orange); margin-bottom: 10px; }
 
   /* ===== SECTION CARD ===== */
-  .section-card {
-    background: var(--card);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 20px;
-    margin-bottom: 12px;
-  }
-  .section-title {
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--text);
-  }
+  .section-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; margin-bottom: 12px; }
+  .section-title { font-size: 16px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; color: var(--text); }
 
   /* ===== CHECKLIST ===== */
-  .cl-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 0;
-    border-bottom: 1px solid oklch(0.94 0.008 255);
-  }
+  .cl-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid oklch(0.94 0.008 255); }
   .cl-item:last-child { border-bottom: none; }
   .cl-check {
-    width: 26px; height: 26px;
-    border-radius: 7px;
-    border: 2px solid oklch(0.82 0.02 255);
-    background: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-size: 14px;
-    color: transparent;
-    transition: all 0.18s;
-    -webkit-tap-highlight-color: transparent;
-    font-family: inherit;
+    width: 26px; height: 26px; border-radius: 7px;
+    border: 2px solid oklch(0.82 0.02 255); background: white;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 14px; color: transparent; transition: all 0.18s;
+    -webkit-tap-highlight-color: transparent; font-family: inherit;
   }
   .cl-check.done    { background: var(--green); border-color: var(--green); color: white; }
   .cl-text          { flex: 1; font-size: 15px; }
   .cl-text.done-text{ text-decoration: line-through; color: var(--gray); }
   .cl-text a        { color: var(--blue); }
   .cl-sub           { font-size: 12px; color: var(--gray); display: block; }
-  .cl-map {
-    padding: 5px 12px;
-    background: var(--blue-light);
-    color: var(--blue);
-    border-radius: 12px;
-    text-decoration: none;
-    font-size: 12px;
-    font-weight: 600;
-    flex-shrink: 0;
-  }
+  .cl-map { padding: 5px 12px; background: var(--blue-light); color: var(--blue); border-radius: 12px; text-decoration: none; font-size: 12px; font-weight: 600; flex-shrink: 0; }
 
   /* ===== PROGRESS ===== */
   .progress-ring           { text-align: center; padding: 10px 0; }
@@ -579,20 +291,8 @@
   .info-label  { font-size: 11px; color: var(--gray); font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
   .info-value  { font-size: 15px; font-weight: 700; color: var(--text); }
 
-
-  /* ===== SECRET UNLOCK HEART ===== */
-  .unlock-heart {
-    position: absolute;
-    top: 14px; right: 16px;
-    font-size: 14px;
-    opacity: 0.20;
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    transition: all 0.4s ease;
-    filter: grayscale(1);
-  }
+  /* ===== SECRET UNLOCK ===== */
+  .unlock-heart { position: absolute; top: 14px; right: 16px; font-size: 14px; opacity: 0.20; cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; transition: all 0.4s ease; filter: grayscale(1); }
   .unlock-heart.unlocked  { opacity: 0.65; filter: grayscale(0); transform: scale(1.15); }
   .unlock-heart.pressing  { transform: scale(0.85); opacity: 0.4; }
 
@@ -605,6 +305,15 @@
   .exp-stat.full         { grid-column: 1 / -1; }
   .exp-rate              { text-align: center; font-size: 13px; color: var(--gray); margin-bottom: 12px; }
   .exp-rate input        { width: 60px; border: 1.5px solid oklch(0.88 0.01 255); border-radius: 8px; padding: 4px 8px; font-size: 13px; text-align: center; font-family: inherit; }
+
+  /* Expense category chart */
+  .exp-chart             { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; margin-bottom: 14px; }
+  .exp-chart-title       { font-size: 13px; font-weight: 700; color: var(--gray); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.6px; }
+  .exp-chart-row         { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .exp-chart-label       { font-size: 13px; width: 52px; flex-shrink: 0; }
+  .exp-chart-bar-wrap    { flex: 1; height: 8px; background: var(--gray-light); border-radius: 8px; overflow: hidden; }
+  .exp-chart-bar         { height: 100%; border-radius: 8px; transition: width 0.5s ease; }
+  .exp-chart-amt         { font-size: 12px; color: var(--gray); width: 54px; text-align: right; flex-shrink: 0; font-weight: 600; }
 
   .exp-form              { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; margin-bottom: 14px; }
   .exp-form-title        { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
@@ -646,10 +355,24 @@
   .exp-sync-setup .url-input { width: 100%; padding: 8px 10px; border: 1.5px solid oklch(0.88 0.01 255); border-radius: 8px; font-size: 13px; font-family: monospace; margin-top: 6px; }
   .exp-sync-setup .url-input:focus { outline: none; border-color: #34A853; }
 
-  /* ===== RESPONSIVE ===== */
+  /* day-tab (backup hint buttons) */
+  .day-tab {
+    flex: 0 0 auto; padding: 8px 15px; border-radius: 20px;
+    border: 1.5px solid var(--gray-light); font-size: 13px; font-weight: 600;
+    cursor: pointer; background: var(--card); color: var(--gray); transition: all 0.2s;
+    white-space: nowrap; -webkit-tap-highlight-color: transparent; font-family: inherit;
+  }
+  .day-tab.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 3px 12px oklch(0.55 0.22 28 / 0.28); }
+
+  /* ===== SWIPE INDICATOR ===== */
+  .swipe-hint {
+    text-align: center; font-size: 11px; color: oklch(0.80 0.01 255);
+    padding: 0 0 4px; letter-spacing: 0.3px;
+  }
+
   @media (min-width: 768px) {
-    body        { font-size: 17px; }
-    .spot-name  { font-size: 18px; }
+    body { font-size: 19px; }
+    .spot-name { font-size: 21px; }
     .page-inner { padding: 12px 24px; }
   }
 </style>
@@ -657,70 +380,61 @@
 <body>
 
 <div class="header">
+  <div class="header-blob2"></div>
   <div class="header-accent"></div>
   <h1>大阪家族旅行</h1>
   <div class="subtitle">2026 · 5/8（五）― 5/12（二）· 5天4夜</div>
+  <div class="header-days">
+    <div class="header-day-chip">Day 1 抵達</div>
+    <div class="header-day-chip">Day 2 市區</div>
+    <div class="header-day-chip">Day 3 奈良</div>
+    <div class="header-day-chip">Day 4 箕面</div>
+    <div class="header-day-chip">Day 5 回程</div>
+  </div>
 </div>
 
-<div class="view-toggle" id="viewToggle" style="display:none;">
-  <button class="view-btn active" data-view="list">行程</button>
-  <button class="view-btn" data-view="map">地圖</button>
-</div>
+<div id="topNav" class="top-nav"></div>
+
+<!-- Persistent map pool -->
+<div id="map-pool"></div>
 
 <div id="appRoot"></div>
 
-<div class="drawer-overlay" id="drawerOverlay"></div>
-<div class="day-drawer" id="dayDrawer">
-  <div class="drawer-handle"></div>
-  <div class="drawer-title">選擇行程日</div>
-  <div class="drawer-days" id="drawerDays"></div>
-</div>
-<nav class="bottom-nav">
-  <button class="bnav-day-btn" id="bnavDayBtn"></button>
-  <button class="bnav-icon-btn" data-day="info" title="總覽">📋</button>
-  <button class="bnav-icon-btn" data-day="expense" title="記帳">💰</button>
-  <button class="bnav-icon-btn" data-day="backup" title="備案">🔄</button>
-</nav>
-
 <script>
 // ============================================================
-// DATA — enriched with coordinates, categories, tips
+// DATA
 // ============================================================
 const DAYS_DATA = [
-  { id:'day1', label:'5/8', icon:'🛬', weekday:'五', title:'Day 1 · 抵達大阪', spots:[
-    { name:"關西機場 KIX", jp:"関西国際空港", time:"12:50", tags:["transport"], desc:"抵達關西國際機場，搭南海電鐵前往市區", lat:34.4320, lng:135.2304, maps:"https://maps.google.com/?q=Kansai+International+Airport" , transitToNext:"🚃 南海電鐵到難波 約 40 分 → 轉長堀鶴見緑地線到大正 約 10 分"},
-    { name:"Airbnb Check-in", jp:"大正駅 徒歩4分", time:"16:00", tags:["transport"], desc:"放行李、稍作休息，準備出發逛街", tips:"入住 16:00，可先聯繫房東確認能否提早寄放行李", lat:34.6515, lng:135.4818, maps:"https://maps.google.com/?q=大正駅" , transitToNext:"🚃 長堀鶴見緑地線 · 心齋橋駅 · 約 10 分鐘"},
-    { name:"心齋橋筋商店街", jp:"心斎橋筋商店街", tags:["shop"], desc:"大阪最熱鬧的購物商店街，600 公尺長的拱廊", tips:"可逛藥妝店、服飾、伴手禮，建議留 1-2 小時", lat:34.6723, lng:135.5016, maps:"https://maps.google.com/?q=心斎橋筋商店街" },
-    { name:"道頓堀", jp:"道頓堀", tags:["food","sight"], desc:"大阪美食地標，固力果跑跑人、螃蟹道樂都在這", tips:"必吃：章魚燒、大阪燒、串炸。傍晚霓虹燈最美", lat:34.6687, lng:135.5013, maps:"https://maps.google.com/?q=道頓堀" },
-    { name:"難波", jp:"なんば", tags:["shop","food"], desc:"大阪南區最繁華的商圈，連接心齋橋與道頓堀", lat:34.6659, lng:135.5013, maps:"https://maps.google.com/?q=難波" },
-  ], solo:[
-    { name:"飯店下午茶", tags:["food"] }
+  { id:'day1', label:'5/8', icon:'', weekday:'五', title:'Day 1 · 抵達大阪', kanji:'初日', spots:[
+    { name:"關西機場 KIX", jp:"関西国際空港", time:"12:50", tags:["transport"], desc:"抵達關西國際機場，搭南海電鐵前往市區", lat:34.4320, lng:135.2304, maps:"https://maps.google.com/?q=Kansai+International+Airport", transitToNext:" 南海電鐵到難波 約 40 分 → 轉長堀鶴見緑地線到大正 約 10 分"},
+    { name:"Airbnb Check-in", jp:"大正駅 徒歩4分", time:"16:00", tags:["transport"], desc:"放行李、稍作休息，準備出發逛街", tips:"入住 16:00，可先聯繫房東確認能否提早寄放行李", lat:34.6515, lng:135.4818, maps:"https://maps.google.com/?q=大正駅", transitToNext:" 長堀鶴見緑地線 · 心齋橋駅 · 約 10 分鐘"},
+    { name:"心齋橋筋商店街", jp:"心斎橋筋商店街", tags:["shop"], desc:"大阪最熱鬧的購物商店街，600 公尺長的拱廊", tips:"可逛藥妝店、服飾、伴手禮，建議留 1-2 小時", lat:34.6723, lng:135.5016, maps:"https://maps.google.com/?q=心斎橋筋商店街"},
+    { name:"道頓堀", jp:"道頓堀", tags:["food","sight"], desc:"大阪美食地標，固力果跑跑人、螃蟹道樂都在這", tips:"必吃：章魚燒、大阪燒、串炸。傍晚霓虹燈最美", lat:34.6687, lng:135.5013, maps:"https://maps.google.com/?q=道頓堀"},
+    { name:"難波", jp:"なんば", tags:["shop","food"], desc:"大阪南區最繁華的商圈，連接心齋橋與道頓堀", lat:34.6659, lng:135.5013, maps:"https://maps.google.com/?q=難波"},
+  ], solo:[{ name:"飯店下午茶", tags:["food"] }]},
+  { id:'day2', label:'5/9', icon:'', weekday:'六', title:'Day 2 · 大阪市區經典', kanji:'城下', startTransit:"→  長堀鶴見緑地線 大正→森ノ宮 · 約 15 分鐘 + 步行", spots:[
+    { name:"大阪城公園 · 天守閣", jp:"大阪城天守閣", tags:["sight","temple"], desc:"豐臣秀吉建造的歷史名城，天守閣可眺望大阪全景", tips:"天守閣門票 ¥600 / 9:00-17:00。城公園免費，櫻花季很美", lat:34.6873, lng:135.5262, maps:"https://maps.google.com/?q=大阪城天守閣", transitToNext:" 谷町線 谷町四丁目→日本橋 · 約 15 分鐘"},
+    { name:"黑門市場", jp:"黒門市場", tags:["food","shop"], desc:"「大阪的廚房」，超過 170 年歷史的生鮮市場", tips:"推薦：新鮮海鮮丼、黑門三平鮪魚、現烤扇貝", lat:34.6627, lng:135.5063, maps:"https://maps.google.com/?q=黒門市場"},
+    { name:"すき焼き しゃぶしゃぶ 豚々 心斎橋店", jp:"すき焼き しゃぶしゃぶ 豚々 心斎橋店", tags:["food"], desc:"心齋橋人氣壽喜燒＆涮涮鍋專門店，食材新鮮、適合家族共享的午餐", tips:"建議提前訂位 / 午餐時段約 ¥2,000–4,000 / 人，可選豬肉套餐（豚々招牌）", lat:34.6723, lng:135.5009, maps:"https://maps.google.com/?q=すき焼き+しゃぶしゃぶ+豚々+心斎橋店"},
+    { name:"法善寺橫丁", jp:"法善寺横丁", tags:["sight","food"], desc:"充滿懷舊風情的石板小巷，不動明王佛像被苔蘚覆蓋", tips:"可以往佛像潑水許願，巷內也有高級割烹餐廳", lat:34.6681, lng:135.5034, maps:"https://maps.google.com/?q=法善寺横丁", transitToNext:" 御堂筋線 なんば→天王寺 · 約 10 分鐘"},
+    { name:"HARUKAS 300 展望台", jp:"ハルカス300", tags:["sight"], desc:"日本最高的百貨大樓（300m），360度全景展望台", tips:"門票 ¥1,500 / 營業至 22:00。建議傍晚來看夕陽+夜景", lat:34.6464, lng:135.5133, maps:"https://maps.google.com/?q=HARUKAS+300+展望台"},
+  ], solo:[{ name:"アニメイトカフェ天王寺", jp:"アニメイトカフェ天王寺", tags:["play"], maps:"https://maps.google.com/?q=アニメイトカフェ+天王寺", lat:34.6467, lng:135.5144}]},
+  { id:'day3', label:'5/10', icon:'', weekday:'日', title:'Day 3 · 奈良一日遊', kanji:'奈良', startTransit:"→  長堀鶴見緑地線到なんば → 近鐵奈良線 · 約 60 分鐘", spots:[
+    { name:"奈良", jp:"奈良", tags:["sight"], desc:"從大阪搭近鐵約 45 分鐘，千年古都一日遊", tips:"建議搭近鐵奈良線，比 JR 更近市中心景點", lat:34.6851, lng:135.8048, maps:"https://maps.google.com/?q=近鉄奈良駅"},
+    { name:"焼肉キング", jp:"焼肉キング", tags:["food"], desc:"日式燒肉吃到飽連鎖，CP 值高適合家族午餐", tips:"午餐吃到飽約 ¥2,680 起，建議先用 Hot Pepper 訂位", lat:34.6990, lng:135.7870, maps:"https://maps.google.com/?q=焼肉キング+奈良"},
+    { name:"東大寺大佛殿", jp:"東大寺大仏殿", tags:["temple","sight"], desc:"世界最大木造建築，供奉 15 公尺高的盧舍那大佛", tips:"門票 ¥600 / 8:00-17:00。鑽大佛鼻孔洞可祈求好運", lat:34.6891, lng:135.8399, maps:"https://maps.google.com/?q=東大寺大仏殿"},
+    { name:"興福寺五重塔", jp:"興福寺五重塔", tags:["temple"], desc:"奈良代表性地標，高 50 公尺的五重塔", tips:"目前維修中，可能有圍欄，但仍值得路過拍照", lat:34.6832, lng:135.8328, maps:"https://maps.google.com/?q=興福寺五重塔"},
+    { name:"春日大社", jp:"春日大社", tags:["temple","nature"], desc:"世界遺產，朱紅色的千座石燈籠非常壯觀", tips:"免費參拜 / 本殿特別參拜 ¥500。路上可能遇到小鹿", lat:34.6812, lng:135.8498, maps:"https://maps.google.com/?q=春日大社"},
   ]},
-  { id:'day2', label:'5/9', icon:'🏯', weekday:'六', title:'Day 2 · 大阪市區經典', startTransit:"🏠 → 🚃 長堀鶴見緑地線 大正→森ノ宮 · 約 15 分鐘 + 步行", spots:[
-    { name:"大阪城公園 · 天守閣", jp:"大阪城天守閣", tags:["sight","temple"], desc:"豐臣秀吉建造的歷史名城，天守閣可眺望大阪全景", tips:"天守閣門票 ¥600 / 9:00-17:00。城公園免費，櫻花季很美", lat:34.6873, lng:135.5262, maps:"https://maps.google.com/?q=大阪城天守閣" , transitToNext:"🚃 谷町線 谷町四丁目→日本橋 · 約 15 分鐘"},
-    { name:"黑門市場", jp:"黒門市場", tags:["food","shop"], desc:"「大阪的廚房」，超過 170 年歷史的生鮮市場", tips:"推薦：新鮮海鮮丼、黑門三平鮪魚、現烤扇貝", lat:34.6627, lng:135.5063, maps:"https://maps.google.com/?q=黒門市場" },
-    { name:"すき焼き しゃぶしゃぶ 豚々 心斎橋店", jp:"すき焼き しゃぶしゃぶ 豚々 心斎橋店", tags:["food"], desc:"心齋橋人氣壽喜燒＆涮涮鍋專門店，食材新鮮、適合家族共享的午餐", tips:"建議提前訂位 / 午餐時段約 ¥2,000–4,000 / 人，可選豬肉套餐（豚々招牌）", lat:34.6723, lng:135.5009, maps:"https://maps.google.com/?q=すき焼き+しゃぶしゃぶ+豚々+心斎橋店" },
-    { name:"法善寺橫丁", jp:"法善寺横丁", tags:["sight","food"], desc:"充滿懷舊風情的石板小巷，不動明王佛像被苔蘚覆蓋", tips:"可以往佛像潑水許願，巷內也有高級割烹餐廳", lat:34.6681, lng:135.5034, maps:"https://maps.google.com/?q=法善寺横丁" , transitToNext:"🚃 御堂筋線 なんば→天王寺 · 約 10 分鐘"},
-    { name:"HARUKAS 300 展望台", jp:"ハルカス300", tags:["sight"], desc:"日本最高的百貨大樓（300m），360度全景展望台", tips:"門票 ¥1,500 / 營業至 22:00。建議傍晚來看夕陽+夜景", lat:34.6464, lng:135.5133, maps:"https://maps.google.com/?q=HARUKAS+300+展望台" },
-  ], solo:[
-    { name:"アニメイトカフェ天王寺", jp:"アニメイトカフェ天王寺", tags:["play"], maps:"https://maps.google.com/?q=アニメイトカフェ+天王寺", lat:34.6467, lng:135.5144 }
+  { id:'day4', label:'5/11', icon:'', weekday:'一', title:'Day 4 · 箕面自然 + 梅田', kanji:'滝道', startTransit:"→  長堀鶴見緑地線到心齋橋 → 御堂筋線到梅田 → 阪急箕面線 · 約 50 分鐘", spots:[
+    { name:"箕面瀑布", jp:"箕面大滝", tags:["nature","sight"], desc:"落差 33 公尺的壯觀瀑布，日本百選瀑布之一", tips:"從箕面站步行約 40 分鐘。步道平緩適合長輩，建議穿好走的鞋", lat:34.8536, lng:135.4697, maps:"https://maps.google.com/?q=箕面大滝", transitToNext:" 阪急巴士 · 約 15 分鐘（班次少，建議先查時刻表）"},
+    { name:"勝尾寺", jp:"勝尾寺", tags:["temple","nature"], desc:"「勝運之寺」，以達摩不倒翁和美麗庭園聞名", tips:"門票 ¥500 / 寺內可以買達摩許願", lat:34.8614, lng:135.4858, maps:"https://maps.google.com/?q=勝尾寺", transitToNext:" 巴士回箕面駅 →  阪急線到梅田 · 約 50 分鐘"},
+    { name:"梅田藍天大廈", jp:"梅田スカイビル", tags:["sight"], desc:"空中庭園展望台，獨特的連接雙塔設計地標", tips:"門票 ¥1,500 / 開放至 22:30。地下有昭和復古美食街「瀧見小路」", lat:34.7052, lng:135.4906, maps:"https://maps.google.com/?q=梅田スカイビル"},
+    { name:"天神橋筋商店街", jp:"天神橋筋商店街", tags:["shop","food"], desc:"日本最長商店街（2.6km），在地庶民美食天堂", tips:"必吃：中村屋可樂餅、春駒壽司。可邊走邊吃", lat:34.7044, lng:135.5126, maps:"https://maps.google.com/?q=天神橋筋商店街"},
   ]},
-  { id:'day3', label:'5/10', icon:'🦌', weekday:'日', title:'Day 3 · 奈良一日遊', startTransit:"🏠 → 🚃 長堀鶴見緑地線到なんば → 近鐵奈良線 · 約 60 分鐘", spots:[
-    { name:"奈良", jp:"奈良", tags:["sight"], desc:"從大阪搭近鐵約 45 分鐘，千年古都一日遊", tips:"建議搭近鐵奈良線，比 JR 更近市中心景點", lat:34.6851, lng:135.8048, maps:"https://maps.google.com/?q=近鉄奈良駅" },
-    { name:"焼肉キング", jp:"焼肉キング", tags:["food"], desc:"日式燒肉吃到飽連鎖，CP 值高適合家族午餐", tips:"午餐吃到飽約 ¥2,680 起，建議先用 Hot Pepper 訂位", lat:34.6990, lng:135.7870, maps:"https://maps.google.com/?q=焼肉キング+奈良" },
-    { name:"東大寺大佛殿", jp:"東大寺大仏殿", tags:["temple","sight"], desc:"世界最大木造建築，供奉 15 公尺高的盧舍那大佛", tips:"門票 ¥600 / 8:00-17:00。鑽大佛鼻孔洞可祈求好運", lat:34.6891, lng:135.8399, maps:"https://maps.google.com/?q=東大寺大仏殿" },
-    { name:"興福寺五重塔", jp:"興福寺五重塔", tags:["temple"], desc:"奈良代表性地標，高 50 公尺的五重塔", tips:"目前維修中，可能有圍欄，但仍值得路過拍照", lat:34.6832, lng:135.8328, maps:"https://maps.google.com/?q=興福寺五重塔" },
-    { name:"春日大社", jp:"春日大社", tags:["temple","nature"], desc:"世界遺產，朱紅色的千座石燈籠非常壯觀", tips:"免費參拜 / 本殿特別參拜 ¥500。路上可能遇到小鹿", lat:34.6812, lng:135.8498, maps:"https://maps.google.com/?q=春日大社" },
-  ]},
-  { id:'day4', label:'5/11', icon:'🍁', weekday:'一', title:'Day 4 · 箕面自然 + 梅田', startTransit:"🏠 → 🚃 長堀鶴見緑地線到心齋橋 → 御堂筋線到梅田 → 阪急箕面線 · 約 50 分鐘", spots:[
-    { name:"箕面瀑布", jp:"箕面大滝", tags:["nature","sight"], desc:"落差 33 公尺的壯觀瀑布，日本百選瀑布之一", tips:"從箕面站步行約 40 分鐘。步道平緩適合長輩，建議穿好走的鞋", lat:34.8536, lng:135.4697, maps:"https://maps.google.com/?q=箕面大滝" , transitToNext:"🚌 阪急巴士 · 約 15 分鐘（班次少，建議先查時刻表）"},
-    { name:"勝尾寺", jp:"勝尾寺", tags:["temple","nature"], desc:"「勝運之寺」，以達摩不倒翁和美麗庭園聞名", tips:"門票 ¥500 / 寺內可以買達摩許願", lat:34.8614, lng:135.4858, maps:"https://maps.google.com/?q=勝尾寺" , transitToNext:"🚌 巴士回箕面駅 → 🚃 阪急線到梅田 · 約 50 分鐘"},
-    { name:"梅田藍天大廈", jp:"梅田スカイビル", tags:["sight"], desc:"空中庭園展望台，獨特的連接雙塔設計地標", tips:"門票 ¥1,500 / 開放至 22:30。地下有昭和復古美食街「瀧見小路」", lat:34.7052, lng:135.4906, maps:"https://maps.google.com/?q=梅田スカイビル" },
-    { name:"天神橋筋商店街", jp:"天神橋筋商店街", tags:["shop","food"], desc:"日本最長商店街（2.6km），在地庶民美食天堂", tips:"必吃：中村屋可樂餅、春駒壽司。可邊走邊吃", lat:34.7044, lng:135.5126, maps:"https://maps.google.com/?q=天神橋筋商店街" },
-  ]},
-  { id:'day5', label:'5/12', icon:'🛍', weekday:'二', title:'Day 5 · 購物 + 回程', startTransit:"🏠 → 🚃 JR 環狀線 大正→新今宮 → 南海線到りんくうタウン · 約 55 分鐘", spots:[
-    { name:"臨空城 Outlet", jp:"りんくうプレミアム・アウトレット", tags:["shop"], desc:"關西機場旁的大型 Outlet，離機場搭電車只要一站", tips:"10:00 開門，建議早到。離機場近適合最後一天逛", lat:34.4073, lng:135.2913, maps:"https://maps.google.com/?q=りんくうプレミアム・アウトレット" , transitToNext:"🚃 南海電鐵 · 1 站 · 約 5 分鐘"},
-    { name:"關西機場 · 回程", jp:"関西国際空港", time:"19:05", tags:["transport"], desc:"搭乘 19:05 班機返回台灣", tips:"建議 16:30 前抵達機場，預留退稅和安檢時間", lat:34.4320, lng:135.2304, maps:"https://maps.google.com/?q=Kansai+International+Airport" },
+  { id:'day5', label:'5/12', icon:'', weekday:'二', title:'Day 5 · 購物 + 回程', kanji:'帰路', startTransit:"→  JR 環狀線 大正→新今宮 → 南海線到りんくうタウン · 約 55 分鐘", spots:[
+    { name:"臨空城 Outlet", jp:"りんくうプレミアム・アウトレット", tags:["shop"], desc:"關西機場旁的大型 Outlet，離機場搭電車只要一站", tips:"10:00 開門，建議早到。離機場近適合最後一天逛", lat:34.4073, lng:135.2913, maps:"https://maps.google.com/?q=りんくうプレミアム・アウトレット", transitToNext:" 南海電鐵 · 1 站 · 約 5 分鐘"},
+    { name:"關西機場 · 回程", jp:"関西国際空港", time:"19:05", tags:["transport"], desc:"搭乘 19:05 班機返回台灣", tips:"建議 16:30 前抵達機場，預留退稅和安檢時間", lat:34.4320, lng:135.2304, maps:"https://maps.google.com/?q=Kansai+International+Airport"},
   ]},
 ];
 
@@ -744,39 +458,22 @@ const CAFES = [
   { name:"cafe i-eum", area:"西大橋", url:"https://www.instagram.com/i_eum_cafe/", maps:"https://maps.google.com/?q=cafe+i-eum+西大橋" },
 ];
 
-// ============================================================
-// BACKUP PLANS — 備案行程
-// ============================================================
 const BACKUP_PLANS = [
-  {
-    id: 'backup1',
-    priority: 1,
-    title: '姬路城一日遊',
-    icon: '🏰',
-    subtitle: '可替代 Day 3 奈良 或 Day 4 箕面',
-    transit: '🏠 → 🚃 JR環狀線 大正→大阪 → JR新快速 大阪→姫路 · 約 90 分鐘',
-    spots: [
-      { name:"姬路城", jp:"姫路城", tags:["sight","temple"], desc:"日本第一座世界文化遺產，有「白鷺城」之稱的國寶天守閣，保存最完整的日本城堡", tips:"門票 ¥1,050 / 9:00-17:00（16:00 最後入城）。建議預留 2 小時參觀，週日人稍多但比奈良好很多", lat:34.8394, lng:134.6939, maps:"https://maps.google.com/?q=姫路城", transitToNext:"🚶 步行約 5 分鐘" },
-      { name:"好古園", jp:"好古園", tags:["nature","sight"], desc:"姬路城旁的池泉回遊式日本庭園，九個風格各異的美麗庭園", tips:"門票 ¥310（與姬路城聯票 ¥1,050 更划算）/ 9:00-17:00。拍照非常美", lat:34.8383, lng:134.6896, maps:"https://maps.google.com/?q=好古園+姫路", transitToNext:"🚶 步行回姫路駅 約 15 分鐘" },
-      { name:"姬路午餐 · 穴子飯", jp:"姫路駅周辺", tags:["food"], desc:"姬路名物穴子飯（星鰻蓋飯）是當地必吃美食，炭火烤星鰻搭配醬汁超香", tips:"推薦「穴子料理 柊」或站前「炭火焼穴子 あなご亭」，約 ¥1,500-2,500", lat:34.8266, lng:134.6914, maps:"https://maps.google.com/?q=姫路駅" },
-    ]
-  },
-  {
-    id: 'backup2',
-    priority: 2,
-    title: '太陽之塔 + 萬博紀念公園',
-    icon: '☀️',
-    subtitle: '可替代 Day 4 箕面，下午接梅田行程',
-    transit: '🏠 → 🚃 長堀鶴見緑地線到心齋橋 → 御堂筋線到千里中央 → 大阪モノレール · 約 50 分鐘',
-    spots: [
-      { name:"萬博紀念公園", jp:"万博記念公園", tags:["nature","sight"], desc:"1970 年大阪萬國博覽會舊址，廣大綠地公園，有自然文化園和日本庭園", tips:"入園 ¥260 / 9:30-17:00（16:30 最後入園）。園區很大很舒服，建議預留 2 小時慢慢逛", lat:34.8109, lng:135.5318, maps:"https://maps.google.com/?q=万博記念公園", transitToNext:"🚶 園區內 · 步行約 3 分鐘" },
-      { name:"太陽之塔", jp:"太陽の塔", tags:["sight"], desc:"岡本太郎設計的 70 公尺高藝術巨作，大阪萬博的永恆象徵。三張臉代表過去、現在、未來", tips:"內部參觀需預約（¥720）→ taiyounotou-expo70.jp。即使不進去，外觀拍照也很震撼", lat:34.8116, lng:135.5327, maps:"https://maps.google.com/?q=太陽の塔", transitToNext:"🚃 大阪モノレール→千里中央 → 御堂筋線到梅田 · 約 40 分鐘" },
-    ]
-  }
+  { id:'backup1', priority:1, title:'姬路城一日遊', icon:'', subtitle:'可替代 Day 3 奈良 或 Day 4 箕面',
+    transit:'→  JR環狀線 大正→大阪 → JR新快速 大阪→姫路 · 約 90 分鐘', spots:[
+      { name:"姬路城", jp:"姫路城", tags:["sight","temple"], desc:"日本第一座世界文化遺產，有「白鷺城」之稱的國寶天守閣，保存最完整的日本城堡", tips:"門票 ¥1,050 / 9:00-17:00（16:00 最後入城）。建議預留 2 小時參觀，週日人稍多但比奈良好很多", lat:34.8394, lng:134.6939, maps:"https://maps.google.com/?q=姫路城", transitToNext:"步行 步行約 5 分鐘"},
+      { name:"好古園", jp:"好古園", tags:["nature","sight"], desc:"姬路城旁的池泉回遊式日本庭園，九個風格各異的美麗庭園", tips:"門票 ¥310（與姬路城聯票 ¥1,050 更划算）/ 9:00-17:00。拍照非常美", lat:34.8383, lng:134.6896, maps:"https://maps.google.com/?q=好古園+姫路", transitToNext:"步行 步行回姫路駅 約 15 分鐘"},
+      { name:"姬路午餐 · 穴子飯", jp:"姫路駅周辺", tags:["food"], desc:"姬路名物穴子飯（星鰻蓋飯）是當地必吃美食，炭火烤星鰻搭配醬汁超香", tips:"推薦「穴子料理 柊」或站前「炭火焼穴子 あなご亭」，約 ¥1,500-2,500", lat:34.8266, lng:134.6914, maps:"https://maps.google.com/?q=姫路駅"},
+    ]},
+  { id:'backup2', priority:2, title:'太陽之塔 + 萬博紀念公園', icon:'', subtitle:'可替代 Day 4 箕面，下午接梅田行程',
+    transit:'→  長堀鶴見緑地線到心齋橋 → 御堂筋線到千里中央 → 大阪モノレール · 約 50 分鐘', spots:[
+      { name:"萬博紀念公園", jp:"万博記念公園", tags:["nature","sight"], desc:"1970 年大阪萬國博覽會舊址，廣大綠地公園，有自然文化園和日本庭園", tips:"入園 ¥260 / 9:30-17:00（16:30 最後入園）。園區很大很舒服，建議預留 2 小時慢慢逛", lat:34.8109, lng:135.5318, maps:"https://maps.google.com/?q=万博記念公園", transitToNext:"步行 園區內 · 步行約 3 分鐘"},
+      { name:"太陽之塔", jp:"太陽の塔", tags:["sight"], desc:"岡本太郎設計的 70 公尺高藝術巨作，大阪萬博的永恆象徵。三張臉代表過去、現在、未來", tips:"內部參觀需預約（¥720）→ taiyounotou-expo70.jp。即使不進去，外觀拍照也很震撼", lat:34.8116, lng:135.5327, maps:"https://maps.google.com/?q=太陽の塔", transitToNext:" 大阪モノレール→千里中央 → 御堂筋線到梅田 · 約 40 分鐘"},
+    ]},
 ];
 
 const BRING = ["日本 eSIM","通鼻液","鼻炎藥","熱水器"];
-const SOUVENIRS = ["🐷","ㄒㄘ"];
+const SOUVENIRS = ["","ㄒㄘ"];
 const WISHES = [
   { name:"吃麥當勞" },
   { name:"Refa 捲髮器" },
@@ -785,12 +482,9 @@ const WISHES = [
 ];
 
 const TAG_MAP = {
-  sight: { label:"觀光", cls:"tag-sight" },
-  food: { label:"美食", cls:"tag-food" },
-  shop: { label:"購物", cls:"tag-shop" },
-  nature: { label:"自然", cls:"tag-nature" },
-  temple: { label:"寺廟", cls:"tag-temple" },
-  transport: { label:"交通", cls:"tag-transport" },
+  sight: { label:"觀光", cls:"tag-sight" }, food: { label:"美食", cls:"tag-food" },
+  shop: { label:"購物", cls:"tag-shop" }, nature: { label:"自然", cls:"tag-nature" },
+  temple: { label:"寺廟", cls:"tag-temple" }, transport: { label:"交通", cls:"tag-transport" },
   play: { label:"娛樂", cls:"tag-play" },
 };
 
@@ -802,33 +496,24 @@ try { state = JSON.parse(localStorage.getItem('osaka2026v2') || '{}'); } catch(e
 function save() { localStorage.setItem('osaka2026v2', JSON.stringify(state)); }
 function escapeHtml(s) { const d = document.createElement('div'); d.appendChild(document.createTextNode(s)); return d.innerHTML; }
 function isChecked(k) { return !!state[k]; }
-function toggle(k) { state[k] = !state[k]; save(); }
 
-// secret unlock: hides solo / cafe / wishlist / bring list from family view
 let isUnlocked = localStorage.getItem('osaka2026_unlock') === '1';
-function setUnlocked(v) {
-  isUnlocked = v;
-  localStorage.setItem('osaka2026_unlock', v ? '1' : '0');
-}
+function setUnlocked(v) { isUnlocked = v; localStorage.setItem('osaka2026_unlock', v ? '1' : '0'); }
 
-// expense tracker
 let expenses = [];
 try { expenses = JSON.parse(localStorage.getItem('osaka2026_exp') || '[]'); } catch(e) { expenses = []; }
 function saveExp() { localStorage.setItem('osaka2026_exp', JSON.stringify(expenses)); }
 let expRate = parseFloat(localStorage.getItem('osaka2026_rate') || '0.206');
 function saveRate() { localStorage.setItem('osaka2026_rate', String(expRate)); }
 const EXP_CATS = { food:'餐飲', transport:'交通', shop:'購物', stay:'住宿', ticket:'門票', other:'其他' };
-const EXP_CAT_ICONS = { food:'🍽️', transport:'🚃', shop:'🛍️', stay:'🏠', ticket:'🎫', other:'📦' };
+const EXP_CAT_ICONS = { food:'', transport:'', shop:'️', stay:'', ticket:'', other:'' };
 const EXP_CAT_COLORS = { food:'#FFF3E0', transport:'#E3F2FD', shop:'#FCE4EC', stay:'#E8F5E9', ticket:'#F3E5F5', other:'#ECEFF1' };
+const EXP_CAT_BAR_COLORS = { food:'#FF9800', transport:'#2196F3', shop:'#E91E63', stay:'#4CAF50', ticket:'#9C27B0', other:'#78909C' };
 const EXP_PAYS = { cash:'現金', card:'信用卡', paypay:'PayPay', icoca:'ICOCA' };
-const TRIP_DATES = ['2026-05-08','2026-05-09','2026-05-10','2026-05-11','2026-05-12'];
 
-// Google Sheets sync
 let sheetUrl = localStorage.getItem('osaka2026_sheet_url') || '';
 function saveSheetUrl() { localStorage.setItem('osaka2026_sheet_url', sheetUrl); }
-let syncStatus = ''; // '', 'syncing', 'ok', 'error'
-let syncMsg = '';
-let lastSyncTime = localStorage.getItem('osaka2026_last_sync') || '';
+let syncStatus = '', syncMsg = '', lastSyncTime = localStorage.getItem('osaka2026_last_sync') || '';
 
 async function syncToSheets() {
   if (!sheetUrl) { syncStatus = 'error'; syncMsg = '請先設定 Google Apps Script 網址'; render(); return; }
@@ -836,22 +521,11 @@ async function syncToSheets() {
   if (!confirm(`確定要同步 ${expenses.length} 筆記錄到 Google Sheets？\n（會覆寫 Sheet 上的 A~G 欄資料）`)) return;
   syncStatus = 'syncing'; syncMsg = '同步中…'; render();
   try {
-    const res = await fetch(sheetUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ expenses, rate: expRate, cats: EXP_CATS, pays: EXP_PAYS })
-    });
+    const res = await fetch(sheetUrl, { method:'POST', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({expenses, rate:expRate, cats:EXP_CATS, pays:EXP_PAYS}) });
     const data = await res.json();
-    if (data.ok) {
-      lastSyncTime = new Date().toLocaleString('zh-TW');
-      localStorage.setItem('osaka2026_last_sync', lastSyncTime);
-      syncStatus = 'ok'; syncMsg = `✅ 已同步 ${data.count || expenses.length} 筆`;
-    } else {
-      syncStatus = 'error'; syncMsg = '❌ 同步失敗：' + (data.error || '未知錯誤');
-    }
-  } catch(e) {
-    syncStatus = 'error'; syncMsg = '❌ 連線失敗，請確認網址是否正確';
-  }
+    if (data.ok) { lastSyncTime = new Date().toLocaleString('zh-TW'); localStorage.setItem('osaka2026_last_sync', lastSyncTime); syncStatus = 'ok'; syncMsg = ` 已同步 ${data.count||expenses.length} 筆`; }
+    else { syncStatus = 'error'; syncMsg = ' 同步失敗：'+(data.error||'未知錯誤'); }
+  } catch(e) { syncStatus = 'error'; syncMsg = ' 連線失敗，請確認網址是否正確'; }
   render();
 }
 
@@ -860,227 +534,148 @@ async function testSheetConnection() {
   try {
     const res = await fetch(sheetUrl);
     const data = await res.json();
-    if (data.ok) { alert('✅ 連線成功！可以開始同步了'); }
-    else { alert('⚠️ 收到回應但格式不對，請確認 Apps Script 有部署 doGet'); }
-  } catch(e) {
-    alert('❌ 連線失敗，請確認網址是否正確，以及是否已部署為「所有人」可存取');
-  }
+    if (data.ok) alert(' 連線成功！可以開始同步了');
+    else alert('️ 收到回應但格式不對，請確認 Apps Script 有部署 doGet');
+  } catch(e) { alert(' 連線失敗，請確認網址是否正確，以及是否已部署為「所有人」可存取'); }
 }
 
 let currentDay = 'info';
 let currentView = 'list';
 let maps = {};
-let drawerOpen = false;
 
-function openDrawer() {
-  drawerOpen = true;
-  document.getElementById('dayDrawer').classList.add('open');
-  document.getElementById('drawerOverlay').classList.add('open');
-  renderDrawer();
-  renderBottomNav();
-}
-
-function closeDrawer() {
-  drawerOpen = false;
-  const dr = document.getElementById('dayDrawer');
-  const ov = document.getElementById('drawerOverlay');
-  if (dr) dr.classList.remove('open');
-  if (ov) ov.classList.remove('open');
-}
-
-function renderDrawer() {
-  const container = document.getElementById('drawerDays');
-  if (!container) return;
-  let html = '';
-  DAYS_DATA.forEach(d => {
-    const isActive = currentDay === d.id;
-    const nextIdx = d.spots.findIndex((_, i) => !isChecked(d.id + '_' + i));
-    const dotsHtml = d.spots.map((_, i) => {
-      const done = isChecked(d.id + '_' + i);
-      const isCurrent = isActive && i === nextIdx && !done;
-      return `<div class="drawer-dot ${done ? 'done' : (isCurrent ? 'current' : '')}"></div>`;
-    }).join('');
-    html += `
-      <div class="drawer-day-card ${isActive ? 'active' : ''}" data-day="${d.id}">
-        <div class="drawer-day-icon">${d.icon}</div>
-        <div class="drawer-day-body">
-          <div class="drawer-day-meta">${d.label} (${d.weekday})</div>
-          <div class="drawer-day-title">${d.title}</div>
-        </div>
-        <div class="drawer-dots">${dotsHtml}</div>
-      </div>`;
-  });
-  container.innerHTML = html;
-}
-
-function renderBottomNav() {
-  const btn = document.getElementById('bnavDayBtn');
-  if (!btn) return;
+// ============================================================
+// TOP NAV
+// ============================================================
+function renderTopNav() {
+  const isDayPage = DAYS_DATA.some(d => d.id === currentDay);
   const day = DAYS_DATA.find(d => d.id === currentDay);
-  const chevron = `<div class="bnav-chevron ${drawerOpen ? 'open' : ''}">▲</div>`;
-  if (day) {
-    const doneCount = day.spots.filter((_, i) => isChecked(day.id + '_' + i)).length;
-    btn.className = 'bnav-day-btn';
-    btn.innerHTML = `
-      <div class="bnav-day-icon">${day.icon}</div>
-      <div class="bnav-day-text">
-        <div class="bnav-day-label">${day.label} (${day.weekday}) · ${doneCount}/${day.spots.length} 個景點</div>
-        <div class="bnav-day-title">${day.title}</div>
-      </div>
-      ${chevron}`;
-  } else {
-    const sections = {
-      info:    { icon: '📋', title: '行程總覽' },
-      backup:  { icon: '🔄', title: '備案行程' },
-      expense: { icon: '💰', title: '旅遊記帳' },
-      cafe:    { icon: '☕', title: '咖啡廳清單' },
-      lists:   { icon: '📝', title: '個人清單' },
-    };
-    const sec = sections[currentDay] || { icon: '📋', title: '行程總覽' };
-    btn.className = 'bnav-day-btn is-section';
-    btn.innerHTML = `
-      <div class="bnav-day-icon">${sec.icon}</div>
-      <div class="bnav-day-text">
-        <div class="bnav-day-label">切換行程日 ▸</div>
-        <div class="bnav-day-title">${sec.title}</div>
-      </div>
-      ${chevron}`;
+  const total = day ? day.spots.length : 0;
+  const done = day ? day.spots.filter((_,i) => isChecked(day.id+'_'+i)).length : 0;
+  const pct = total ? Math.round(done/total*100) : 0;
+
+  let pills = DAYS_DATA.map(d =>
+    `<button class="tnav-pill ${currentDay===d.id?'active':''}" data-day="${d.id}">${d.label} (${d.weekday})</button>`
+  ).join('');
+  pills += `<div class="tnav-divider"></div>`;
+  pills += `<button class="tnav-pill sec ${currentDay==='info'?'active':''}" data-day="info">概覽</button>`;
+  pills += `<button class="tnav-pill sec ${currentDay==='expense'?'active':''}" data-day="expense">記帳</button>`;
+  pills += `<button class="tnav-pill sec ${currentDay==='backup'?'active':''}" data-day="backup">備案</button>`;
+  if (isUnlocked) {
+    pills += `<button class="tnav-pill sec ${currentDay==='cafe'?'active':''}" data-day="cafe">咖啡廳</button>`;
+    pills += `<button class="tnav-pill sec ${currentDay==='lists'?'active':''}" data-day="lists">清單</button>`;
   }
-  document.querySelectorAll('.bnav-icon-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.day === currentDay);
-  });
+
+  // view toggle for day/backup pages
+  const showViewToggle = isDayPage || currentDay === 'backup';
+  const viewHtml = showViewToggle ? `
+    <div style="display:flex;gap:0;padding:0 14px 10px;justify-content:center;">
+      <button class="view-btn ${currentView==='list'?'active':''}" data-view="list">行程</button>
+      <button class="view-btn ${currentView==='map'?'active':''}" data-view="map">地圖</button>
+    </div>` : '';
+
+  const progressHtml = isDayPage ? `<div class="tnav-progress"><div class="tnav-progress-fill" id="tnavProgressFill" style="width:${pct}%;"></div></div>` : '';
+
+  document.getElementById('topNav').innerHTML =
+    `<div class="top-nav-pills" id="tnavPills">${pills}</div>${viewHtml}${progressHtml}`;
+
+  // Scroll active pill into view
+  setTimeout(() => {
+    const active = document.querySelector('.tnav-pill.active');
+    if (active) active.scrollIntoView({ inline: 'center', behavior: 'smooth', block: 'nearest' });
+  }, 50);
+}
+
+function updateTopNavProgress() {
+  const day = DAYS_DATA.find(d => d.id === currentDay);
+  if (!day) return;
+  const total = day.spots.length;
+  const done = day.spots.filter((_,i) => isChecked(day.id+'_'+i)).length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  const fill = document.getElementById('tnavProgressFill');
+  if (fill) fill.style.width = pct + '%';
 }
 
 // ============================================================
-// RENDER — Tags
+// OPTIMISATION 1: Persistent Map Instances
+// Map containers live in #map-pool when inactive; moved into view when needed.
+// We never call .remove() so Leaflet state is preserved.
 // ============================================================
-function renderTags(tags) {
-  if (!tags || !tags.length) return '';
-  return '<div class="tags">' + tags.map(t => {
-    const info = TAG_MAP[t];
-    return info ? `<span class="tag ${info.cls}">${info.label}</span>` : '';
-  }).join('') + '</div>';
+function getOrCreateMapContainer(id) {
+  const pool = document.getElementById('map-pool');
+  let el = document.getElementById('map-frame-' + id);
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'map-frame-' + id;
+    el.className = 'map-frame';
+    pool.appendChild(el);
+  }
+  return el;
 }
 
-// ============================================================
-// RENDER — Day page (list view)
-// ============================================================
-function renderDayList(day) {
-  let html = '';
-  if (day.startTransit) {
-    html += `<div class="connector" style="padding-left:0;justify-content:center;"><span class="connector-text" style="border-color:var(--pink);color:var(--pink-dark);font-weight:600;">${day.startTransit}</span></div>`;
+function initMapForDay(day) {
+  const el = getOrCreateMapContainer(day.id);
+  if (maps[day.id]) {
+    // Already initialized — just invalidate size after move
+    setTimeout(() => maps[day.id].invalidateSize(), 60);
+    return el;
   }
-  day.spots.forEach((s, i) => {
-    const key = day.id + '_' + i;
-    const done = isChecked(key);
-    if (i > 0) html += `<div class="connector" id="conn-${day.id}-${i}"><span class="connector-text loading">…</span></div>`;
-    html += `
-      <div class="spot-card">
-        <div class="spot-card-inner">
-          <div class="spot-num ${done?'done':''}" data-key="${key}"><span class="num-text">${i+1}</span></div>
-          <div class="spot-body">
-            ${s.time ? `<div class="spot-time">${s.time}</div>` : ''}
-            <div class="spot-name ${done?'done-text':''}">${s.name}</div>
-            ${s.jp ? `<div class="spot-jp">${s.jp}</div>` : ''}
-            ${renderTags(s.tags)}
-            ${s.desc ? `<div class="spot-desc">${s.desc}</div>` : ''}
-            ${s.tips ? `<div class="spot-tips"><strong>💡 小提醒</strong><br>${s.tips}</div>` : ''}
-          </div>
-        </div>
-        <div class="spot-actions">
-          ${s.maps ? `<a class="act-btn act-nav" href="${s.maps}" target="_blank" rel="noopener">📍 Google Maps 導航</a>` : ''}
-          <button class="act-btn act-check ${done?'is-done':''}" data-key="${key}">${done?'✓ 已完成':'標記完成'}</button>
-        </div>
-      </div>`;
-  });
-
-  if (isUnlocked && day.solo && day.solo.length) {
-    html += `<div class="solo-section"><div class="solo-title">🧡 脫隊行程</div>`;
-    day.solo.forEach((s, i) => {
-      const key = day.id + '_solo_' + i;
-      const done = isChecked(key);
-      html += `
-        <div class="cl-item">
-          <button class="cl-check ${done?'done':''}" data-key="${key}">✓</button>
-          <div class="cl-text ${done?'done-text':''}">${s.name} ${renderTags(s.tags)}</div>
-          ${s.maps ? `<a class="cl-map" href="${s.maps}" target="_blank" rel="noopener">📍</a>` : ''}
-        </div>`;
-    });
-    html += `</div>`;
-  }
-
-  // show backup hint on Day 3 (Nara) and Day 4 (Minoh)
-  if (day.id === 'day3') {
-    html += `<div style="text-align:center;padding:16px 0 8px;">
-      <button class="day-tab" data-day="backup" style="font-size:13px;color:var(--orange);border:1.5px solid var(--orange);background:var(--orange-light);">🔄 人太多？看備案（姬路城）→</button>
-    </div>`;
-  }
-  if (day.id === 'day4') {
-    html += `<div style="text-align:center;padding:16px 0 8px;">
-      <button class="day-tab" data-day="backup" style="font-size:13px;color:var(--orange);border:1.5px solid var(--orange);background:var(--orange-light);">🔄 想換行程？看備案（萬博公園）→</button>
-    </div>`;
-  }
-
-  return html;
-}
-
-// ============================================================
-// RENDER — Day page (map view)
-// ============================================================
-function renderDayMap(day) {
-  const mapId = 'map-' + day.id;
-  setTimeout(() => initMap(day, mapId), 50);
-  return `<div class="map-container active" id="${mapId}"></div>`;
-}
-
-function initMap(day, mapId) {
-  const el = document.getElementById(mapId);
-  if (!el || el._leaflet_id) return;
   const spots = day.spots.filter(s => s.lat && s.lng);
-  if (!spots.length) return;
-
+  if (!spots.length) return el;
   const map = L.map(el, { zoomControl: false });
   L.control.zoom({ position: 'topright' }).addTo(map);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap',
-    maxZoom: 18,
-  }).addTo(map);
-
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap', maxZoom: 18 }).addTo(map);
   const coords = spots.map(s => [s.lat, s.lng]);
-
-  // dashed route line
   L.polyline(coords, { color: '#C05A8C', weight: 3, dashArray: '8,8', opacity: 0.7 }).addTo(map);
-
-  // markers
   spots.forEach((s, i) => {
     const key = day.id + '_' + i;
-    const done = isChecked(key);
     const icon = L.divIcon({
       className: '',
-      html: `<div class="custom-marker ${done?'checked-marker':''}">${i+1}</div>`,
-      iconSize: [32, 32],
-      iconAnchor: [16, 16],
+      html: `<div class="custom-marker ${isChecked(key)?'checked-marker':''}" id="mmarker-${key}">${i+1}</div>`,
+      iconSize: [32, 32], iconAnchor: [16, 16],
     });
     const marker = L.marker([s.lat, s.lng], { icon }).addTo(map);
     const tagsHtml = (s.tags||[]).map(t => { const info = TAG_MAP[t]; return info ? `<span class="tag ${info.cls}" style="font-size:11px;padding:1px 6px;">${info.label}</span>` : ''; }).join(' ');
-    marker.bindPopup(`
-      <div class="popup-title">${s.name}</div>
-      ${s.jp ? `<div style="color:#999;font-size:12px;margin-bottom:4px;">${s.jp}</div>` : ''}
-      <div class="popup-tags">${tagsHtml}</div>
-      ${s.desc ? `<div style="margin-bottom:8px;">${s.desc}</div>` : ''}
-      ${s.maps ? `<a class="popup-nav-btn" href="${s.maps}" target="_blank" rel="noopener">📍 Google Maps 導航</a>` : ''}
-    `, { maxWidth: 260 });
+    marker.bindPopup(`<div class="popup-title">${s.name}</div>${s.jp?`<div style="color:#999;font-size:12px;margin-bottom:4px;">${s.jp}</div>`:''}<div class="popup-tags">${tagsHtml}</div>${s.desc?`<div style="margin-bottom:8px;">${s.desc}</div>`:''}${s.maps?`<a class="popup-nav-btn" href="${s.maps}" target="_blank" rel="noopener">Google Maps 導航</a>`:''}`, { maxWidth: 260 });
   });
-
   map.fitBounds(L.latLngBounds(coords).pad(0.15));
   maps[day.id] = map;
+  return el;
 }
 
 // ============================================================
-// RENDER — Info page
+// OPTIMISATION 2: Surgical DOM Updates on Toggle
 // ============================================================
-function renderInfo() {
-  // count progress (solo items only count when unlocked)
+
+function toggleAndUpdate(key) {
+  state[key] = !state[key];
+  save();
+  const done = state[key];
+
+  document.querySelectorAll(`.spot-num[data-key="${key}"]`).forEach(el => {
+    el.classList.toggle('done', done);
+    el.closest('.spot-card') && el.closest('.spot-card').classList.toggle('done-card', done);
+  });
+  document.querySelectorAll(`.spot-name[data-name-key="${key}"]`).forEach(el => {
+    el.classList.toggle('done-text', done);
+  });
+  document.querySelectorAll(`.act-check[data-key="${key}"]`).forEach(el => {
+    el.classList.toggle('is-done', done);
+    el.textContent = done ? '已完成' : '標記完成';
+  });
+  document.querySelectorAll(`.cl-check[data-key="${key}"]`).forEach(el => {
+    el.classList.toggle('done', done);
+  });
+  document.querySelectorAll(`.cl-text[data-name-key="${key}"]`).forEach(el => {
+    el.classList.toggle('done-text', done);
+  });
+  const mmarker = document.getElementById('mmarker-' + key);
+  if (mmarker) mmarker.classList.toggle('checked-marker', done);
+
+  updateTopNavProgress();
+  if (currentDay === 'info') updateProgressRing();
+}
+
+function updateProgressRing() {
   let total = 0, done = 0;
   DAYS_DATA.forEach(d => {
     d.spots.forEach((_,i) => { total++; if(isChecked(d.id+'_'+i)) done++; });
@@ -1089,22 +684,92 @@ function renderInfo() {
   const pct = total ? Math.round(done/total*100) : 0;
   const circ = 2 * Math.PI * 48;
   const offset = circ - (pct/100) * circ;
+  const fill = document.querySelector('.ring-fill');
+  const pctEl = document.querySelector('.progress-pct');
+  const labelEl = document.querySelector('.progress-label');
+  if (fill) fill.style.strokeDashoffset = offset;
+  if (pctEl) pctEl.textContent = pct + '%';
+  if (labelEl) labelEl.textContent = `已完成 ${done} / ${total} 個景點`;
+}
 
+
+
+// ============================================================
+// RENDER HELPERS
+// ============================================================
+function renderTags(tags) {
+  if (!tags || !tags.length) return '';
+  return '<div class="tags">'+tags.map(t => { const info=TAG_MAP[t]; return info?`<span class="tag ${info.cls}">${info.label}</span>`:''; }).join('')+'</div>';
+}
+
+function renderDayList(day) {
+  let html = '';
+  if (day.startTransit) {
+    html += `<div class="connector" style="padding-left:0;justify-content:center;"><span class="connector-text" style="border-color:var(--pink);color:var(--pink-dark);font-weight:600;">${day.startTransit}</span></div>`;
+  }
+  day.spots.forEach((s, i) => {
+    const key = day.id+'_'+i;
+    const done = isChecked(key);
+    if (i > 0) html += `<div class="connector" id="conn-${day.id}-${i}"><span class="connector-text loading">…</span></div>`;
+    html += `<div class="spot-card ${done?'done-card':''}">
+      <div class="spot-card-inner">
+        <div class="spot-num ${done?'done':''}" data-key="${key}"><span class="num-text">${i+1}</span></div>
+        <div class="spot-body">
+          ${s.time?`<div class="spot-time">${s.time}</div>`:''}
+          <div class="spot-name ${done?'done-text':''}" data-name-key="${key}">${s.name}</div>
+          ${s.jp?`<div class="spot-jp">${s.jp}</div>`:''}
+          ${renderTags(s.tags)}
+          ${s.desc?`<div class="spot-desc">${s.desc}</div>`:''}
+          ${s.tips?`<div class="spot-tips"><strong>小提醒</strong><br>${s.tips}</div>`:''}
+        </div>
+      </div>
+      <div class="spot-actions">
+        ${s.maps?`<a class="act-btn act-nav" href="${s.maps}" target="_blank" rel="noopener">Google Maps 導航</a>`:''}
+        <button class="act-btn act-check ${done?'is-done':''}" data-key="${key}">${done?'已完成':'標記完成'}</button>
+      </div>
+    </div>`;
+  });
+  if (isUnlocked && day.solo && day.solo.length) {
+    html += `<div class="solo-section"><div class="solo-title">脫隊行程</div>`;
+    day.solo.forEach((s,i) => {
+      const key = day.id+'_solo_'+i, done = isChecked(key);
+      html += `<div class="cl-item">
+        <button class="cl-check ${done?'done':''}" data-key="${key}"></button>
+        <div class="cl-text ${done?'done-text':''}" data-name-key="${key}">${s.name} ${renderTags(s.tags)}</div>
+        ${s.maps?`<a class="cl-map" href="${s.maps}" target="_blank" rel="noopener"></a>`:''}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  if (day.id==='day3') html += `<div style="text-align:center;padding:16px 0 8px;"><button class="day-tab" data-day="backup" style="font-size:13px;color:var(--orange);border:1.5px solid var(--orange);background:var(--orange-light);">備案 人太多？看備案（姬路城）→</button></div>`;
+  if (day.id==='day4') html += `<div style="text-align:center;padding:16px 0 8px;"><button class="day-tab" data-day="backup" style="font-size:13px;color:var(--orange);border:1.5px solid var(--orange);background:var(--orange-light);">備案 想換行程？看備案（萬博公園）→</button></div>`;
+  return html;
+}
+
+function renderInfo() {
+  let total = 0, done = 0;
+  DAYS_DATA.forEach(d => {
+    d.spots.forEach((_,i) => { total++; if(isChecked(d.id+'_'+i)) done++; });
+    if(isUnlocked && d.solo) d.solo.forEach((_,i) => { total++; if(isChecked(d.id+'_solo_'+i)) done++; });
+  });
+  const pct = total ? Math.round(done/total*100) : 0;
+  const circ = 2 * Math.PI * 48;
+  const offset = circ - (pct/100) * circ;
   let html = `
     <div class="section-card">
-      <div class="section-title">✈️ 航班資訊</div>
+      <div class="section-title">航班資訊</div>
       <div class="info-grid">
         <div class="info-item"><div class="info-label">去程</div><div class="info-value">5/8 (五) → 12:50 抵達關西機場 KIX</div></div>
         <div class="info-item"><div class="info-label">回程</div><div class="info-value">5/12 (二) 19:05 關西機場出發</div></div>
       </div>
     </div>
     <div class="section-card" style="position:relative;">
-      <span id="unlockHeart" class="unlock-heart ${isUnlocked?'unlocked':''}">💗</span>
-      <div class="section-title">🏠 住宿資訊</div>
+      <span id="unlockHeart" class="unlock-heart ${isUnlocked?'unlocked':''}"></span>
+      <div class="section-title">住宿資訊</div>
       <div style="font-size:15px;color:var(--gray);line-height:1.6;">大正駅 徒步約 4 分鐘 ・ 16:00 入住 / 10:00 退房</div>
     </div>
     <div class="section-card">
-      <div class="section-title">📊 行程進度</div>
+      <div class="section-title">行程進度</div>
       <div class="progress-ring">
         <svg viewBox="0 0 120 120">
           <circle class="ring-bg" cx="60" cy="60" r="48"/>
@@ -1113,68 +778,52 @@ function renderInfo() {
         <div class="progress-pct">${pct}%</div>
         <div class="progress-label">已完成 ${done} / ${total} 個景點</div>
       </div>
-    </div>
-`;
+    </div>`;
   if (isUnlocked) {
-    html += `<div class="section-card"><div class="section-title">📦 攜帶物品</div>`;
+    html += `<div class="section-card"><div class="section-title">攜帶物品</div>`;
     BRING.forEach((item,i) => {
-      const key = 'bring_'+i, d = isChecked(key);
-      html += `<div class="cl-item"><button class="cl-check ${d?'done':''}" data-key="${key}">✓</button><div class="cl-text ${d?'done-text':''}">${item}</div></div>`;
+      const key='bring_'+i, d=isChecked(key);
+      html += `<div class="cl-item"><button class="cl-check ${d?'done':''}" data-key="${key}"></button><div class="cl-text ${d?'done-text':''}" data-name-key="${key}">${item}</div></div>`;
     });
     html += `</div>`;
   }
-  html += `<div style="text-align:center;padding:30px 0 10px;">
-    <button style="background:none;border:1px solid #ddd;border-radius:8px;padding:8px 20px;color:#bbb;font-size:13px;cursor:pointer;" onclick="if(confirm('確定要重置所有打勾紀錄和記帳資料嗎？此操作無法復原。')){['osaka2026v2','osaka2026_exp','osaka2026_rate','osaka2026_unlock','osaka2026_sheet_url','osaka2026_last_sync'].forEach(k=>localStorage.removeItem(k));location.reload();}">🔄 重置所有紀錄</button>
-  </div>`;
+  html += `<div style="text-align:center;padding:30px 0 10px;"><button style="background:none;border:1px solid #ddd;border-radius:8px;padding:8px 20px;color:#bbb;font-size:13px;cursor:pointer;" onclick="if(confirm('確定要重置所有打勾紀錄和記帳資料嗎？此操作無法復原。')){['osaka2026v2','osaka2026_exp','osaka2026_rate','osaka2026_unlock','osaka2026_sheet_url','osaka2026_last_sync'].forEach(k=>localStorage.removeItem(k));location.reload();}">備案 重置所有紀錄</button></div>`;
   return html;
 }
 
-// ============================================================
-// RENDER — Cafe page
-// ============================================================
 function renderCafe() {
-  let html = `<div class="section-card"><div class="section-title">☕ 脫隊咖啡廳候選清單</div>`;
+  let html = `<div class="section-card"><div class="section-title">咖啡 脫隊咖啡廳候選清單</div>`;
   CAFES.forEach((c,i) => {
     const key='cafe_'+i, d=isChecked(key);
     html += `<div class="cl-item">
-      <button class="cl-check ${d?'done':''}" data-key="${key}">✓</button>
-      <div class="cl-text ${d?'done-text':''}"><a href="${c.url}" target="_blank" rel="noopener">${c.name}</a><span class="cl-sub">📍 ${c.area}</span></div>
+      <button class="cl-check ${d?'done':''}" data-key="${key}"></button>
+      <div class="cl-text ${d?'done-text':''}"><a href="${c.url}" target="_blank" rel="noopener">${c.name}</a><span class="cl-sub"> ${c.area}</span></div>
       <a class="cl-map" href="${c.maps}" target="_blank" rel="noopener">導航</a>
     </div>`;
   });
-  html += `</div>`;
-  return html;
+  return html + `</div>`;
 }
 
-// ============================================================
-// RENDER — Lists page
-// ============================================================
 function renderLists() {
-  let html = `<div class="section-card"><div class="section-title">🎁 伴手禮對象</div>`;
+  let html = `<div class="section-card"><div class="section-title">伴手禮對象</div>`;
   SOUVENIRS.forEach((s,i) => {
     const key='sou_'+i, d=isChecked(key);
-    html += `<div class="cl-item"><button class="cl-check ${d?'done':''}" data-key="${key}">✓</button><div class="cl-text ${d?'done-text':''}">${s}</div></div>`;
+    html += `<div class="cl-item"><button class="cl-check ${d?'done':''}" data-key="${key}"></button><div class="cl-text ${d?'done-text':''}">${s}</div></div>`;
   });
-  html += `</div><div class="section-card"><div class="section-title">⭐ 願望清單</div>`;
+  html += `</div><div class="section-card"><div class="section-title">願望清單</div>`;
   WISHES.forEach((w,i) => {
     const key='wish_'+i, d=isChecked(key), name=typeof w==='string'?w:w.name, url=typeof w==='object'?w.url:null;
-    html += `<div class="cl-item"><button class="cl-check ${d?'done':''}" data-key="${key}">✓</button><div class="cl-text ${d?'done-text':''}">${url?`<a href="${url}" target="_blank" rel="noopener">${name}</a>`:name}</div></div>`;
+    html += `<div class="cl-item"><button class="cl-check ${d?'done':''}" data-key="${key}"></button><div class="cl-text ${d?'done-text':''}">${url?`<a href="${url}" target="_blank" rel="noopener">${name}</a>`:name}</div></div>`;
   });
-  html += `</div>`;
-  return html;
+  return html + `</div>`;
 }
 
-// ============================================================
-// RENDER — Backup plans page
-// ============================================================
 function renderBackup() {
   let html = `<div class="section-card" style="background:linear-gradient(135deg,#FFF8E1,#FFF3E0);border:1.5px solid #FFD54F;">
-    <div class="section-title">🔄 備案行程</div>
-    <div style="font-size:14px;color:var(--gray);line-height:1.6;margin-bottom:4px;">如果碰上人潮太多、天氣不好或臨時想換行程，可以直接參考這裡！</div>
+    <div class="section-title">備案 備案行程</div>
+    <div style="font-size:14px;color:var(--gray);line-height:1.6;">如果碰上人潮太多、天氣不好或臨時想換行程，可以直接參考這裡！</div>
   </div>`;
-
   BACKUP_PLANS.forEach(plan => {
-    // header card
     html += `<div class="section-card">
       <div class="section-title">${plan.icon} 備案 ${plan.priority}：${plan.title}</div>
       <div style="font-size:14px;color:var(--gray);margin-bottom:10px;">${plan.subtitle}</div>
@@ -1182,162 +831,95 @@ function renderBackup() {
         <span class="connector-text" style="border-color:var(--pink);color:var(--pink-dark);font-weight:600;">${plan.transit}</span>
       </div>
     </div>`;
-
-    // spot cards — same style as day pages, with check functionality
-    plan.spots.forEach((s, i) => {
-      const key = plan.id + '_' + i;
-      const done = isChecked(key);
+    plan.spots.forEach((s,i) => {
+      const key = plan.id+'_'+i, done = isChecked(key);
       if (i > 0 && plan.spots[i-1].transitToNext) {
         html += `<div class="connector" style="padding-left:30px;"><span class="connector-text">${plan.spots[i-1].transitToNext}</span></div>`;
       } else if (i > 0) {
         html += `<div class="connector" id="conn-${plan.id}-${i}"><span class="connector-text loading">…</span></div>`;
       }
-      html += `
-        <div class="spot-card">
-          <div class="spot-card-inner">
-            <div class="spot-num ${done?'done':''}" data-key="${key}" style="${done?'':'background:var(--orange);box-shadow:0 2px 6px rgba(232,152,94,0.3);'}"><span class="num-text">${i+1}</span></div>
-            <div class="spot-body">
-              <div class="spot-name ${done?'done-text':''}">${s.name}</div>
-              ${s.jp ? `<div class="spot-jp">${s.jp}</div>` : ''}
-              ${renderTags(s.tags)}
-              ${s.desc ? `<div class="spot-desc">${s.desc}</div>` : ''}
-              ${s.tips ? `<div class="spot-tips"><strong>💡 小提醒</strong><br>${s.tips}</div>` : ''}
-            </div>
+      html += `<div class="spot-card ${done?'done-card':''}">
+        <div class="spot-card-inner">
+          <div class="spot-num ${done?'done':''}" data-key="${key}" style="${done?'':'background:var(--orange);box-shadow:0 2px 6px rgba(232,152,94,0.3);'}"><span class="num-text">${i+1}</span></div>
+          <div class="spot-body">
+            <div class="spot-name ${done?'done-text':''}" data-name-key="${key}">${s.name}</div>
+            ${s.jp?`<div class="spot-jp">${s.jp}</div>`:''}
+            ${renderTags(s.tags)}
+            ${s.desc?`<div class="spot-desc">${s.desc}</div>`:''}
+            ${s.tips?`<div class="spot-tips"><strong>小提醒</strong><br>${s.tips}</div>`:''}
           </div>
-          <div class="spot-actions">
-            ${s.maps ? `<a class="act-btn act-nav" href="${s.maps}" target="_blank" rel="noopener">📍 Google Maps 導航</a>` : ''}
-            <button class="act-btn act-check ${done?'is-done':''}" data-key="${key}">${done?'✓ 已完成':'標記完成'}</button>
-          </div>
-        </div>`;
+        </div>
+        <div class="spot-actions">
+          ${s.maps?`<a class="act-btn act-nav" href="${s.maps}" target="_blank" rel="noopener">Google Maps 導航</a>`:''}
+          <button class="act-btn act-check ${done?'is-done':''}" data-key="${key}">${done?'已完成':'標記完成'}</button>
+        </div>
+      </div>`;
     });
-    // spacer between plans
     html += `<div style="height:10px;"></div>`;
   });
-
   return html;
 }
 
 // ============================================================
-// WALKING DISTANCE (OSRM)
+// OPTIMISATION 3: Expense Category Chart
 // ============================================================
-const routeCache = {};
-async function fetchRoute(lat1, lng1, lat2, lng2) {
-  const key = lat1+','+lng1+'_'+lat2+','+lng2;
-  if (routeCache[key]) return routeCache[key];
-  try {
-    const r = await fetch('https://router.project-osrm.org/route/v1/foot/'+lng1+','+lat1+';'+lng2+','+lat2+'?overview=false');
-    const d = await r.json();
-    if (d.code === 'Ok' && d.routes && d.routes[0]) {
-      const result = { dist: d.routes[0].distance, dur: d.routes[0].duration };
-      routeCache[key] = result;
-      return result;
-    }
-  } catch(e) {}
-  return null;
-}
-function fmtWalk(dist, dur) {
-  const mins = Math.max(1, Math.round(dur / 60));
-  const ds = dist >= 1000 ? (dist/1000).toFixed(1)+' km' : Math.round(dist)+' m';
-  return '🚶 '+ds+' · 步行約 '+mins+' 分鐘';
-}
-async function loadWalkingData(day) {
-  for (let i = 1; i < day.spots.length; i++) {
-    const a = day.spots[i-1], b = day.spots[i];
-    const el = document.getElementById('conn-'+day.id+'-'+i);
-    if (!el) continue;
-    const span = el.querySelector('.connector-text');
-    if (!span) continue;
-    if (a.transitToNext) {
-      span.textContent = a.transitToNext;
-      span.classList.remove('loading');
-      continue;
-    }
-    if (!a.lat || !b.lat) { span.textContent = ''; span.classList.remove('loading'); continue; }
-    const res = await fetchRoute(a.lat, a.lng, b.lat, b.lng);
-    span.textContent = res ? fmtWalk(res.dist, res.dur) : '';
-    span.classList.remove('loading');
-  }
+function renderExpenseCategoryChart() {
+  const totals = {};
+  Object.keys(EXP_CATS).forEach(k => { totals[k] = 0; });
+  expenses.forEach(e => { totals[e.cat] = (totals[e.cat]||0) + e.amount; });
+  const max = Math.max(...Object.values(totals), 1);
+  const hasData = Object.values(totals).some(v => v > 0);
+  if (!hasData) return '';
+  let html = `<div class="exp-chart"><div class="exp-chart-title">各類別支出</div>`;
+  Object.entries(EXP_CATS).forEach(([k,label]) => {
+    if (!totals[k]) return;
+    const pct = Math.round((totals[k]/max)*100);
+    html += `<div class="exp-chart-row">
+      <div class="exp-chart-label">${EXP_CAT_ICONS[k]} ${label}</div>
+      <div class="exp-chart-bar-wrap"><div class="exp-chart-bar" style="width:${pct}%;background:${EXP_CAT_BAR_COLORS[k]};"></div></div>
+      <div class="exp-chart-amt">¥${totals[k].toLocaleString()}</div>
+    </div>`;
+  });
+  return html + '</div>';
 }
 
-// ============================================================
-// RENDER — Expense tracker
-// ============================================================
 function renderExpense() {
   const today = new Date().toISOString().slice(0,10);
-  const todayExp = expenses.filter(e => e.date === today);
-  const todayTotal = todayExp.reduce((s,e) => s + e.amount, 0);
-  const tripTotal = expenses.reduce((s,e) => s + e.amount, 0);
-
+  const todayTotal = expenses.filter(e => e.date===today).reduce((s,e) => s+e.amount, 0);
+  const tripTotal = expenses.reduce((s,e) => s+e.amount, 0);
   let html = `
     <div class="exp-rate">匯率　¥1 = NT$ <input type="number" step="0.001" id="expRateInput" value="${expRate}"> <span style="color:#bbb;">（可自行調整）</span></div>
     <div class="exp-dashboard">
       <div class="exp-stat">
-        <div class="exp-stat-label">🧾 今日支出</div>
+        <div class="exp-stat-label"> 今日支出</div>
         <div class="exp-stat-value">¥${todayTotal.toLocaleString()}</div>
-        <div class="exp-stat-sub">≈ NT$${Math.round(todayTotal * expRate).toLocaleString()}</div>
+        <div class="exp-stat-sub">≈ NT$${Math.round(todayTotal*expRate).toLocaleString()}</div>
       </div>
       <div class="exp-stat">
-        <div class="exp-stat-label">📊 旅程累計</div>
+        <div class="exp-stat-label">旅程累計</div>
         <div class="exp-stat-value">¥${tripTotal.toLocaleString()}</div>
-        <div class="exp-stat-sub">≈ NT$${Math.round(tripTotal * expRate).toLocaleString()} · ${expenses.length} 筆</div>
+        <div class="exp-stat-sub">≈ NT$${Math.round(tripTotal*expRate).toLocaleString()} · ${expenses.length} 筆</div>
       </div>
     </div>
-
+    ${renderExpenseCategoryChart()}
     <div class="exp-sync-section">
       <button class="exp-sync-btn ${syncStatus==='syncing'?'syncing':''}" id="expSyncBtn" ${syncStatus==='syncing'?'disabled':''}>
-        ${syncStatus==='syncing'?'⏳ 同步中…':'📤 一鍵同步到 Google Sheets'}
+        ${syncStatus==='syncing'?'同步中…':'同步到 Google Sheets'}
       </button>
       <div class="exp-sync-status" style="color:${syncStatus==='ok'?'var(--green)':syncStatus==='error'?'var(--red)':'var(--gray)'}">
-        ${syncMsg}${!syncMsg && lastSyncTime ? '<span style="color:#999;font-size:12px;">上次同步：'+lastSyncTime+'</span>' : ''}
+        ${syncMsg}${!syncMsg&&lastSyncTime?'<span style="color:#999;font-size:12px;">上次同步：'+lastSyncTime+'</span>':''}
       </div>
       <details class="exp-sync-setup">
-        <summary>⚙️ 設定 Google Sheets 連結</summary>
+        <summary>設定 Google Sheets 連結</summary>
         <div class="setup-content">
-          <strong>第一次使用？按以下步驟設定：</strong><br>
-          1. 開一個新的 <a href="https://sheets.google.com" target="_blank" rel="noopener">Google Sheets</a><br>
-          2. 點選「擴充功能」→「Apps Script」<br>
-          3. 把以下程式碼貼進去，取代原本的內容：<br>
-          <div style="background:#1E1E1E;color:#D4D4D4;padding:10px;border-radius:8px;margin:8px 0;font-size:11px;line-height:1.5;overflow-x:auto;white-space:pre;font-family:monospace;">// 健康檢查（驗證網址用）
-function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({ok:true}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = JSON.parse(e.postData.contents);
-  // 清除 A~G 欄舊資料（保留標題列，H 欄以後不動）
-  if (sheet.getLastRow() > 1)
-    sheet.getRange(2,1,sheet.getLastRow()-1,7).clearContent();
-  // 寫入標題（如果是空的）
-  if (sheet.getLastRow() === 0)
-    sheet.appendRow(['ID','日期','金額(¥)','店名','類別','付款方式','NT$']);
-  // 寫入資料
-  data.expenses.forEach(function(exp) {
-    sheet.appendRow([
-      exp.id, exp.date, exp.amount,
-      exp.store || '', data.cats[exp.cat]||'',
-      data.pays[exp.pay]||'',
-      Math.round(exp.amount * data.rate)
-    ]);
-  });
-  return ContentService
-    .createTextOutput(JSON.stringify({ok:true,count:data.expenses.length}))
-    .setMimeType(ContentService.MimeType.JSON);
-}</div>
-          4. 點「部署」→「新增部署」→ 類型選「網頁應用程式」<br>
-          5. 存取權限設為「所有人」→ 按「部署」<br>
-          6. 複製產生的網址，貼到下方，然後按「測試連線」：<br>
-          <input class="url-input" id="sheetUrlInput" type="url" placeholder="https://script.google.com/macros/s/..." value="${sheetUrl}">
-          <button id="testSheetBtn" style="margin-top:8px;padding:6px 14px;border:1.5px solid #34A853;border-radius:8px;background:white;color:#34A853;font-size:13px;font-weight:600;cursor:pointer;">🔗 測試連線</button>
-          <div style="margin-top:6px;font-size:12px;color:#999;">同步只會覆寫 A~G 欄，H 欄以後的備註/公式不受影響</div>
+          在 Google Sheets 的 Apps Script 中貼入處理程式碼，部署為網頁應用程式（所有人可存取），然後將網址貼入下方：<br>
+          <input class="url-input" id="sheetUrlInput" type="url" placeholder="https://script.google.com/macros/s/..." value="${escapeHtml(sheetUrl)}">
+          <button id="testSheetBtn" style="margin-top:8px;padding:6px 14px;border:1.5px solid #34A853;border-radius:8px;background:white;color:#34A853;font-size:13px;font-weight:600;cursor:pointer;">測試連線</button>
         </div>
       </details>
     </div>
-
     <div class="exp-form">
-      <div class="exp-form-title">➕ 新增花費</div>
+      <div class="exp-form-title">新增花費</div>
       <div class="exp-row">
         <input class="exp-input" id="expAmount" type="number" placeholder="金額（¥）" inputmode="numeric" style="flex:1;">
         <input class="exp-input" id="expStore" type="text" placeholder="店名 / 備註" style="flex:1.5;">
@@ -1349,38 +931,33 @@ function doPost(e) {
       <button class="exp-submit" id="expSubmit">記錄花費</button>
     </div>`;
 
-  // group by date, sorted newest first
   const grouped = {};
-  expenses.slice().sort((a,b) => b.date.localeCompare(a.date) || b.id - a.id).forEach(e => {
+  expenses.slice().sort((a,b) => b.date.localeCompare(a.date)||b.id-a.id).forEach(e => {
     if (!grouped[e.date]) grouped[e.date] = [];
     grouped[e.date].push(e);
   });
 
-  if (Object.keys(grouped).length === 0) {
+  if (!Object.keys(grouped).length) {
     html += `<div class="exp-empty">還沒有任何花費紀錄<br>開始記帳吧！</div>`;
   } else {
-    Object.entries(grouped).forEach(([date, items]) => {
-      const dayTotal = items.reduce((s,e) => s + e.amount, 0);
+    Object.entries(grouped).forEach(([date,items]) => {
+      const dayTotal = items.reduce((s,e) => s+e.amount, 0);
       const d = new Date(date);
       const weekdays = ['日','一','二','三','四','五','六'];
       const dateLabel = `${d.getMonth()+1}/${d.getDate()} (${weekdays[d.getDay()]})`;
-      html += `<div class="exp-day-group">
-        <div class="exp-day-header">
-          <span class="exp-day-date">${dateLabel}</span>
-          <span class="exp-day-total">¥${dayTotal.toLocaleString()} ≈ NT$${Math.round(dayTotal * expRate).toLocaleString()}</span>
-        </div>`;
+      html += `<div class="exp-day-group"><div class="exp-day-header"><span class="exp-day-date">${dateLabel}</span><span class="exp-day-total">¥${dayTotal.toLocaleString()} ≈ NT$${Math.round(dayTotal*expRate).toLocaleString()}</span></div>`;
       items.forEach(e => {
         html += `<div class="exp-item">
-          <div class="exp-item-icon" style="background:${EXP_CAT_COLORS[e.cat]||'#f5f5f5'}">${EXP_CAT_ICONS[e.cat]||'📦'}</div>
+          <div class="exp-item-icon" style="background:${EXP_CAT_COLORS[e.cat]||'#f5f5f5'}">${EXP_CAT_ICONS[e.cat]||''}</div>
           <div class="exp-item-body">
-            <div class="exp-item-name">${e.store ? escapeHtml(e.store) : (EXP_CATS[e.cat] || '其他')}</div>
+            <div class="exp-item-name">${e.store?escapeHtml(e.store):(EXP_CATS[e.cat]||'其他')}</div>
             <div class="exp-item-meta"><span class="tag" style="background:${EXP_CAT_COLORS[e.cat]||'#eee'};color:#555;font-size:11px;padding:1px 6px;">${EXP_CATS[e.cat]||'其他'}</span> ${EXP_PAYS[e.pay]||''}</div>
           </div>
           <div class="exp-item-amount">
             <div class="exp-item-jpy">¥${e.amount.toLocaleString()}</div>
-            <div class="exp-item-twd">NT$${Math.round(e.amount * expRate).toLocaleString()}</div>
+            <div class="exp-item-twd">NT$${Math.round(e.amount*expRate).toLocaleString()}</div>
           </div>
-          <button class="exp-item-del" data-expid="${e.id}">✕</button>
+          <button class="exp-item-del" data-expid="${e.id}"></button>
         </div>`;
       });
       html += `</div>`;
@@ -1393,64 +970,98 @@ function doPost(e) {
 // MAIN RENDER
 // ============================================================
 function render() {
-  if (!isUnlocked && (currentDay === 'cafe' || currentDay === 'lists')) {
-    currentDay = 'info';
-  }
-  closeDrawer();
-  renderBottomNav();
+  if (!isUnlocked && (currentDay==='cafe'||currentDay==='lists')) currentDay = 'info';
+  renderTopNav();
   const root = document.getElementById('appRoot');
-  const vt = document.getElementById('viewToggle');
   const isDayPage = DAYS_DATA.some(d => d.id === currentDay);
   const isBackupPage = currentDay === 'backup';
-  vt.style.display = (isDayPage || isBackupPage) ? 'flex' : 'none';
 
-  // invalidate old maps
-  Object.keys(maps).forEach(k => { if(maps[k]) { maps[k].remove(); delete maps[k]; } });
-
-  let walkDay = null;
+  const day = DAYS_DATA.find(d => d.id === currentDay);
   let content = '';
-  if (currentDay === 'info') {
-    content = renderInfo();
-  } else if (currentDay === 'backup') {
-    if (currentView === 'map') {
-      // show all backup plans on one map
-      const allBackupSpots = [];
-      BACKUP_PLANS.forEach(p => p.spots.forEach(s => { if(s.lat && s.lng) allBackupSpots.push(s); }));
-      const backupMapDay = { id:'backup', spots: allBackupSpots };
-      content = renderDayMap(backupMapDay);
-      content += `<div class="page-inner">${renderBackup()}</div>`;
-    } else {
-      content = renderBackup();
-    }
-  } else if (currentDay === 'expense') {
-    content = renderExpense();
-  } else if (currentDay === 'cafe') {
-    content = renderCafe();
-  } else if (currentDay === 'lists') {
-    content = renderLists();
-  } else {
-    const day = DAYS_DATA.find(d => d.id === currentDay);
-    if (day) {
-      walkDay = day;
-      if (currentView === 'map') {
-        content = renderDayMap(day);
-        // also show list below map
-        content += `<div class="page-inner">${renderDayList(day)}</div>`;
-      } else {
-        content = `<div class="page-inner">${renderDayList(day)}</div>`;
-      }
-    }
-  }
+  let walkTarget = null;
 
-  const useMapLayout = (isDayPage || isBackupPage) && currentView === 'map';
-  if (!useMapLayout) {
-    root.innerHTML = `<div class="page active"><div class="page-inner">${content}</div></div>`;
-  } else {
-    root.innerHTML = `<div class="page active">${content}</div>`;
-  }
-  if (walkDay) setTimeout(() => loadWalkingData(walkDay), 100);
-  if (currentDay === 'backup') {
+  if (isDayPage && day) {
+    const heroHtml = `<div class="day-hero" data-day="${day.id}">
+      <div class="day-hero-body">
+        <div class="day-hero-label">${day.label} (${day.weekday})</div>
+        <div class="day-hero-title">${day.title}</div>
+      </div>
+    </div>`;
+    if (currentView === 'map') {
+      const mapEl = initMapForDay(day);
+      root.innerHTML = heroHtml + `<div id="map-slot"></div><div class="page active"><div class="page-inner" id="listBelowMap">${renderDayList(day)}</div></div>`;
+      document.getElementById('map-slot').appendChild(mapEl);
+      setTimeout(() => maps[day.id] && maps[day.id].invalidateSize(), 60);
+    } else {
+      content = renderDayList(day);
+      root.innerHTML = heroHtml + `<div class="page active"><div class="page-inner">${content}</div></div>`;
+    }
+    walkTarget = day;
+  } else if (isBackupPage) {
+    const heroHtml = `<div class="day-hero" data-day="backup">
+      <div class="day-hero-body">
+        <div class="day-hero-label">替代方案</div>
+        <div class="day-hero-title">備案行程</div>
+      </div>
+    </div>`;
+    if (currentView === 'map') {
+      const allSpots = [];
+      BACKUP_PLANS.forEach(p => p.spots.forEach(s => { if(s.lat&&s.lng) allSpots.push(s); }));
+      const fakDay = { id:'backup', spots:allSpots };
+      const mapEl = initMapForDay(fakDay);
+      root.innerHTML = heroHtml + `<div id="map-slot"></div><div class="page active"><div class="page-inner">${renderBackup()}</div></div>`;
+      document.getElementById('map-slot').appendChild(mapEl);
+      setTimeout(() => maps['backup'] && maps['backup'].invalidateSize(), 60);
+    } else {
+      root.innerHTML = heroHtml + `<div class="page active"><div class="page-inner">${renderBackup()}</div></div>`;
+    }
     setTimeout(() => { BACKUP_PLANS.forEach(p => loadWalkingData(p)); }, 100);
+    return;
+  } else {
+    if (currentDay === 'info') content = renderInfo();
+    else if (currentDay === 'expense') content = renderExpense();
+    else if (currentDay === 'cafe') content = renderCafe();
+    else if (currentDay === 'lists') content = renderLists();
+    root.innerHTML = `<div class="page active"><div class="page-inner">${content}</div></div>`;
+  }
+  if (walkTarget) setTimeout(() => loadWalkingData(walkTarget), 100);
+}
+
+// ============================================================
+// WALKING DISTANCE (OSRM) — cached
+// ============================================================
+const routeCache = {};
+async function fetchRoute(lat1,lng1,lat2,lng2) {
+  const key = lat1+','+lng1+'_'+lat2+','+lng2;
+  if (routeCache[key]) return routeCache[key];
+  try {
+    const r = await fetch('https://router.project-osrm.org/route/v1/foot/'+lng1+','+lat1+';'+lng2+','+lat2+'?overview=false');
+    const d = await r.json();
+    if (d.code==='Ok'&&d.routes&&d.routes[0]) {
+      const result = { dist:d.routes[0].distance, dur:d.routes[0].duration };
+      routeCache[key] = result;
+      return result;
+    }
+  } catch(e) {}
+  return null;
+}
+function fmtWalk(dist,dur) {
+  const mins = Math.max(1, Math.round(dur/60));
+  const ds = dist>=1000 ? (dist/1000).toFixed(1)+' km' : Math.round(dist)+' m';
+  return '步行 '+ds+' · 步行約 '+mins+' 分鐘';
+}
+async function loadWalkingData(day) {
+  for (let i=1; i<day.spots.length; i++) {
+    const a=day.spots[i-1], b=day.spots[i];
+    const el = document.getElementById('conn-'+day.id+'-'+i);
+    if (!el) continue;
+    const span = el.querySelector('.connector-text');
+    if (!span) continue;
+    if (a.transitToNext) { span.textContent = a.transitToNext; span.classList.remove('loading'); continue; }
+    if (!a.lat||!b.lat) { span.textContent=''; span.classList.remove('loading'); continue; }
+    const res = await fetchRoute(a.lat,a.lng,b.lat,b.lng);
+    span.textContent = res ? fmtWalk(res.dist,res.dur) : '';
+    span.classList.remove('loading');
   }
 }
 
@@ -1458,148 +1069,100 @@ function render() {
 // EVENTS
 // ============================================================
 document.addEventListener('click', e => {
-  // Bottom nav: day pill button → toggle drawer
-  if (e.target.closest('#bnavDayBtn')) {
-    if (drawerOpen) { closeDrawer(); renderBottomNav(); }
-    else { openDrawer(); }
-    return;
-  }
-  // Bottom nav: icon section buttons
-  const bnavIcon = e.target.closest('.bnav-icon-btn');
-  if (bnavIcon) {
-    currentDay = bnavIcon.dataset.day;
-    currentView = 'list';
-    render();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
-  }
-  // Drawer overlay → close
-  if (e.target.closest('#drawerOverlay')) {
-    closeDrawer();
-    renderBottomNav();
-    return;
-  }
-  // Drawer day card → navigate
-  const drawerCard = e.target.closest('.drawer-day-card');
-  if (drawerCard) {
-    currentDay = drawerCard.dataset.day;
-    currentView = 'list';
-    render();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
-  }
-  // Inline tab buttons (backup hint buttons inside day pages still use .day-tab class)
+  const pill = e.target.closest('.tnav-pill');
+  if (pill && pill.dataset.day) { currentDay = pill.dataset.day; currentView = 'list'; render(); window.scrollTo(0, 0); return; }
   const tab = e.target.closest('.day-tab');
-  if (tab) {
-    currentDay = tab.dataset.day;
-    currentView = 'list';
-    document.querySelectorAll('.view-btn').forEach(b => b.classList.toggle('active', b.dataset.view === 'list'));
-    render();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
-  }
-  // View toggle
+  if (tab) { currentDay = tab.dataset.day; currentView = 'list'; render(); window.scrollTo(0, 0); return; }
   const vb = e.target.closest('.view-btn');
-  if (vb) {
-    currentView = vb.dataset.view;
-    document.querySelectorAll('.view-btn').forEach(b => b.classList.toggle('active', b.dataset.view === currentView));
-    render();
-    return;
-  }
-  // Check buttons
+  if (vb) { currentView = vb.dataset.view; render(); return; }
+
+  // OPTIMISATION 2: Use targeted update instead of full render
   const ck = e.target.closest('.cl-check, .spot-num, .act-check');
-  if (ck && ck.dataset.key) {
-    toggle(ck.dataset.key);
-    render();
-    return;
-  }
-  // Expense — submit
+  if (ck && ck.dataset.key) { toggleAndUpdate(ck.dataset.key); return; }
+
   if (e.target.closest('#expSubmit')) {
     const amt = parseInt(document.getElementById('expAmount').value);
-    if (!amt || amt <= 0) { document.getElementById('expAmount').focus(); return; }
+    if (!amt||amt<=0) { document.getElementById('expAmount').focus(); return; }
     const store = document.getElementById('expStore').value.trim();
     const cat = document.getElementById('expCat').value;
     const pay = document.getElementById('expPay').value;
-    expenses.push({ id: Date.now(), date: new Date().toISOString().slice(0,10), amount: amt, store, cat, pay });
-    saveExp();
-    render();
-    // scroll to top of expense list after short delay
-    setTimeout(() => { const el = document.querySelector('.exp-dashboard'); if(el) el.scrollIntoView({behavior:'smooth'}); }, 50);
-    return;
+    expenses.push({ id:Date.now(), date:new Date().toISOString().slice(0,10), amount:amt, store, cat, pay });
+    saveExp(); render(); return;
   }
-  // Expense — delete
   const del = e.target.closest('.exp-item-del');
   if (del && del.dataset.expid) {
     if (!confirm('確定刪除這筆紀錄？')) return;
-    expenses = expenses.filter(ex => ex.id !== parseInt(del.dataset.expid));
-    saveExp();
-    render();
-    return;
+    expenses = expenses.filter(ex => ex.id!==parseInt(del.dataset.expid));
+    saveExp(); render(); return;
   }
+  if (e.target.closest('#expSyncBtn')) { syncToSheets(); return; }
+  if (e.target.closest('#testSheetBtn')) { testSheetConnection(); return; }
 });
 
-// Expense — rate change (partial update to avoid destroying form state)
 document.addEventListener('change', e => {
-  if (e.target.id === 'expRateInput') {
+  // OPTIMISATION 4: Rate change — update TWD values in-place, no full render
+  if (e.target.id==='expRateInput') {
     const v = parseFloat(e.target.value);
     if (v > 0) {
       expRate = v; saveRate();
-      // partial update: only refresh dashboard + item TWD values, don't rebuild form
-      document.querySelectorAll('.exp-stat-sub').forEach(el => {
-        const m = el.textContent.match(/NT\$/);
-        if (!m) return;
-      });
-      // just update all TWD displays in-place
       const today = new Date().toISOString().slice(0,10);
-      const todayTotal = expenses.filter(x => x.date === today).reduce((s,x) => s + x.amount, 0);
-      const tripTotal = expenses.reduce((s,x) => s + x.amount, 0);
+      const todayTotal = expenses.filter(x => x.date===today).reduce((s,x) => s+x.amount, 0);
+      const tripTotal = expenses.reduce((s,x) => s+x.amount, 0);
       const stats = document.querySelectorAll('.exp-stat');
-      if (stats[0]) stats[0].querySelector('.exp-stat-sub').textContent = '≈ NT$' + Math.round(todayTotal * expRate).toLocaleString();
-      if (stats[1]) stats[1].querySelector('.exp-stat-sub').textContent = '≈ NT$' + Math.round(tripTotal * expRate).toLocaleString() + ' · ' + expenses.length + ' 筆';
+      if (stats[0]) stats[0].querySelector('.exp-stat-sub').textContent = '≈ NT$'+Math.round(todayTotal*expRate).toLocaleString();
+      if (stats[1]) stats[1].querySelector('.exp-stat-sub').textContent = '≈ NT$'+Math.round(tripTotal*expRate).toLocaleString()+' · '+expenses.length+' 筆';
       document.querySelectorAll('.exp-item-twd').forEach(el => {
         const jpy = el.closest('.exp-item')?.querySelector('.exp-item-jpy');
-        if (jpy) {
-          const amt = parseInt(jpy.textContent.replace(/[¥,]/g, ''));
-          if (!isNaN(amt)) el.textContent = 'NT$' + Math.round(amt * expRate).toLocaleString();
-        }
+        if (jpy) { const amt=parseInt(jpy.textContent.replace(/[¥,]/g,'')); if(!isNaN(amt)) el.textContent='NT$'+Math.round(amt*expRate).toLocaleString(); }
       });
       document.querySelectorAll('.exp-day-total').forEach(el => {
-        const m = el.textContent.match(/¥([\d,]+)/);
-        if (m) {
-          const amt = parseInt(m[1].replace(/,/g, ''));
-          el.textContent = '¥' + amt.toLocaleString() + ' ≈ NT$' + Math.round(amt * expRate).toLocaleString();
-        }
+        const m=el.textContent.match(/¥([\d,]+)/);
+        if (m) { const amt=parseInt(m[1].replace(/,/g,'')); el.textContent='¥'+amt.toLocaleString()+' ≈ NT$'+Math.round(amt*expRate).toLocaleString(); }
       });
+      // Update chart bars
+      const chart = document.querySelector('.exp-chart');
+      if (chart) chart.outerHTML = renderExpenseCategoryChart() || '';
     }
   }
-  if (e.target.id === 'sheetUrlInput') {
-    sheetUrl = e.target.value.trim();
-    saveSheetUrl();
-  }
-});
-// Expense — sync & test buttons
-document.addEventListener('click', e => {
-  if (e.target.closest('#expSyncBtn')) { syncToSheets(); }
-  if (e.target.closest('#testSheetBtn')) { testSheetConnection(); }
+  if (e.target.id==='sheetUrlInput') { sheetUrl=e.target.value.trim(); saveSheetUrl(); }
 });
 
 // ============================================================
-// SECRET UNLOCK — long-press 💗 to toggle
+// OPTIMISATION 5: Swipe Gesture — navigate between days
 // ============================================================
 (function() {
-  // --- Long-press to UNLOCK ---
+  let startX = 0, startY = 0;
+  const dayIds = DAYS_DATA.map(d => d.id);
+  document.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    // Only trigger on strong horizontal swipes (not vertical scrolls)
+    if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.8) return;
+    // Don't fire if inside map or drawer
+    if (e.target.closest('#dayDrawer') || e.target.closest('.map-frame')) return;
+    const idx = dayIds.indexOf(currentDay);
+    if (idx === -1) return; // not on a day page
+    if (dx < 0 && idx < dayIds.length - 1) { currentDay = dayIds[idx+1]; currentView='list'; render(); window.scrollTo(0,0); }
+    else if (dx > 0 && idx > 0) { currentDay = dayIds[idx-1]; currentView='list'; render(); window.scrollTo(0,0); }
+  }, { passive: true });
+})();
+
+// ============================================================
+// SECRET UNLOCK
+// ============================================================
+(function() {
   let pressTimer = null;
   function onStart(e) {
-    if (isUnlocked) return; // already unlocked, long-press does nothing
+    if (isUnlocked) return;
     e.preventDefault();
     const heart = document.getElementById('unlockHeart');
     if (!heart) return;
     heart.classList.add('pressing');
-    pressTimer = setTimeout(() => {
-      setUnlocked(true);
-      heart.classList.remove('pressing');
-      render();
-    }, 800);
+    pressTimer = setTimeout(() => { setUnlocked(true); heart.classList.remove('pressing'); render(); }, 800);
   }
   function onEnd() {
     clearTimeout(pressTimer);
@@ -1612,25 +1175,20 @@ document.addEventListener('click', e => {
   document.addEventListener('mousedown', e => { if (e.target.closest('#unlockHeart')) onStart(e); });
   document.addEventListener('mouseup', onEnd);
 
-  // --- Triple-tap to LOCK ---
-  let tapCount = 0, tapTimer = null;
+  let tapCount=0, tapTimer=null;
   document.addEventListener('click', e => {
     if (!e.target.closest('#unlockHeart') || !isUnlocked) return;
     tapCount++;
     clearTimeout(tapTimer);
-    if (tapCount >= 3) {
-      tapCount = 0;
-      setUnlocked(false);
-      render();
-    } else {
-      tapTimer = setTimeout(() => { tapCount = 0; }, 500);
-    }
+    if (tapCount >= 3) { tapCount=0; setUnlocked(false); render(); }
+    else { tapTimer = setTimeout(() => { tapCount=0; }, 500); }
   });
 })();
 
 // Auto-select today
 (function() {
-  const t = new Date(), key = `${t.getFullYear()}-${t.getMonth()+1}-${t.getDate()}`;
+  const t = new Date();
+  const key = `${t.getFullYear()}-${t.getMonth()+1}-${t.getDate()}`;
   const map = {'2026-5-8':'day1','2026-5-9':'day2','2026-5-10':'day3','2026-5-11':'day4','2026-5-12':'day5'};
   if (map[key]) currentDay = map[key];
 })();
