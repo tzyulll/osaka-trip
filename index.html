@@ -52,19 +52,19 @@
 
   /* ===== HEADER ===== */
   .header {
-    background: linear-gradient(160deg, #FADADD 0%, #F9C6D0 30%, #F2B8D0 60%, #E8A8C8 100%);
-    color: #3D1A26;
+    background: linear-gradient(160deg, #F0E5FA 0%, #EAD8F5 25%, #E2CCF0 50%, #DBBFEA 75%, #F0C8E0 100%);
+    color: #2A1840;
     text-align: center;
     padding: 52px 24px 50px;
     position: relative;
     overflow: hidden;
   }
-  /* Soft blobs */
+  /* Soft blobs — purple tones */
   .header::before {
     content: '';
     position: absolute; top: -40px; right: -40px;
     width: 220px; height: 220px; border-radius: 50%;
-    background: oklch(0.92 0.08 350 / 0.45);
+    background: rgba(200, 170, 235, 0.30);
     pointer-events: none;
   }
   .header::after {
@@ -75,22 +75,43 @@
   .header-blob2 {
     position: absolute; bottom: 20px; left: -30px;
     width: 160px; height: 160px; border-radius: 50%;
-    background: oklch(0.90 0.07 320 / 0.35);
+    background: rgba(215, 185, 245, 0.25);
     pointer-events: none;
+  }
+  .header-blob3 {
+    position: absolute; top: 30px; left: 50%;
+    width: 100px; height: 100px; border-radius: 50%;
+    background: rgba(240, 200, 235, 0.20);
+    pointer-events: none;
+  }
+  /* Sparkle decorations */
+  .header-sparkle {
+    position: absolute; color: rgba(255,255,255,0.6); font-size: 14px;
+    pointer-events: none; z-index: 1;
+    animation: sparkle-pulse 2.5s ease-in-out infinite;
+  }
+  .header-sparkle:nth-child(2) { top: 25px; right: 50px; font-size: 10px; animation-delay: 0.4s; }
+  .header-sparkle:nth-child(3) { top: 60px; left: 30px; font-size: 16px; animation-delay: 1.0s; }
+  .header-sparkle:nth-child(4) { bottom: 50px; right: 25px; font-size: 12px; animation-delay: 1.6s; }
+  .header-sparkle:nth-child(5) { top: 40px; left: 55%; font-size: 8px; animation-delay: 0.8s; }
+  .header-sparkle:nth-child(6) { bottom: 55px; left: 15%; font-size: 13px; animation-delay: 2.0s; }
+  @keyframes sparkle-pulse {
+    0%, 100% { opacity: 0.4; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
   }
   .header-accent {
     width: 36px; height: 3px;
-    background: oklch(0.60 0.18 350);
+    background: rgba(140, 90, 180, 0.6);
     border-radius: 3px; margin: 0 auto 20px;
     position: relative; z-index: 1;
   }
   .header h1 {
     font-size: 28px; font-weight: 900; letter-spacing: 5px; line-height: 1.2;
     position: relative; z-index: 1;
-    color: #2D1018;
+    color: #3A1A55;
   }
   .header .subtitle {
-    font-size: 13px; color: oklch(0.45 0.06 350);
+    font-size: 13px; color: rgba(80, 40, 110, 0.7);
     margin-top: 10px; font-weight: 500; letter-spacing: 0.5px;
     position: relative; z-index: 1;
   }
@@ -100,9 +121,10 @@
   }
   .header-day-chip {
     padding: 5px 14px; border-radius: 20px;
-    background: oklch(1 0 0 / 0.55); color: #2D1018;
+    background: rgba(255, 255, 255, 0.50); color: #3A1A55;
     font-size: 12px; font-weight: 700;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
   }
 
   /* ===== DAY TITLE BAR ===== */
@@ -381,8 +403,14 @@
 
 <div class="header">
   <div class="header-blob2"></div>
+  <div class="header-blob3"></div>
+  <span class="header-sparkle">✦</span>
+  <span class="header-sparkle">✦</span>
+  <span class="header-sparkle">✦</span>
+  <span class="header-sparkle">✦</span>
+  <span class="header-sparkle">✦</span>
   <div class="header-accent"></div>
-  <h1>大阪家族旅行</h1>
+  <h1>✦ 大阪家族旅行 ✦</h1>
   <div class="subtitle">2026 · 5/8（五）― 5/12（二）· 5天4夜</div>
   <div class="header-days">
     <div class="header-day-chip">Day 1 抵達</div>
